@@ -7,11 +7,13 @@
   {
     "email": "test@cs-hu.xyz",
     "name": "Dominic Developer",
-    "pin": "test"
+    "pin": "test",
+    "pinHash": "$2b$10$cKLDb0tIXn6X5gzNVkwqA.jVYe7TqZEDTXfUBJYM6Pe3h2R/4jU1e"
   },
   {
-    "email": "parinte.google@cs-hu.xyz",
-    "name": "Google Parent",
-    "pin": "0000"
+    "email": "test@cs-hub.xyz",
+    "name": "test",
+    "pin": "1234",
+    "pinHash": "$2b$10$c8loen85FxWTlkvo5XgWOOdq6KYo9AUpVdwLVLzL6KMlU3N28nb2q"
   }
 ]

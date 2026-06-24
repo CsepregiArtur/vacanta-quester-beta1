@@ -34,7 +34,8 @@ import {
   Thermometer,
   Sun,
   Search,
-  MapPin
+  MapPin,
+  Upload
 } from "lucide-react";
 import { motion, AnimatePresence, animate } from "motion/react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
@@ -1023,7 +1024,7 @@ export default function KidDashboard({ childId, state, onRefresh, theme, onChang
                     <button
                       onClick={() => handleClaimStreakBonus(milestone.tag)}
                       disabled={claimingMilestone !== null}
-                      className="px-3 py-1.5 bg-[#58cc02] hover:bg-[#46a302] text-white border-2 border-slate-950 rounded-xl text-[9px] font-black uppercase tracking-wider shadow-[1.5px_1.5px_0_0_#1e293b] hover:translate-y-[-1px] active:translate-y-[1px] active:shadow-none transition-all cursor-pointer"
+                      className={dashboardStyles.buttonGreen + " text-[9px] py-1.5 px-3"}
                     >
                       {claimingMilestone === milestone.tag ? "Procesare..." : "REVENDICĂ! 🎁"}
                     </button>
@@ -1046,7 +1047,7 @@ export default function KidDashboard({ childId, state, onRefresh, theme, onChang
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-indigo-650 text-white rounded-3xl p-6 shadow-md border-2 border-indigo-700 flex flex-col md:flex-row items-center justify-between gap-4"
+            className={`${dashboardStyles.card} bg-indigo-650 text-white border-indigo-700 flex flex-col md:flex-row items-center justify-between gap-4`}
           >
             <div className="flex items-center gap-4">
               <div className="p-3 bg-white/10 rounded-2xl border border-white/10">
@@ -1116,8 +1117,8 @@ export default function KidDashboard({ childId, state, onRefresh, theme, onChang
         </div>
 
         {/* Panou Lateral: PLIMBARE CÂINE & EXCLUSIVITATE */}
-        <div className="space-y-6">
-          <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm" id="dog-walk-widget">
+        {state.dogWalkEnabled && <div className="space-y-6">
+          <div className={`${dashboardStyles.card}`} id="dog-walk-widget">
             <h3 className="text-lg font-black text-slate-900 border-b-2 border-slate-100 pb-4 mb-4 flex items-center gap-2">
               <Activity className="w-5 h-5 text-indigo-600" />
               Sarcina: Plimbat Câinele
@@ -1156,7 +1157,7 @@ export default function KidDashboard({ childId, state, onRefresh, theme, onChang
                 }
                 
                 return (
-                  <div key={slot} className="p-4 rounded-2xl border-2 border-slate-100 flex flex-col justify-between gap-3 bg-slate-50/20 shadow-2xs">
+                  <div key={slot} className={`${dashboardStyles.subCard} flex flex-col justify-between gap-3`}>
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-slate-800">
                         {slot === "morning" ? "🌞 Dimineață" : slot === "midday" ? "La Prânz (12:00)" : "🌛 Seară"}
@@ -1234,12 +1235,12 @@ export default function KidDashboard({ childId, state, onRefresh, theme, onChang
               })}
             </div>
           </div>
-        </div>
+        </div>}
       </div>
 
       
       {/* SECTIUNEA 2: SARCINI CASNICE (TREBURI ÎN CASĂ CU VALIDARE PRIN POZĂ) */}
-      <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm" id="domestic-activities-widget">
+      <div className={`${dashboardStyles.card}`} id="domestic-activities-widget">
         <h3 className="text-lg font-black text-slate-900 border-b-2 border-slate-100 pb-4 mb-4 flex items-center gap-2">
           <Upload className="w-5 h-5 text-indigo-650 animate-bounce" />
           Sarcini Casnice: Validare Automată cu Gemini Vision 👁️
@@ -1258,7 +1259,7 @@ export default function KidDashboard({ childId, state, onRefresh, theme, onChang
               const isRejected = task.status === "rejected";
               
               return (
-                <div key={task.id} className="p-5 rounded-3xl border-2 border-slate-150 bg-slate-50/10 flex flex-col justify-between hover:shadow-xs transition duration-200">
+                <div key={task.id} className={`${dashboardStyles.subCard} flex flex-col justify-between`}>
                   <div>
                     <div className="flex items-start justify-between gap-1">
                       <h4 className="font-extrabold text-slate-900 text-sm">{task.name}</h4>

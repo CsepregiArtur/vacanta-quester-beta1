@@ -17,9 +17,12 @@ import {
   revokeRefreshToken,
   revokeAllUserTokens,
   authMiddleware,
-} from "./server/auth.ts";
+} from "./auth.ts";
 
 dotenv.config();
+
+import { analyticsService } from "../services";
+import syncRoutes from "../routes/sync.routes";
 
 const app = express();
 const PORT = 3000;
@@ -27,9 +30,16 @@ const PORT = 3000;
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ limit: "20mb", extended: true }));
 
-// Middleware to bind request-specific x-parent-email context
+// Middleware: context DB + urmărire utilizatori activi
 app.use((req, res, next) => {
-  const parentEmail = req.headers["x-parent-email"] || req.query.parentEmail;
+  const parentEmail = (req.headers["x-parent-email"] as string) || 
+                       (req.query.parentEmail as string);
+  
+  // Urmărește utilizatorii activi
+  if (parentEmail) {
+    activeUsers.set(parentEmail.toLowerCase(), Date.now());
+  }
+  
   if (parentEmail && typeof parentEmail === "string") {
     dbContext.run(parentEmail, () => {
       next();
@@ -64,18 +74,11 @@ app.post("/api/auth/register", async (req, res) => {
     saveUsers(users);
 
     const familyPath = getFamilyDbPath(email);
-    let baseState: any;
-    if (fs.existsSync(DB_PATH)) {
-      const raw = fs.readFileSync(DB_PATH, "utf-8");
-      baseState = JSON.parse(raw);
-    } else {
-      baseState = createDefaultState();
-    }
-
-    baseState.parentEmail = email.toLowerCase();
+    const baseState = createDefaultState(email.toLowerCase());
     baseState.parentPin = userPin;
     baseState.lastUpdated = new Date().toISOString();
 
+    // Dacă părintele trimite copii personalizați la înregistrare, îi adaugă
     if (customChildren && Array.isArray(customChildren) && customChildren.length > 0) {
       baseState.children = customChildren.map((item: any) => ({
         id: item.name.toLowerCase().replace(/[^a-z0-9]/g, ""),
@@ -84,16 +87,17 @@ app.post("/api/auth/register", async (req, res) => {
         points: Number(item.points) || 80,
         avatar: item.avatar || "🐶",
         readingStreak: 0,
-        daysSinceLastReading: 1,
+        daysSinceLastReading: 0,
         activeTimer: null
       }));
 
-      let updatedTasks: any[] = [];
+      baseState.activeTasks = [];
       baseState.children.forEach((c: any) => {
         const isOlder = c.age >= 12;
-        updatedTasks = updatedTasks.concat(generateDefaultChoresForChild(c.id, c.name, isOlder));
+        baseState.activeTasks = baseState.activeTasks.concat(
+          generateDefaultChoresForChild(c.id, c.name, isOlder)
+        );
       });
-      baseState.activeTasks = updatedTasks;
     }
 
     fs.writeFileSync(familyPath, JSON.stringify(baseState, null, 2), "utf-8");
@@ -183,14 +187,7 @@ app.post("/api/auth/social-login", async (req, res) => {
       saveUsers(users);
 
       const familyPath = getFamilyDbPath(email);
-      let baseState: any;
-      if (fs.existsSync(DB_PATH)) {
-        const raw = fs.readFileSync(DB_PATH, "utf-8");
-        baseState = JSON.parse(raw);
-      } else {
-        baseState = createDefaultState();
-      }
-      baseState.parentEmail = email.toLowerCase();
+      const baseState = createDefaultState(email.toLowerCase());
       baseState.parentPin = "0000";
       baseState.lastUpdated = new Date().toISOString();
       fs.writeFileSync(familyPath, JSON.stringify(baseState, null, 2), "utf-8");
@@ -612,200 +609,20 @@ const updatePointsHistory = (db: any) => {
   }
 };
 
-const createDefaultState = (): any => {
+const createDefaultState = (parentEmail?: string): any => {
   return {
-    children: [
-      {
-        id: "dominic",
-        name: "Dominic",
-        age: 10,
-        points: 80,
-        avatar: "🐶",
-        readingStreak: 2,
-        daysSinceLastReading: 1,
-        activeTimer: null
-      },
-      {
-        id: "sofia",
-        name: "Sofia",
-        age: 14,
-        points: 140,
-        avatar: "🐈",
-        readingStreak: 3,
-        daysSinceLastReading: 2,
-        activeTimer: null
-      }
-    ],
-    activeTasks: [
-      {
-        id: "dominic-chore-vacuum",
-        childId: "dominic",
-        name: "Aspirat în Cameră & Hol",
-        type: "chore",
-        description: "Aspiră cu atenție camera proprie și holul de la intrare folosind aspiratorul vertical inteligent.",
-        points: 70,
-        status: "pending",
-        category: "Household",
-        streak: 3
-      },
-      {
-        id: "dominic-chore-room",
-        childId: "dominic",
-        name: "Curățenie în Cameră",
-        type: "chore",
-        description: "Sortează jucăriile în cutii, fă-ți patul excelent și ordonează-ți cărțile pe bibliotecă.",
-        points: 60,
-        status: "pending",
-        category: "Household",
-        streak: 2
-      },
-      {
-        id: "dominic-chore-dishes",
-        childId: "dominic",
-        name: "Clătire & Aranjare Vase",
-        type: "chore",
-        description: "Ajută-ți părinții clătind ușor farfuriile și așezându-le ordonat în mașina de spălat.",
-        points: 50,
-        status: "pending",
-        category: "Household",
-        streak: 1
-      },
-      {
-        id: "dominic-chore-clothes",
-        childId: "dominic",
-        name: "Sortare Haine de Spălat",
-        type: "chore",
-        description: "Adună hainele lăsate în cameră și sortează-le pe culori (coșul alb vs coșul colorat).",
-        points: 40,
-        status: "pending",
-        category: "Household",
-        streak: 4
-      },
-      {
-        id: "dominic-hygiene-morning",
-        childId: "dominic",
-        name: "🧼 Igienă de Dimineață",
-        type: "chore",
-        description: "Spală-te pe dinți timp de 2 minute, spală-te bine pe față, piaptănă-te și îmbracă-te cu haine curate de vacanță.",
-        points: 30,
-        status: "pending",
-        category: "Household",
-        streak: 5
-      },
-      {
-        id: "dominic-hygiene-evening",
-        childId: "dominic",
-        name: "🚿 Igienă de Seară",
-        type: "chore",
-        description: "Fă un duș sau o baie revigorantă, spală-te corect pe dinți înainte de culcare și pune-ți pijamalele curate.",
-        points: 30,
-        status: "pending",
-        category: "Household",
-        streak: 6
-      },
-      {
-        id: "sofia-chore-vacuum",
-        childId: "sofia",
-        name: "Aspirat Living & Hol Mare",
-        type: "chore",
-        description: "Aspiră covorul și parchetul din living, holul de legătură și sub biblioteca principală.",
-        points: 85,
-        status: "pending",
-        category: "Household",
-        streak: 3
-      },
-      {
-        id: "sofia-chore-room",
-        childId: "sofia",
-        name: "Curățenie Generală & Praf",
-        type: "chore",
-        description: "Șterge praful pe rafturi, pe blatul de bucătărie și living, și aranjează pernele canapelei ca la carte.",
-        points: 80,
-        status: "pending",
-        category: "Household",
-        streak: 4
-      },
-      {
-        id: "sofia-chore-dishes",
-        childId: "sofia",
-        name: "Spălare Manuală & Ordonat Vase",
-        type: "chore",
-        description: "Spală tigaia și cratița mare, golește vasele curate din mașina de spălat și așază-le în dulapul corespunzător.",
-        points: 75,
-        status: "pending",
-        category: "Household",
-        streak: 2
-      },
-      {
-        id: "sofia-chore-washing",
-        childId: "sofia",
-        name: "Operat Mașină de Spălat Haine",
-        type: "chore",
-        description: "Sortează haina murdară, adaugă capsule de detergent și balsam de rufe, selectează Eco 40° și pornește mașina.",
-        points: 70,
-        status: "pending",
-        category: "Household",
-        streak: 1
-      },
-      {
-        id: "sofia-chore-ironing",
-        childId: "sofia",
-        name: "Călcat Tricouri & Haine Simple",
-        type: "chore",
-        description: "Folosind stația de călcat setată la putere medie, calcă cu atenție 3 tricouri și întinde-le frumos pe umeraș în sifonier.",
-        points: 90,
-        status: "pending",
-        category: "Household",
-        streak: 5
-      },
-      {
-        id: "sofia-hygiene-morning",
-        childId: "sofia",
-        name: "🧼 Igienă de Dimineață",
-        type: "chore",
-        description: "Rutina completă de dimineață: spălat pe dinți, curățarea tenului/spălat pe față, pieptănat și haine curate pentru o zi excelentă.",
-        points: 30,
-        status: "pending",
-        category: "Household",
-        streak: 7
-      },
-      {
-        id: "sofia-hygiene-evening",
-        childId: "sofia",
-        name: "🚿 Igienă de Seară",
-        type: "chore",
-        description: "Duș sau baie completă, igienă dentară de seară temeinică și așezat pijamale curate pentru un somn odihnitor.",
-        points: 30,
-        status: "pending",
-        category: "Household",
-        streak: 6
-      }
-    ],
+    children: [],
+    activeTasks: [],
     notifications: [
       {
-        id: "init-notification",
+        id: `init-notification-${Date.now()}`,
         childName: "Sistem",
-        message: "Vacanța de vară a început! Aplicația Arcadia Smart Vacation a pornit cu succes. Spor deopotrivă la activități fizice și la lectură!",
+        message: "Vacanța de vară a început! Aplicația Arcadia Smart Vacation a pornit cu succes. Adaugă copiii în panoul de administrare pentru a începe.",
         timestamp: new Date().toISOString(),
         type: "info"
       }
     ],
-    topicProposals: [
-      {
-        childId: "dominic",
-        topic: "Dinozauri acvatici",
-        customPrompt: "",
-        customQuestions: "",
-        approved: true
-      },
-      {
-        childId: "sofia",
-        topic: "Inteligenta Artificiala",
-        customPrompt: "",
-        customQuestions: "",
-        approved: true
-      }
-    ],
+    topicProposals: [],
     homeAssistant: {
       url: "",
       token: "",
@@ -813,43 +630,26 @@ const createDefaultState = (): any => {
       tvEntityId: "input_boolean.tv_kids_time",
       xboxEntityId: "input_boolean.xbox_kids_time"
     },
+    dogWalkEnabled: false,
+    dogWalkWindows: {
+      morning: { start: 6, end: 12 },
+      midday: { start: 11, end: 17 },
+      evening: { start: 16, end: 22 }
+    },
     dogWalkStatus: {
       morning: { childId: null, time: null },
       midday: { childId: null, time: null },
       evening: { childId: null, time: null }
     },
     parentPin: "0000",
-    parentEmail: "csepregi.arthur@gmail.com",
+    parentEmail: parentEmail || "",
     emailsSent: [],
-    readingHistory: createDefaultReadingHistory(),
-    suggestions: [
-      {
-        id: "sug-dominic-skate",
-        childId: "dominic",
-        childName: "Dominic",
-        type: "reward",
-        title: "🛹 30 de minute extra de Skateboarding",
-        description: "Aș vrea să pot cumpăra 30 de minute de dat cu skate-ul pe alee cu băieții după amiază.",
-        proposedPointsOrCost: 40,
-        proposedDurationMinutes: 30,
-        status: "pending",
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: "sug-sofia-plants",
-        childId: "sofia",
-        childName: "Sofia",
-        type: "activity",
-        title: "🪴 Udarea și curățenia plantelor de pe terasă",
-        description: "Pot să primesc puncte dacă curăț frunzele uscate de la mușcate și ud toate plantele de pe terasă și living?",
-        proposedPointsOrCost: 50,
-        status: "pending",
-        createdAt: new Date().toISOString()
-      }
-    ],
-    pointsHistory: createDefaultPointsHistory(),
-    activityTimeLogs: createDefaultActivityTimeLogs(),
+    readingHistory: [],
+    suggestions: [],
+    pointsHistory: [],
+    activityTimeLogs: [],
     customRewards: [],
+    screenTimeRequests: [],
     smtpConfig: {
       enabled: false,
       host: "smtp.gmail.com",
@@ -878,7 +678,7 @@ const loadDB = (overrideEmail?: string): any => {
         changed = true;
       }
       if (!db.parentEmail) {
-        db.parentEmail = parentEmail || "csepregi.arthur@gmail.com";
+        db.parentEmail = parentEmail || "";
         changed = true;
       }
       if (!db.emailsSent) {
@@ -886,7 +686,7 @@ const loadDB = (overrideEmail?: string): any => {
         changed = true;
       }
       if (!db.readingHistory) {
-        db.readingHistory = createDefaultReadingHistory();
+        db.readingHistory = [];
         changed = true;
       }
       if (!db.suggestions) {
@@ -895,6 +695,14 @@ const loadDB = (overrideEmail?: string): any => {
       }
       if (!db.customRewards) {
         db.customRewards = [];
+        changed = true;
+      }
+      if (db.dogWalkEnabled === undefined) {
+        db.dogWalkEnabled = false;
+        changed = true;
+      }
+      if (!db.dogWalkWindows) {
+        db.dogWalkWindows = { morning: { start: 6, end: 12 }, midday: { start: 11, end: 17 }, evening: { start: 16, end: 22 } };
         changed = true;
       }
       if (!db.tomorrowSchedule) {
@@ -913,11 +721,11 @@ const loadDB = (overrideEmail?: string): any => {
         changed = true;
       }
       if (!db.pointsHistory) {
-        db.pointsHistory = createDefaultPointsHistory();
+        db.pointsHistory = [];
         changed = true;
       }
       if (!db.activityTimeLogs) {
-        db.activityTimeLogs = createDefaultActivityTimeLogs();
+        db.activityTimeLogs = [];
         changed = true;
       }
       if (!db.screenTimeRequests) {
@@ -929,15 +737,8 @@ const loadDB = (overrideEmail?: string): any => {
       }
       return db;
     } else {
-      // Create a fresh copy of the default DB for this parent
-      let baseState: any;
-      if (fs.existsSync(DB_PATH)) {
-        const raw = fs.readFileSync(DB_PATH, "utf-8");
-        baseState = JSON.parse(raw);
-      } else {
-        baseState = createDefaultState();
-      }
-      baseState.parentEmail = parentEmail || "csepregi.arthur@gmail.com";
+      // Create a fresh default DB for this parent
+      const baseState = createDefaultState(parentEmail);
       baseState.lastUpdated = new Date().toISOString();
       saveDB(baseState);
       return baseState;
@@ -1034,7 +835,7 @@ const awardPointsForReading = (db: any, childId: string, task: any, correctCount
 
 // HELPER: Send parent email notification (simulated with database archive logs & console dump)
 const sendParentEmail = (db: any, subject: string, title: string, childName: string, avatar: string, bodyContentHtml: string, currentPoints: number) => {
-  const targetEmail = db.parentEmail || "csepregi.arthur@gmail.com";
+  const targetEmail = db.parentEmail || "";
   
   const fullHtml = `
 <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
@@ -1252,7 +1053,21 @@ setInterval(async () => {
 function executeDailyTransition(db: any, dayLabel: string) {
   // Update daysSinceLastReading
   db.children.forEach((child: any) => {
+    const wasWithinGrace = child.daysSinceLastReading < 3;
     child.daysSinceLastReading += 1;
+    
+    // Streak lost tracking — depășește perioada de grație de 3 zile
+    if (wasWithinGrace && child.daysSinceLastReading >= 3 && child.readingStreak > 0) {
+      const lostStreak = child.readingStreak;
+      child.readingStreak = 0;
+      analyticsService.trackEvent({
+        eventName: "streak_lost",
+        familyId: db.meta?.familyId || null,
+        childId: child.id,
+        properties: { lostStreak, childName: child.name, daysSinceLastReading: child.daysSinceLastReading },
+        source: "server",
+      });
+    }
     
     // Load evening planning if exists for this child
     const schedule = db.tomorrowSchedule ? db.tomorrowSchedule[child.id] : null;
@@ -1311,126 +1126,20 @@ function executeDailyTransition(db: any, dayLabel: string) {
     evening: { childId: null, time: null }
   };
   
-  // Clear any existing active tasks and repopulate standard chores
-  db.activeTasks = [
-    {
-      id: `dominic-chore-vacuum-${Date.now()}`,
-      childId: "dominic",
-      name: "Aspirat în Cameră & Hol",
-      type: "chore",
-      description: "Aspiră cu atenție camera proprie și holul de la intrare folosind aspiratorul vertical inteligent.",
-      points: 70,
-      status: "pending"
-    },
-    {
-      id: `dominic-chore-room-${Date.now()}`,
-      childId: "dominic",
-      name: "Curățenie în Cameră",
-      type: "chore",
-      description: "Sortează jucăriile în cutii, fă-ți patul excelent și ordonează-ți cărțile pe bibliotecă.",
-      points: 60,
-      status: "pending"
-    },
-    {
-      id: `dominic-chore-dishes-${Date.now()}`,
-      childId: "dominic",
-      name: "Clătire & Aranjare Vase",
-      type: "chore",
-      description: "Ajută-ți părinții clătind ușor farfuriile și așezându-le ordonat în mașina de spălat.",
-      points: 50,
-      status: "pending"
-    },
-    {
-      id: `dominic-chore-clothes-${Date.now()}`,
-      childId: "dominic",
-      name: "Sortare Haine de Spălat",
-      type: "chore",
-      description: "Adună hainele lăsate în cameră și sortează-le pe culori (coșul alb vs coșul colorat).",
-      points: 40,
-      status: "pending"
-    },
-    {
-      id: `dominic-hygiene-morning-${Date.now()}`,
-      childId: "dominic",
-      name: "🧼 Igienă de Dimineață",
-      type: "chore",
-      description: "Spală-te pe dinți timp de 2 minute, spală-te bine pe față, piaptănă-te și îmbracă-te cu haine curate de vacanță.",
-      points: 30,
-      status: "pending"
-    },
-    {
-      id: `dominic-hygiene-evening-${Date.now()}`,
-      childId: "dominic",
-      name: "🚿 Igienă de Seară",
-      type: "chore",
-      description: "Fă un duș sau o baie revigorantă, spală-te corect pe dinți înainte de culcare și pune-ți pijamalele curate.",
-      points: 30,
-      status: "pending"
-    },
-    {
-      id: `sofia-chore-vacuum-${Date.now()}`,
-      childId: "sofia",
-      name: "Aspirat Living & Hol Mare",
-      type: "chore",
-      description: "Aspiră covorul și parchetul din living, holul de legătură și sub biblioteca principală.",
-      points: 85,
-      status: "pending"
-    },
-    {
-      id: `sofia-chore-room-${Date.now()}`,
-      childId: "sofia",
-      name: "Curățenie Generală & Praf",
-      type: "chore",
-      description: "Șterge praful pe rafturi, pe blatul de bucătărie și living, și aranjează pernele canapelei ca la carte.",
-      points: 80,
-      status: "pending"
-    },
-    {
-      id: `sofia-chore-dishes-${Date.now()}`,
-      childId: "sofia",
-      name: "Spălare Manuală & Ordonat Vase",
-      type: "chore",
-      description: "Spală tigaia și cratița mare, golește vasele curate din mașina de spălat și așază-le în dulapul corespunzător.",
-      points: 75,
-      status: "pending"
-    },
-    {
-      id: `sofia-chore-washing-${Date.now()}`,
-      childId: "sofia",
-      name: "Operat Mașină de Spălat Haine",
-      type: "chore",
-      description: "Sortează haina murdară, adaugă capsule de detergent și balsam de rufe, selectează Eco 40° și pornește mașina.",
-      points: 70,
-      status: "pending"
-    },
-    {
-      id: `sofia-chore-ironing-${Date.now()}`,
-      childId: "sofia",
-      name: "Călcat Tricouri & Haine Simple",
-      type: "chore",
-      description: "Folosind stația de călcat setată la putere medie, calcă cu atenție 3 tricouri și întinde-le frumos pe umeraș în sifonier.",
-      points: 90,
-      status: "pending"
-    },
-    {
-      id: `sofia-hygiene-morning-${Date.now()}`,
-      childId: "sofia",
-      name: "🧼 Igienă de Dimineață",
-      type: "chore",
-      description: "Rutina completă de dimineață: spălat pe dinți, curățarea tenului/spălat pe față, pieptănat și haine curate pentru o zi excelentă.",
-      points: 30,
-      status: "pending"
-    },
-    {
-      id: `sofia-hygiene-evening-${Date.now()}`,
-      childId: "sofia",
-      name: "🚿 Igienă de Seară",
-      type: "chore",
-      description: "Duș sau baie completă, igienă dentară de seară temeinică și așezat pijamale curate pentru un somn odihnitor.",
-      points: 30,
-      status: "pending"
-    }
-  ];
+  // Generează sarcini dinamice pentru fiecare copil în funcție de vârstă
+  const newActiveTasks: any[] = [];
+  (db.children || []).forEach((child: any) => {
+    const isOlder = child.age >= 12;
+    const chores = generateDefaultChoresForChild(child.id, child.name, isOlder);
+    chores.forEach((chore: any) => {
+      newActiveTasks.push({
+        ...chore,
+        id: `${chore.id}-${Date.now()}`,
+        status: "pending"
+      });
+    });
+  });
+  db.activeTasks = newActiveTasks;
 
   // Append scheduled suggestions as active tasks for today!
   if (db.suggestions) {
@@ -1621,30 +1330,29 @@ app.post("/api/task/claim-walk", async (req, res) => {
   const { childId, slot, photoBase64 } = req.body; // slot: "morning" | "midday" | "evening", photoBase64 containing proof
   const db = loadDB();
   
+  // Verifică dacă plimbatul câinelui e activat pentru această familie
+  if (!db.dogWalkEnabled) {
+    return res.status(400).json({ error: "Plimbatul câinelui nu este activat pentru familia ta. Activează-l din panoul părinte." });
+  }
+  
   const child = db.children.find((c: any) => c.id === childId);
   if (!child) return res.status(404).json({ error: "Child not found." });
   
   const slotData = db.dogWalkStatus[slot];
   if (!slotData) return res.status(400).json({ error: "Invalid slot type." });
 
-  // Hour validation to prevent claiming morning walk in the afternoon / evening, etc.
+  // Validatează intervalele orare configurabile per familie
   const currentHour = getRomanianHour();
-  if (slot === "morning") {
-    if (currentHour >= 12) {
+  const windows = db.dogWalkWindows || {
+    morning: { start: 6, end: 12 },
+    midday: { start: 11, end: 17 },
+    evening: { start: 16, end: 22 }
+  };
+  const win = windows[slot];
+  if (win) {
+    if (currentHour < win.start || currentHour >= win.end) {
       return res.status(400).json({ 
-        error: `Ora de plimbare de dimineață a trecut! Nu mai poți confirma plimbarea de dimineață după-amiaza (este ora ${currentHour}:00).` 
-      });
-    }
-  } else if (slot === "midday") {
-    if (currentHour < 11 || currentHour >= 17) {
-      return res.status(400).json({ 
-        error: `Plimbarea de la prânz poate fi confirmată doar în intervalul orar 11:00 - 17:00 (este ora ${currentHour}:00).` 
-      });
-    }
-  } else if (slot === "evening") {
-    if (currentHour < 16) {
-      return res.status(400).json({ 
-        error: `Plimbarea de seară poate fi confirmată doar după ora 16:00 (este ora ${currentHour}:00).` 
+        error: `Plimbarea de ${slot === 'morning' ? 'dimineață' : slot === 'midday' ? 'prânz' : 'seară'} poate fi confirmată doar între ${win.start}:00 - ${win.end}:00 (acum e ora ${currentHour}:00).` 
       });
     }
   }
@@ -2810,6 +2518,15 @@ app.post("/api/store/buy", async (req, res) => {
     type: "success"
   });
 
+  // Analytics
+  analyticsService.trackEvent({
+    eventName: "reward_claimed",
+    familyId: db.meta?.familyId || null,
+    childId: child.id,
+    properties: { rewardId: reward.id, rewardName: reward.name, costPoints: reward.costPoints, timerAdded },
+    source: "web",
+  });
+
   // DISPATCH SIMULATED OUTBOX EMAIL
   sendParentEmail(
     db,
@@ -3515,7 +3232,7 @@ app.post("/api/task/claim-streak-bonus", (req, res) => {
 
 // POST save parent-specific config settings
 app.post("/api/parent/save-config", (req, res) => {
-  const { parentEmail, smtpConfig } = req.body;
+  const { parentEmail, smtpConfig, dogWalkEnabled, dogWalkWindows } = req.body;
   const db = loadDB();
   
   if (parentEmail) {
@@ -3531,19 +3248,33 @@ app.post("/api/parent/save-config", (req, res) => {
       secure: smtpConfig.secure || false
     };
   }
+  if (dogWalkEnabled !== undefined) {
+    db.dogWalkEnabled = !!dogWalkEnabled;
+  }
+  if (dogWalkWindows) {
+    db.dogWalkWindows = {
+      morning: { start: Number(dogWalkWindows.morning?.start) || 6, end: Number(dogWalkWindows.morning?.end) || 12 },
+      midday: { start: Number(dogWalkWindows.midday?.start) || 11, end: Number(dogWalkWindows.midday?.end) || 17 },
+      evening: { start: Number(dogWalkWindows.evening?.start) || 16, end: Number(dogWalkWindows.evening?.end) || 22 }
+    };
+  }
+
+  const notifParts: string[] = [];
+  if (smtpConfig?.enabled) notifParts.push("Email SMTP activat");
+  if (dogWalkEnabled !== undefined) notifParts.push(`Plimbat câine: ${dogWalkEnabled ? 'ACTIVAT 🐶' : 'DEZACTIVAT'}`);
 
   db.notifications.unshift({
     id: `config-save-${Date.now()}`,
     childName: "Părinte",
-    message: smtpConfig?.enabled 
-      ? `Configurația e-mailului (${db.parentEmail}) și serverului SMTP au fost actualizate și activate!`
-      : `Configurația e-mailului a fost modificată în: ${db.parentEmail}.`,
+    message: notifParts.length > 0 
+      ? `Configurare salvată: ${notifParts.join(', ')}.`
+      : `Configurația a fost actualizată.`,
     timestamp: new Date().toISOString(),
     type: "info"
   });
 
   saveDB(db);
-  res.json({ success: true, parentEmail: db.parentEmail, smtpConfig: db.smtpConfig, emailsSent: db.emailsSent || [] });
+  res.json({ success: true, parentEmail: db.parentEmail, smtpConfig: db.smtpConfig, dogWalkEnabled: db.dogWalkEnabled, dogWalkWindows: db.dogWalkWindows, emailsSent: db.emailsSent || [] });
 });
 
 // POST test SMTP connection configuration
@@ -3603,7 +3334,7 @@ app.get("/api/parent/emails", (req, res) => {
   const db = loadDB();
   res.json({ 
     emails: db.emailsSent || [], 
-    parentEmail: db.parentEmail || "csepregi.arthur@gmail.com",
+    parentEmail: db.parentEmail || "",
     smtpConfig: db.smtpConfig || { enabled: false, host: "smtp.gmail.com", port: 587, user: "", pass: "", secure: false }
   });
 });
@@ -3616,7 +3347,7 @@ app.get("/api/parent/emails", (req, res) => {
 // is returned so the client can reconcile.
 // ═══════════════════════════════════════════════════════════════════
 
-app.post("/api/sync/action", (req, res) => {
+app.post("/api/sync/action", authMiddleware, (req, res) => {
   const { action, childId, activityId, taskId, payload } = req.body;
   const db = loadDB();
 
@@ -3753,7 +3484,7 @@ app.post("/api/sync/action", (req, res) => {
 });
 
 // POST sync batch — process multiple actions atomically
-app.post("/api/sync/batch", (req, res) => {
+app.post("/api/sync/batch", authMiddleware, (req, res) => {
   const { actions } = req.body;
   if (!Array.isArray(actions) || actions.length === 0) {
     return res.status(400).json({ success: false, error: "Missing actions array" });
@@ -3800,12 +3531,131 @@ app.post("/api/sync/batch", (req, res) => {
 // ─── AI Service Health Check ─────────────────────────────────────────
 app.get("/api/ai/status", (req, res) => {
   try {
-    const { aiService } = require("./server/ai");
+    const { aiService } = require("./ai");
     res.json(aiService.getStatus());
   } catch {
     res.json({ provider: "unknown", available: false, queueEnabled: false });
   }
 });
+
+// ═══════════════════════════════════════════════════════════════════
+// PROMETHEUS METRICS — monitorizare (înainte de catch-all *)
+// ═══════════════════════════════════════════════════════════════════
+import promClient from "prom-client";
+
+// Colectează metrici implicite (memorie, CPU, even loop, etc.)
+const collectDefaultMetrics = promClient.collectDefaultMetrics;
+collectDefaultMetrics({ register: promClient.register });
+
+// Contor de request-uri pe rute
+const httpRequestCounter = new promClient.Counter({
+  name: "vacanta_http_requests_total",
+  help: "Total number of HTTP requests",
+  labelNames: ["method", "route", "status_code"],
+});
+
+// Contor de task-uri completate
+const tasksCompletedCounter = new promClient.Counter({
+  name: "vacanta_tasks_completed_total",
+  help: "Total number of tasks completed",
+  labelNames: ["child_id", "task_type"],
+});
+
+// Gauge pentru punctele copiilor
+const childrenPointsGauge = new promClient.Gauge({
+  name: "vacanta_children_points",
+  help: "Current points per child",
+  labelNames: ["child_id", "child_name"],
+});
+
+// Gauge pentru utilizatori înregistrați
+const registeredUsersGauge = new promClient.Gauge({
+  name: "vacanta_users_registered_total",
+  help: "Total number of registered users",
+});
+
+// Gauge pentru utilizatori activi (care au făcut request-uri în ultimele 24h)
+const activeUsersGauge = new promClient.Gauge({
+  name: "vacanta_users_active_total",
+  help: "Number of active users in the last 24 hours",
+});
+
+// Set pentru urmărirea utilizatorilor activi (cu timestamp)
+const activeUsers = new Map<string, number>();
+const ACTIVE_USER_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 ore
+
+// Histogram pentru durata request-urilor
+const httpRequestDuration = new promClient.Histogram({
+  name: "vacanta_http_request_duration_seconds",
+  help: "HTTP request duration in seconds",
+  labelNames: ["method", "route"],
+  buckets: [0.1, 0.3, 0.5, 1, 2, 5, 10],
+});
+
+// Middleware de metrici pentru Express
+app.use((req, res, next) => {
+  const start = Date.now();
+  
+  // Urmărește utilizatorii activi
+  const parentEmail = (req.headers["x-parent-email"] as string) || 
+                       (req.query.parentEmail as string) || 
+                       (req.body?.email as string);
+  if (parentEmail) {
+    activeUsers.set(parentEmail.toLowerCase(), Date.now());
+  }
+  
+  res.on("finish", () => {
+    const duration = (Date.now() - start) / 1000;
+    const route = req.route?.path || req.path || "unknown";
+    httpRequestCounter.inc({ method: req.method, route, status_code: res.statusCode });
+    httpRequestDuration.observe({ method: req.method, route }, duration);
+  });
+  next();
+});
+
+// Endpoint pentru Prometheus (înainte de catch-all ca să nu fie prins de *)
+app.get("/metrics", async (_req, res) => {
+  // Actualizează gauge-urile cu datele curente
+  try {
+    const db = loadDB();
+    if (db.children) {
+      db.children.forEach((child: any) => {
+        childrenPointsGauge.set({ child_id: child.id, child_name: child.name }, child.points || 0);
+      });
+    }
+    
+    // Utilizatori înregistrați
+    const users = loadUsers();
+    registeredUsersGauge.set(users.length);
+    
+    // Utilizatori activi (care au făcut request-uri în ultimele 24h)
+    const now = Date.now();
+    let activeCount = 0;
+    for (const [email, lastSeen] of activeUsers.entries()) {
+      if (now - lastSeen < ACTIVE_USER_WINDOW_MS) {
+        activeCount++;
+      } else {
+        activeUsers.delete(email); // cleanup
+      }
+    }
+    activeUsersGauge.set(activeCount);
+    
+  } catch { /* ignore */ }
+  
+  res.set("Content-Type", promClient.register.contentType);
+  res.end(await promClient.register.metrics());
+});
+
+// Export pentru sync engine
+export { tasksCompletedCounter, childrenPointsGauge };
+
+// Health check
+app.get("/api/health", (_req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString(), db: "postgresql" });
+});
+
+// Montează rutele noi ÎNAINTE de catch-all
+app.use("/api/sync", syncRoutes);
 
 // Serve Vite preview / Static assets
 const viteDevMode = process.env.NODE_ENV !== "production";
@@ -3834,6 +3684,11 @@ if (!viteDevMode) {
   });
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// START SERVER
+// ═══════════════════════════════════════════════════════════════════
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running in ${viteDevMode ? "development" : "production"} on port ${PORT}`);
 });
+
+export { app };

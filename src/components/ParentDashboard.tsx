@@ -32,6 +32,8 @@ import {
   X
 } from "lucide-react";
 import { AppState, Child, NextDayTopicProposal, ParentNotification } from "../types";
+import { dashboardThemes } from "../styles/themes";
+import type { ThemeName } from "../styles/themes";
 
 const MARKETPLACE_TEMPLATES = [
   {
@@ -112,9 +114,13 @@ interface ParentDashboardProps {
   state: AppState;
   onRefresh: () => void;
   onLock?: () => void;
+  theme?: ThemeName;
+  onChangeTheme?: (theme: ThemeName) => void;
 }
 
-export default function ParentDashboard({ state, onRefresh, onLock }: ParentDashboardProps) {
+export default function ParentDashboard({ state, onRefresh, onLock, theme, onChangeTheme }: ParentDashboardProps) {
+  const dashboardStyles = dashboardThemes[theme || "nintendo"];
+
   // Custom secure iframe-friendly modal confirmations
   const [confirmModal, setConfirmModal] = useState<{
     title: string;
@@ -194,7 +200,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
   const [isSavingTomorrowSchedule, setIsSavingTomorrowSchedule] = useState(false);
 
   // Filters for activity time logging widget
-  const [timeFilterChild, setTimeFilterChild] = useState<"all" | "dominic" | "sofia">("all");
+  const [timeFilterChild, setTimeFilterChild] = useState<string>("all");
   const [timeFilterType, setTimeFilterType] = useState<"all" | "reading" | "quiz" | "dog_walk" | "chore">("all");
 
   // States for Activities Marketplace
@@ -719,6 +725,28 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
   return (
     <div className="space-y-8" id="parent-dashboard-root">
       
+      {/* Theme Selector */}
+      {onChangeTheme && (
+        <div className="flex items-center gap-2 justify-end mb-2">
+          <span className={`${dashboardStyles.label}`}>Temă:</span>
+          <div className="flex gap-1">
+            {(["nintendo", "duolingo", "pokemon", "minecraft"] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => onChangeTheme(t)}
+                className={`px-3 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-xl border-2 transition-all cursor-pointer ${
+                  theme === t
+                    ? dashboardStyles.button.substring(0, dashboardStyles.button.indexOf(' px-4')) + ' bg-indigo-500 text-white border-indigo-600'
+                    : "bg-white text-slate-600 border-slate-300 hover:border-slate-400"
+                }`}
+              >
+                {t === "nintendo" ? "🎮" : t === "duolingo" ? "🦉" : t === "pokemon" ? "⚡" : "⛏️"}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Banners */}
       {successBanner && (
         <div className="p-4 bg-emerald-50 border-2 border-emerald-300 rounded-3xl text-emerald-950 text-sm flex items-center gap-2 font-semibold shadow-xs">
@@ -735,14 +763,16 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
       )}
 
       {/* Titlu Secțiune */}
-      <div className="bg-slate-900 text-white rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 border-2 border-slate-950 shadow-sm">
+      <div className={dashboardStyles.header}>
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-slate-800 text-amber-400 rounded-2xl border border-slate-700">
-            <Shield className="w-6 h-6 animate-pulse" />
+          <div className="p-2.5 bg-black/20 rounded-2xl border border-white/20">
+            <Shield className="w-6 h-6" />
           </div>
           <div>
             <h2 className="text-xl font-black tracking-tight">Panou Control Părinți 🛡️</h2>
-            <p className="text-xs text-slate-400 mt-0.5 font-bold uppercase tracking-wide">Părinți: Arthur & Lavinia | Administrare copii, lecturi și Home Assistant</p>
+            <p className="text-xs text-white/70 mt-0.5 font-bold uppercase tracking-wide">
+              {state.parentEmail || "Părinți"} | Administrare copii, lecturi și configurare
+            </p>
           </div>
         </div>
 
@@ -782,7 +812,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
         
         {/* Statusul copiilor */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm">
+          <div className={`${dashboardStyles.card}`}>
             <h3 className="text-base font-black text-slate-900 border-b-2 border-slate-100 pb-4 mb-4 flex items-center gap-2 uppercase tracking-wide">
               <Users className="w-5 h-5 text-indigo-650" />
               Panou Monitoare Copii și Streaks de vacanță
@@ -792,7 +822,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
               {state.children.map((child) => {
                 const isForced = child.daysSinceLastReading >= 3;
                 return (
-                  <div key={child.id} className="p-5 rounded-3xl border-2 border-slate-100 bg-slate-50/10 space-y-4 shadow-2xs">
+                  <div key={child.id} className={`${dashboardStyles.subCard}`}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <span className="text-3xl p-2 bg-white rounded-2xl border-2 border-slate-100 shadow-xs">{child.avatar}</span>
@@ -882,45 +912,21 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
                     )}
 
                     <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="p-3 bg-white border border-slate-150 rounded-2xl flex flex-col justify-between">
+                      <div className={`${dashboardStyles.subCard} flex flex-col justify-between`}>
                         <div>
-                          <span className="text-slate-400 font-extrabold text-[9px] uppercase tracking-wider block">Puncte strânse</span>
-                          <div className="text-base font-black text-slate-900 mt-1">{child.points} Pcte</div>
+                          <span className={dashboardStyles.label}>Puncte strânse</span>
+                          <div className="text-base font-black mt-1">{child.points} Pcte</div>
                         </div>
-                        <div className="flex gap-1 mt-2 pt-2 border-t border-slate-100 items-center justify-between">
-                          <button
-                            onClick={() => handleQuickAdjustPoints(child.id, child.points, -10)}
-                            className="flex-1 py-1 px-1 text-[9px] font-black rounded bg-red-50 text-red-700 hover:bg-red-100 flex items-center justify-center border border-red-200 cursor-pointer active:scale-95 transition-all"
-                            title="Scade 10 puncte"
-                          >
-                            -10
-                          </button>
-                          <button
-                            onClick={() => handleQuickAdjustPoints(child.id, child.points, -50)}
-                            className="flex-1 py-1 px-1 text-[9px] font-black rounded bg-red-100 text-red-850 hover:bg-red-200 flex items-center justify-center border border-red-300 cursor-pointer active:scale-95 transition-all"
-                            title="Scade 50 puncte"
-                          >
-                            -50
-                          </button>
-                          <button
-                            onClick={() => handleQuickAdjustPoints(child.id, child.points, 10)}
-                            className="flex-1 py-1 px-1 text-[9px] font-black rounded bg-emerald-50 text-emerald-700 hover:bg-emerald-100 flex items-center justify-center border border-emerald-200 cursor-pointer active:scale-95 transition-all"
-                            title="Adaugă 10 puncte"
-                          >
-                            +10
-                          </button>
-                          <button
-                            onClick={() => handleQuickAdjustPoints(child.id, child.points, 50)}
-                            className="flex-1 py-1 px-1 text-[9px] font-black rounded bg-emerald-100 text-emerald-800 hover:bg-emerald-200 flex items-center justify-center border border-emerald-300 cursor-pointer active:scale-95 transition-all"
-                            title="Adaugă 50 puncte"
-                          >
-                            +50
-                          </button>
+                        <div className="flex gap-1 mt-2 pt-2 border-t items-center justify-between">
+                          <button onClick={() => handleQuickAdjustPoints(child.id, child.points, -10)} className={dashboardStyles.buttonRed + " text-[9px] py-1 px-1 flex-1"} title="Scade 10 puncte">-10</button>
+                          <button onClick={() => handleQuickAdjustPoints(child.id, child.points, -50)} className={dashboardStyles.buttonRed + " text-[9px] py-1 px-1 flex-1"} title="Scade 50 puncte">-50</button>
+                          <button onClick={() => handleQuickAdjustPoints(child.id, child.points, 10)} className={dashboardStyles.buttonGreen + " text-[9px] py-1 px-1 flex-1"} title="Adaugă 10 puncte">+10</button>
+                          <button onClick={() => handleQuickAdjustPoints(child.id, child.points, 50)} className={dashboardStyles.buttonGreen + " text-[9px] py-1 px-1 flex-1"} title="Adaugă 50 puncte">+50</button>
                         </div>
                       </div>
-                      <div className="p-3 bg-white border border-slate-150 rounded-2xl">
-                        <span className="text-slate-400 font-extrabold text-[9px] uppercase tracking-wider block">Streak lectură</span>
-                        <div className="text-base font-black text-indigo-600 mt-1">{child.readingStreak} zile</div>
+                      <div className={`${dashboardStyles.subCard}`}>
+                        <span className={dashboardStyles.label}>Streak lectură</span>
+                        <div className="text-base font-black mt-1">{child.readingStreak} zile</div>
                       </div>
                     </div>
 
@@ -965,7 +971,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
 
         {/* Plimbat Câine Jurnal */}
         <div className="space-y-6">
-          <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm">
+          <div className={`${dashboardStyles.card}`}>
             <h3 className="text-base font-black text-slate-900 border-b-2 border-slate-100 pb-4 mb-4 flex items-center gap-2 uppercase tracking-wide">
               <Activity className="w-5 h-5 text-indigo-650" />
               Sarcina Câine: Jurnal Plimbări
@@ -1031,7 +1037,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
       </div>
 
       {/* SECTIUNEA PLANIFICATOR DE SEARĂ: TIMP ECRAN SPRE ALOCARE */}
-      <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm" id="parent-evening-planner">
+      <div className={`${dashboardStyles.card}`} id="parent-evening-planner">
         <div className="flex items-center gap-3 border-b-2 border-slate-100 pb-4 mb-4">
           <div className="p-2 bg-indigo-50 text-indigo-700 rounded-xl border border-indigo-150">
             <Calendar className="w-5 h-5" />
@@ -1052,7 +1058,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {state.children.map((child) => (
-            <div key={child.id} className="p-5 rounded-2xl border-2 border-slate-100 bg-slate-50/15 space-y-4">
+            <div key={child.id} className={`${dashboardStyles.subCard}`}>
               <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
                 <span className="text-2xl">{child.avatar}</span>
                 <span className="font-extrabold text-sm text-slate-950">Planificare Timp: {child.name}</span>
@@ -1117,7 +1123,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
       </div>
 
       {/* 6. MARKETPLACE DE ACTIVITĂȚI */}
-      <div className="bg-white rounded-3xl p-6 border-4 border-slate-900 shadow-[6px_6px_0_0_#1e293b] mb-8" id="parent-activity-marketplace-widget">
+      <div className={`${dashboardStyles.card} mb-8`} id="parent-activity-marketplace-widget">
         <div className="flex items-center gap-3 border-b-3 border-slate-100 pb-4 mb-5">
           <div className="p-2.5 bg-[#e0f7ff] text-[#1cb0f6] rounded-2xl border-2 border-slate-900 shadow-[2px_2px_0_0_#1e293b]">
             <Users className="w-6 h-6 animate-bounce" />
@@ -1244,7 +1250,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
           </div>
 
           {/* Partea Dreaptă: Formular activitate personalizată instant */}
-          <div className="lg:col-span-4 bg-slate-50/50 p-5 rounded-3xl border-2 border-slate-200 shadow-2xs h-full justify-between flex flex-col">
+          <div className={`lg:col-span-4 ${dashboardStyles.subCard} h-full justify-between flex flex-col`}>
             <div className="space-y-4">
               <div className="border-b border-slate-200 pb-2 mb-2">
                 <span className="text-xs font-black text-slate-900 uppercase tracking-wider block">Custom Creator 🪄</span>
@@ -1322,7 +1328,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
       </div>
 
       {/* SECTIUNEA EVOLUTIE PUNCTE COPII (7 ZILE) */}
-      <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm mb-8" id="parent-points-chart-widget">
+      <div className={`${dashboardStyles.card} mb-8`} id="parent-points-chart-widget">
         <h3 className="text-base font-black text-slate-900 border-b-2 border-slate-100 pb-4 mb-4 flex items-center gap-2 uppercase tracking-wide">
           <Activity className="w-5 h-5 text-indigo-650" />
           Evoluția Punctelor în Ultimele 7 Zile 📊
@@ -1397,7 +1403,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
       </div>
 
       {/* SECTIUNEA TIMP PETRECUT PE ACTIVITATI (LOGURI EXACTE) */}
-      <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm mb-8" id="parent-activity-time-widget">
+      <div className={dashboardStyles.card + " mb-8"} id="parent-activity-time-widget">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between border-b-2 border-slate-100 pb-4 mb-6 gap-3">
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-indigo-600" />
@@ -1412,18 +1418,19 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
             <select
               value={timeFilterChild}
               onChange={(e) => setTimeFilterChild(e.target.value as any)}
-              className="bg-slate-50 border-2 border-slate-200 hover:border-slate-300 text-slate-800 text-xs font-bold rounded-xl px-2.5 py-1.5 focus:outline-none transition cursor-pointer"
+              className={dashboardStyles.select}
             >
               <option value="all">Toți copiii</option>
-              <option value="dominic">Dominic 🐶</option>
-              <option value="sofia">Sofia 🐈</option>
+              {state.children.map((c: any) => (
+                <option key={c.id} value={c.id}>{c.name} {c.avatar}</option>
+              ))}
             </select>
 
             {/* Type selector */}
             <select
               value={timeFilterType}
               onChange={(e) => setTimeFilterType(e.target.value as any)}
-              className="bg-slate-50 border-2 border-slate-200 hover:border-slate-300 text-slate-800 text-xs font-bold rounded-xl px-2.5 py-1.5 focus:outline-none transition cursor-pointer"
+              className={dashboardStyles.select}
             >
               <option value="all">Toate tipurile</option>
               <option value="reading">Lectură 📚</option>
@@ -1449,22 +1456,6 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
           });
 
           // Calculate summary stats
-          const dominicLogs = logs.filter(l => l.childId === "dominic");
-          const sofiaLogs = logs.filter(l => l.childId === "sofia");
-
-          const sumSeconds = (arr: typeof logs) => arr.reduce((acc, curr) => acc + curr.durationSeconds, 0);
-          
-          const domTotalSec = sumSeconds(dominicLogs);
-          const sofTotalSec = sumSeconds(sofiaLogs);
-
-          const domReadSec = sumSeconds(dominicLogs.filter(l => l.activityType === "reading"));
-          const domQuizSec = sumSeconds(dominicLogs.filter(l => l.activityType === "quiz"));
-          const domOtherSec = domTotalSec - domReadSec - domQuizSec;
-
-          const sofReadSec = sumSeconds(sofiaLogs.filter(l => l.activityType === "reading"));
-          const sofQuizSec = sumSeconds(sofiaLogs.filter(l => l.activityType === "quiz"));
-          const sofOtherSec = sofTotalSec - sofReadSec - sofQuizSec;
-
           const formatDurationMin = (sec: number) => {
             const m = Math.floor(sec / 60);
             const s = sec % 60;
@@ -1473,101 +1464,56 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
 
           return (
             <div className="space-y-6">
-              {/* Aggregation cards */}
+              {/* Aggregation cards — generate dinamic din state.children */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Dominic Box */}
-                {(timeFilterChild === "all" || timeFilterChild === "dominic") && (
-                  <div className="bg-slate-50 rounded-2xl p-4 border-2 border-indigo-100 flex flex-col justify-between">
-                    <div className="flex items-center justify-between border-b pb-2 mb-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">🐶</span>
-                        <h4 className="font-black text-xs text-indigo-950 uppercase tracking-wide">Dominic</h4>
-                      </div>
-                      <span className="px-2.5 py-0.5 text-[11px] font-black uppercase text-indigo-700 bg-indigo-100 rounded-full">
-                        Total: {formatDurationMin(domTotalSec)}
-                      </span>
-                    </div>
-                    
-                    <div className="space-y-2 text-xs font-semibold">
-                      <div className="flex justify-between items-center text-slate-600">
-                        <span className="flex items-center gap-1.5"><FileText className="w-3.5 h-3.5 text-emerald-500" /> Lectură:</span>
-                        <span className="font-extrabold text-slate-900">{formatDurationMin(domReadSec)}</span>
-                      </div>
-                      <div className="flex justify-between items-center text-slate-600">
-                        <span className="flex items-center gap-1.5"><Lightbulb className="w-3.5 h-3.5 text-sky-500" /> Chestionare:</span>
-                        <span className="font-extrabold text-slate-900">{formatDurationMin(domQuizSec)}</span>
-                      </div>
-                      <div className="flex justify-between items-center text-slate-600">
-                        <span className="flex items-center gap-1.5"><Activity className="w-3.5 h-3.5 text-violet-500" /> Plimbări / Chores:</span>
-                        <span className="font-extrabold text-slate-900">{formatDurationMin(domOtherSec)}</span>
-                      </div>
-                    </div>
+                {state.children
+                  .filter((c: any) => timeFilterChild === "all" || timeFilterChild === c.id)
+                  .map((child: any, idx: number) => {
+                    const childLogs = logs.filter((l: any) => l.childId === child.id);
+                    const readSec = childLogs.filter((l: any) => l.activityType === "reading").reduce((a: number, b: any) => a + (b.durationSeconds || 0), 0);
+                    const quizSec = childLogs.filter((l: any) => l.activityType === "quiz").reduce((a: number, b: any) => a + (b.durationSeconds || 0), 0);
+                    const otherSec = childLogs.filter((l: any) => !["reading","quiz"].includes(l.activityType)).reduce((a: number, b: any) => a + (b.durationSeconds || 0), 0);
+                    const totalSec = readSec + quizSec + otherSec;
+                    const colors = ["border-indigo-100","border-rose-100","border-emerald-100","border-amber-100"];
+                    const tagColors = ["text-indigo-700 bg-indigo-100","text-rose-700 bg-rose-100","text-emerald-700 bg-emerald-100","text-amber-700 bg-amber-100"];
 
-                    <div className="mt-3 pt-3 border-t">
-                      <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden flex">
-                        <div 
-                          style={{ width: `${domTotalSec > 0 ? (domReadSec / domTotalSec) * 100 : 0}%` }} 
-                          className="bg-emerald-500 h-full" 
-                        />
-                        <div 
-                          style={{ width: `${domTotalSec > 0 ? (domQuizSec / domTotalSec) * 100 : 0}%` }} 
-                          className="bg-sky-500 h-full" 
-                        />
-                        <div 
-                          style={{ width: `${domTotalSec > 0 ? (domOtherSec / domTotalSec) * 100 : 0}%` }} 
-                          className="bg-violet-500 h-full" 
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
+                    return (
+                      <div key={child.id} className={`${dashboardStyles.subCard} flex flex-col justify-between`}>
+                        <div className="flex items-center justify-between border-b pb-2 mb-3">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xl">{child.avatar || '👤'}</span>
+                            <h4 className="font-black text-xs uppercase tracking-wide">{child.name}</h4>
+                          </div>
+                          <span className={`px-2.5 py-0.5 text-[11px] font-black uppercase rounded-full ${tagColors[idx % tagColors.length]}`}>
+                            Total: {formatDurationMin(totalSec)}
+                          </span>
+                        </div>
+                        
+                        <div className="space-y-2 text-xs font-semibold">
+                          <div className="flex justify-between items-center text-slate-600">
+                            <span className="flex items-center gap-1.5"><FileText className="w-3.5 h-3.5 text-emerald-500" /> Lectură:</span>
+                            <span className="font-extrabold text-slate-900">{formatDurationMin(readSec)}</span>
+                          </div>
+                          <div className="flex justify-between items-center text-slate-600">
+                            <span className="flex items-center gap-1.5"><Lightbulb className="w-3.5 h-3.5 text-sky-500" /> Chestionare:</span>
+                            <span className="font-extrabold text-slate-900">{formatDurationMin(quizSec)}</span>
+                          </div>
+                          <div className="flex justify-between items-center text-slate-600">
+                            <span className="flex items-center gap-1.5"><Activity className="w-3.5 h-3.5 text-violet-500" /> Plimbări / Chores:</span>
+                            <span className="font-extrabold text-slate-900">{formatDurationMin(otherSec)}</span>
+                          </div>
+                        </div>
 
-                {/* Sofia Box */}
-                {(timeFilterChild === "all" || timeFilterChild === "sofia") && (
-                  <div className="bg-slate-50 rounded-2xl p-4 border-2 border-rose-100 flex flex-col justify-between">
-                    <div className="flex items-center justify-between border-b pb-2 mb-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">🐈</span>
-                        <h4 className="font-black text-xs text-rose-950 uppercase tracking-wide">Sofia</h4>
+                        <div className="mt-3 pt-3 border-t">
+                          <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden flex">
+                            <div style={{ width: `${totalSec > 0 ? (readSec / totalSec) * 100 : 0}%` }} className="bg-emerald-500 h-full" />
+                            <div style={{ width: `${totalSec > 0 ? (quizSec / totalSec) * 100 : 0}%` }} className="bg-sky-500 h-full" />
+                            <div style={{ width: `${totalSec > 0 ? (otherSec / totalSec) * 100 : 0}%` }} className="bg-violet-500 h-full" />
+                          </div>
+                        </div>
                       </div>
-                      <span className="px-2.5 py-0.5 text-[11px] font-black uppercase text-rose-700 bg-rose-100 rounded-full">
-                        Total: {formatDurationMin(sofTotalSec)}
-                      </span>
-                    </div>
-                    
-                    <div className="space-y-2 text-xs font-semibold">
-                      <div className="flex justify-between items-center text-slate-600">
-                        <span className="flex items-center gap-1.5"><FileText className="w-3.5 h-3.5 text-emerald-500" /> Lectură:</span>
-                        <span className="font-extrabold text-slate-900">{formatDurationMin(sofReadSec)}</span>
-                      </div>
-                      <div className="flex justify-between items-center text-slate-600">
-                        <span className="flex items-center gap-1.5"><Lightbulb className="w-3.5 h-3.5 text-sky-500" /> Chestionare:</span>
-                        <span className="font-extrabold text-slate-900">{formatDurationMin(sofQuizSec)}</span>
-                      </div>
-                      <div className="flex justify-between items-center text-slate-600">
-                        <span className="flex items-center gap-1.5"><Activity className="w-3.5 h-3.5 text-violet-500" /> Plimbări / Chores:</span>
-                        <span className="font-extrabold text-slate-900">{formatDurationMin(sofOtherSec)}</span>
-                      </div>
-                    </div>
-
-                    <div className="mt-3 pt-3 border-t">
-                      <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden flex">
-                        <div 
-                          style={{ width: `${sofTotalSec > 0 ? (sofReadSec / sofTotalSec) * 100 : 0}%` }} 
-                          className="bg-emerald-500 h-full" 
-                        />
-                        <div 
-                          style={{ width: `${sofTotalSec > 0 ? (sofQuizSec / sofTotalSec) * 100 : 0}%` }} 
-                          className="bg-sky-500 h-full" 
-                        />
-                        <div 
-                          style={{ width: `${sofTotalSec > 0 ? (sofOtherSec / sofTotalSec) * 100 : 0}%` }} 
-                          className="bg-violet-500 h-full" 
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
+                    );
+                  })}
               </div>
 
               {/* TIMELINE LIST */}
@@ -1636,7 +1582,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
       </div>
 
       {/* 📊 RAPOARTE DETALIATE ȘI LOGURI SEPARATE PE COPII */}
-      <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm mb-8 animate-fade-in" id="parent-children-detailed-reports">
+      <div className={`${dashboardStyles.card} mb-8 animate-fade-in`} id="parent-children-detailed-reports">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-slate-100 pb-4 mb-6 gap-4">
           <div className="flex items-center gap-2">
             <div className="p-2 bg-rose-50 border border-rose-150 text-rose-755 rounded-2xl">
@@ -1925,7 +1871,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
       )}
 
       {/* SECTIUNEA TIMP ECRAN SOLICITAT & RECOMPENSE - VERIFICARE PARINTE */}
-      <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm mb-8 animate-fade-in" id="parent-screen-time-approvals">
+      <div className={`${dashboardStyles.card} mb-8 animate-fade-in`} id="parent-screen-time-approvals">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-slate-100 pb-4 mb-5">
           <div className="flex items-center gap-2">
             <div className="p-2 bg-indigo-50 border border-indigo-150 text-indigo-750 rounded-2xl">
@@ -2257,7 +2203,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
       </div>
 
       {/* SECȚIUNEA PROPUNERI & SUGESTII DE LA COPII */}
-      <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm" id="parent-suggestions-widget">
+      <div className={`${dashboardStyles.card}`} id="parent-suggestions-widget">
         <h3 className="text-base font-black text-slate-900 border-b-2 border-slate-100 pb-4 mb-4 flex items-center gap-2 uppercase tracking-wide">
           <Lightbulb className="w-5 h-5 text-indigo-650" />
           Propuneri și Cereri de la Copii 💡
@@ -2432,7 +2378,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
 
       
       {/* SECTIUNEA CITIT: DEFINIRE ȘI APROBARE TEMĂ DE LECTURĂ PENTRU MÂINE */}
-      <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm" id="parent-reading-proposals-widget">
+      <div className={`${dashboardStyles.card}`} id="parent-reading-proposals-widget">
         <h3 className="text-base font-black text-slate-900 border-b-2 border-slate-100 pb-4 mb-6 flex items-center gap-2 uppercase tracking-wide">
           <Lightbulb className="w-5 h-5 text-indigo-650" />
           Aprobare & Personalizare Lecturi de Vacanță (Mâine)
@@ -2445,7 +2391,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           
           {/* Dominic */}
-          <div className="p-5 rounded-3xl border-2 border-slate-200 bg-indigo-50/10 space-y-4 shadow-2xs">
+          <div className={`${dashboardStyles.subCard}`}>
             <div className="flex items-center gap-2 border-b-2 border-slate-200/50 pb-3">
               <span className="text-2xl p-1 bg-white rounded-xl border border-slate-150">👦</span>
               <h4 className="font-extrabold text-indigo-950 text-sm">Lectură Mâine: Dominic (10 ani)</h4>
@@ -2495,7 +2441,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
           </div>
 
           {/* Sofia */}
-          <div className="p-5 rounded-3xl border-2 border-slate-200 bg-slate-50/10 space-y-4 shadow-2xs">
+          <div className={`${dashboardStyles.subCard}`}>
             <div className="flex items-center gap-2 border-b-2 border-slate-200/50 pb-3">
               <span className="text-2xl p-1 bg-white rounded-xl border border-slate-150">🐈</span>
               <h4 className="font-extrabold text-slate-900 text-sm">Lectură Mâine: Sofia (14 ani)</h4>
@@ -2549,7 +2495,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
 
 
       {/* SECTIUNEA STATISTICI & EVALUARE DIDACTICĂ LECTURĂ */}
-      <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm" id="parent-reading-analytics-widget">
+      <div className={`${dashboardStyles.card}`} id="parent-reading-analytics-widget">
         <h3 className="text-base font-black text-slate-900 border-b-2 border-slate-100 pb-4 mb-6 flex items-center gap-2 uppercase tracking-wide">
           <FileText className="w-5 h-5 text-indigo-650" />
           Raport Didactic și Evaluare Lectură 📊
@@ -2562,7 +2508,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
         {/* Cărți copii mari */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Raport Sofia */}
-          <div className="p-5 rounded-3xl border-2 border-slate-200 bg-slate-50/10 space-y-4 shadow-2xs">
+          <div className={`${dashboardStyles.subCard}`}>
             <div className="flex items-center justify-between pb-2 border-b border-slate-200/50">
               <div className="flex items-center gap-2">
                 <span className="text-2xl p-1 bg-white rounded-xl border border-slate-150">🐈</span>
@@ -2595,7 +2541,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
           </div>
 
           {/* Raport Dominic */}
-          <div className="p-5 rounded-3xl border-2 border-slate-200 bg-indigo-50/5 space-y-4 shadow-2xs">
+          <div className={`${dashboardStyles.subCard}`}>
             <div className="flex items-center justify-between pb-2 border-b border-slate-200/50">
               <div className="flex items-center gap-2">
                 <span className="text-2xl p-1 bg-white rounded-xl border border-slate-150">👦</span>
@@ -2723,7 +2669,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
 
 
       {/* SECTIUNEA INTEGRARE HOME ASSISTANT */}
-      <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm" id="parent-homeassistant-integration-widget">
+      <div className={`${dashboardStyles.card}`} id="parent-homeassistant-integration-widget">
         <h3 className="text-base font-black text-slate-900 border-b-2 border-slate-100 pb-4 mb-4 flex items-center gap-2 uppercase tracking-wide">
           <Settings className="w-5 h-5 text-indigo-650" />
           Configurare Integrare Locală Home Assistant 🏠
@@ -2823,7 +2769,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
       </div>
 
       {/* SECTIUNEA NOTIFICĂRI E-MAIL PĂRINTI */}
-      <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm" id="parent-email-notifications-widget">
+      <div className={`${dashboardStyles.card}`} id="parent-email-notifications-widget">
         <h3 className="text-base font-black text-slate-900 border-b-2 border-slate-100 pb-4 mb-4 flex items-center gap-2 uppercase tracking-wide">
           <Mail className="w-5 h-5 text-indigo-650 animate-bounce" />
           Configurare Notificări & Rapoarte pe E-mail 📧
@@ -2836,7 +2782,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
           {/* Formular configurare e-mail */}
           <div className="lg:col-span-1 space-y-6">
             {/* Box 1: Adresă Destinație */}
-            <div className="p-5 rounded-3xl border-2 border-slate-200 bg-slate-50/5 hover:border-slate-350 transition duration-150 text-xs font-semibold">
+            <div className={`${dashboardStyles.subCard}`}>
               <h4 className="font-extrabold text-slate-900 mb-4 pb-2 border-b border-slate-100 text-[13px] uppercase tracking-wide flex items-center gap-1.5">
                 <Settings className="w-4 h-4 text-indigo-650" /> Adresă Destinație
               </h4>
@@ -2865,7 +2811,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
             </div>
 
             {/* Box 2: Server SMTP Custom */}
-            <div className="p-5 rounded-3xl border-2 border-slate-200 bg-slate-50/5 hover:border-slate-350 transition duration-150 text-xs font-semibold space-y-4">
+            <div className={`${dashboardStyles.subCard} text-xs font-semibold space-y-4`}>
               <h4 className="font-extrabold text-slate-900 pb-2 border-b border-slate-100 text-[13px] uppercase tracking-wide flex items-center justify-between">
                 <span className="flex items-center gap-1.5"><Server className="w-4 h-4 text-indigo-650" /> Server SMTP Custom (Real)</span>
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -2983,7 +2929,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
           </div>
 
           {/* Istoric e-mailuri trimise */}
-          <div className="lg:col-span-2 p-5 rounded-3xl border-2 border-slate-200 bg-slate-50/5 text-xs font-semibold">
+          <div className={`lg:col-span-2 ${dashboardStyles.subCard} text-xs font-semibold`}>
             <h4 className="font-extrabold text-slate-900 mb-4 pb-2 border-b border-slate-100 text-[13px] uppercase tracking-wide flex items-center justify-between">
               <span className="flex items-center gap-1.5"><Mail className="w-4 h-4 text-indigo-650" /> Jurnal E-mailuri Expediate</span>
               {isFetchingEmails ? (
@@ -3052,7 +2998,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
       </div>
 
       {/* SECTIUNEA SECURITATE COD PIN ADMIN */}
-      <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm" id="parent-security-pin-widget">
+      <div className={`${dashboardStyles.card}`} id="parent-security-pin-widget">
         <h3 className="text-base font-black text-slate-900 border-b-2 border-slate-100 pb-4 mb-4 flex items-center gap-2 uppercase tracking-wide">
           <Lock className="w-5 h-5 text-indigo-650" />
           Securitate: Reconfigurare Cod PIN Acces Părinți 🔐
@@ -3102,7 +3048,7 @@ export default function ParentDashboard({ state, onRefresh, onLock }: ParentDash
       </div>
 
       {/* JURNAL NOTIFICĂRI/TIMELINE EVENIMENTE */}
-      <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm" id="parent-audit-logger-widget">
+      <div className={`${dashboardStyles.card}`} id="parent-audit-logger-widget">
         <div className="flex items-center justify-between border-b-2 border-slate-100 pb-4 mb-4">
           <h3 className="text-base font-black text-slate-900 flex items-center gap-2 uppercase tracking-wide">
             <Bell className="w-5 h-5 text-indigo-650" />

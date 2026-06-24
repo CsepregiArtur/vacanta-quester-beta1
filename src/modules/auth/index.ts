@@ -72,7 +72,8 @@ export async function refreshAccessToken(): Promise<boolean> {
   if (!refreshToken) return false;
 
   try {
-    const res = await fetch("/api/auth/refresh", {
+    const doFetch = originalFetch || fetch;
+    const res = await doFetch("/api/auth/refresh", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refreshToken }),
@@ -109,11 +110,36 @@ export async function ensureValidToken(): Promise<string | null> {
   return token;
 }
 
+// ─── Verifică dacă URL-ul țintă este același origin ────────────────
+function isSameOrigin(input: RequestInfo | URL): boolean {
+  if (typeof input === "string") {
+    // Relative URL — same origin
+    if (input.startsWith("/")) return true;
+    try {
+      return new URL(input, location.origin).origin === location.origin;
+    } catch { return false; }
+  }
+  if (input instanceof URL) {
+    return input.origin === location.origin;
+  }
+  // Request object — check its URL
+  try {
+    return new URL(input.url, location.origin).origin === location.origin;
+  } catch { return false; }
+}
+
 // ─── Auth-Aware Fetch ────────────────────────────────────────────────
 export async function authFetch(
   input: RequestInfo | URL,
   init?: RequestInit
 ): Promise<Response> {
+  const doFetch = originalFetch || fetch;
+
+  // Pentru request-uri cross-origin (ex: Open-Meteo API), nu adăuga headere de auth
+  if (!isSameOrigin(input)) {
+    return doFetch(input, init);
+  }
+
   // Ensure we have a valid token first
   const token = await ensureValidToken();
   const loggedEmail = localStorage.getItem(USER_EMAIL_KEY);
@@ -126,7 +152,7 @@ export async function authFetch(
     headers.set("x-parent-email", loggedEmail);
   }
 
-  const response = await fetch(input, {
+  const response = await doFetch(input, {
     ...init,
     headers,
   });
@@ -137,19 +163,22 @@ export async function authFetch(
     if (refreshed) {
       const newToken = getAccessToken();
       headers.set("Authorization", `Bearer ${newToken}`);
-      return fetch(input, { ...init, headers });
+      return doFetch(input, { ...init, headers });
     }
   }
 
   return response;
 }
 
+// ─── Original fetch reference (captured before interceptor) ──────────
+let originalFetch: typeof window.fetch | null = null;
+
 // ─── Install global fetch interceptor ────────────────────────────────
 export function installAuthInterceptor(): void {
   if (typeof window === "undefined") return;
   if ((window.fetch as any).__authInstalled) return;
 
-  const originalFetch = window.fetch;
+  originalFetch = window.fetch;
   window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
     return authFetch(input, init);
   };

@@ -1,0 +1,32 @@
+name: vq_app
+description: Vacanta Quester - Aplicație premium pentru gestionarea activităților copiilor
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  sqflite: ^2.3.0           # SQLite local (Android, iOS)
+  path: ^1.9.0
+  http: ^1.2.0              # API calls
+  shared_preferences: ^2.2.0
+  connectivity_plus: ^5.0.0 # Detect online/offline
+  flutter_local_notifications: ^17.0.0
+  google_sign_in: ^6.2.0
+  sign_in_with_apple: ^5.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Fredoka
+      fonts:
+        - asset: assets/fonts/Fredoka-VariableFont.ttf

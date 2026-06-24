@@ -1,0 +1,245 @@
+{
+  "children": [
+    {
+      "id": "adrian",
+      "name": "adrian",
+      "age": 9,
+      "points": 80,
+      "avatar": "🐶",
+      "readingStreak": 0,
+      "daysSinceLastReading": 0,
+      "activeTimer": null
+    },
+    {
+      "id": "jonel",
+      "name": "jonel",
+      "age": 4,
+      "points": 80,
+      "avatar": "🐶",
+      "readingStreak": 0,
+      "daysSinceLastReading": 0,
+      "activeTimer": null
+    }
+  ],
+  "activeTasks": [
+    {
+      "id": "adrian-chore-vacuum",
+      "childId": "adrian",
+      "name": "Aspirat în Cameră & Hol",
+      "type": "chore",
+      "description": "Aspiră cu atenție camera de jocuri, holul și spațiile adiacente.",
+      "points": 70,
+      "status": "pending",
+      "category": "Household",
+      "streak": 3
+    },
+    {
+      "id": "adrian-chore-room",
+      "childId": "adrian",
+      "name": "Curățenie în Cameră",
+      "type": "chore",
+      "description": "Ordonează jucăriile primite în cutii, fă-ți patul excelent și pune cărțile pe rafturi.",
+      "points": 60,
+      "status": "pending",
+      "category": "Household",
+      "streak": 2
+    },
+    {
+      "id": "adrian-chore-dishes",
+      "childId": "adrian",
+      "name": "Aranjat și Clătit Vase",
+      "type": "chore",
+      "description": "Ajută-ți părinții clătind ușor farfuriile și așezându-le ordonat în dulapuri sau mașina de spălat.",
+      "points": 50,
+      "status": "pending",
+      "category": "Household",
+      "streak": 1
+    },
+    {
+      "id": "adrian-hygiene-morning",
+      "childId": "adrian",
+      "name": "🧼 Igienă de Dimineață",
+      "type": "chore",
+      "description": "Spală-te pe dinți timp de 2 minute, spală-te bine pe față, piaptănă-te și îmbracă-te cu haine curate de vacanță.",
+      "points": 30,
+      "status": "pending",
+      "category": "Household",
+      "streak": 5
+    },
+    {
+      "id": "adrian-hygiene-evening",
+      "childId": "adrian",
+      "name": "🚿 Igienă de Seară",
+      "type": "chore",
+      "description": "Duș sau baie revigorantă, igienă dentară de seară temeinică și așezat pijamale curate pentru somn.",
+      "points": 30,
+      "status": "pending",
+      "category": "Household",
+      "streak": 4
+    },
+    {
+      "id": "jonel-chore-vacuum",
+      "childId": "jonel",
+      "name": "Aspirat în Cameră & Hol",
+      "type": "chore",
+      "description": "Aspiră cu atenție camera de jocuri, holul și spațiile adiacente.",
+      "points": 70,
+      "status": "pending",
+      "category": "Household",
+      "streak": 3
+    },
+    {
+      "id": "jonel-chore-room",
+      "childId": "jonel",
+      "name": "Curățenie în Cameră",
+      "type": "chore",
+      "description": "Ordonează jucăriile primite în cutii, fă-ți patul excelent și pune cărțile pe rafturi.",
+      "points": 60,
+      "status": "pending",
+      "category": "Household",
+      "streak": 2
+    },
+    {
+      "id": "jonel-chore-dishes",
+      "childId": "jonel",
+      "name": "Aranjat și Clătit Vase",
+      "type": "chore",
+      "description": "Ajută-ți părinții clătind ușor farfuriile și așezându-le ordonat în dulapuri sau mașina de spălat.",
+      "points": 50,
+      "status": "pending",
+      "category": "Household",
+      "streak": 1
+    },
+    {
+      "id": "jonel-hygiene-morning",
+      "childId": "jonel",
+      "name": "🧼 Igienă de Dimineață",
+      "type": "chore",
+      "description": "Spală-te pe dinți timp de 2 minute, spală-te bine pe față, piaptănă-te și îmbracă-te cu haine curate de vacanță.",
+      "points": 30,
+      "status": "pending",
+      "category": "Household",
+      "streak": 5
+    },
+    {
+      "id": "jonel-hygiene-evening",
+      "childId": "jonel",
+      "name": "🚿 Igienă de Seară",
+      "type": "chore",
+      "description": "Duș sau baie revigorantă, igienă dentară de seară temeinică și așezat pijamale curate pentru somn.",
+      "points": 30,
+      "status": "pending",
+      "category": "Household",
+      "streak": 4
+    }
+  ],
+  "notifications": [
+    {
+      "id": "init-notification-1782331137983",
+      "childName": "Sistem",
+      "message": "Vacanța de vară a început! Aplicația Arcadia Smart Vacation a pornit cu succes. Adaugă copiii în panoul de administrare pentru a începe.",
+      "timestamp": "2026-06-24T19:58:57.983Z",
+      "type": "info"
+    }
+  ],
+  "topicProposals": [],
+  "homeAssistant": {
+    "url": "",
+    "token": "",
+    "enabled": false,
+    "tvEntityId": "input_boolean.tv_kids_time",
+    "xboxEntityId": "input_boolean.xbox_kids_time"
+  },
+  "dogWalkEnabled": false,
+  "dogWalkWindows": {
+    "morning": {
+      "start": 6,
+      "end": 12
+    },
+    "midday": {
+      "start": 11,
+      "end": 17
+    },
+    "evening": {
+      "start": 16,
+      "end": 22
+    }
+  },
+  "dogWalkStatus": {
+    "morning": {
+      "childId": null,
+      "time": null
+    },
+    "midday": {
+      "childId": null,
+      "time": null
+    },
+    "evening": {
+      "childId": null,
+      "time": null
+    }
+  },
+  "parentPin": "1234",
+  "parentEmail": "test@cs-hub.xyz",
+  "emailsSent": [],
+  "readingHistory": [],
+  "suggestions": [],
+  "pointsHistory": [
+    {
+      "date": "18 iun.",
+      "dateKey": "2026-06-18",
+      "adrian": 10,
+      "jonel": 10
+    },
+    {
+      "date": "19 iun.",
+      "dateKey": "2026-06-19",
+      "adrian": 10,
+      "jonel": 10
+    },
+    {
+      "date": "20 iun.",
+      "dateKey": "2026-06-20",
+      "adrian": 16,
+      "jonel": 16
+    },
+    {
+      "date": "21 iun.",
+      "dateKey": "2026-06-21",
+      "adrian": 35,
+      "jonel": 35
+    },
+    {
+      "date": "22 iun.",
+      "dateKey": "2026-06-22",
+      "adrian": 54,
+      "jonel": 54
+    },
+    {
+      "date": "23 iun.",
+      "dateKey": "2026-06-23",
+      "adrian": 69,
+      "jonel": 69
+    },
+    {
+      "date": "24 iun.",
+      "dateKey": "2026-06-24",
+      "adrian": 80,
+      "jonel": 80
+    }
+  ],
+  "activityTimeLogs": [],
+  "customRewards": [],
+  "screenTimeRequests": [],
+  "smtpConfig": {
+    "enabled": false,
+    "host": "smtp.gmail.com",
+    "port": 587,
+    "user": "",
+    "pass": "",
+    "secure": false
+  },
+  "lastUpdated": "2026-06-24T19:58:58.146Z",
+  "tomorrowSchedule": {},
+  "currentDateKey": "2026-06-24"
+}

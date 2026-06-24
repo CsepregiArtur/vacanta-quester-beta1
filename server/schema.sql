@@ -112,6 +112,25 @@ CREATE TABLE photos (
 CREATE INDEX idx_photos_activity_id ON photos(activity_id);
 
 -- ============================================================
+-- 8. analytics_events
+-- ============================================================
+CREATE TABLE analytics_events (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    family_id       UUID REFERENCES families(id) ON DELETE SET NULL,
+    child_id        UUID REFERENCES children(id) ON DELETE SET NULL,
+    event_name      VARCHAR(100) NOT NULL,
+    properties      JSONB NOT NULL DEFAULT '{}',
+    source          VARCHAR(50) NOT NULL DEFAULT 'web',
+    ip_address      VARCHAR(45),
+    user_agent      TEXT,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_analytics_events_name ON analytics_events(event_name);
+CREATE INDEX idx_analytics_events_family ON analytics_events(family_id);
+CREATE INDEX idx_analytics_events_created ON analytics_events(created_at);
+
+-- ============================================================
 -- Acordă permisiuni utilizatorilor
 -- ============================================================
 -- Citește

@@ -130,10 +130,16 @@ export interface AppState {
   screenTimeRequests?: ScreenTimeRequest[];
   customRewards?: StoreReward[];
   homeAssistant: HomeAssistantConfig;
+  dogWalkEnabled?: boolean;
+  dogWalkWindows?: {
+    morning: { start: number; end: number };
+    midday: { start: number; end: number };
+    evening: { start: number; end: number };
+  };
   dogWalkStatus: {
-    morning: { childId: string | null; time: string | null; feedback?: string; approved?: boolean };
-    midday: { childId: string | null; time: string | null; feedback?: string; approved?: boolean };
-    evening: { childId: string | null; time: string | null; feedback?: string; approved?: boolean };
+    morning: { childId: string | null; time: string | null; feedback?: string; approved?: boolean; photoUrl?: string };
+    midday: { childId: string | null; time: string | null; feedback?: string; approved?: boolean; photoUrl?: string };
+    evening: { childId: string | null; time: string | null; feedback?: string; approved?: boolean; photoUrl?: string };
   };
   tomorrowSchedule?: Record<string, {
     app: string;

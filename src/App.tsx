@@ -408,7 +408,7 @@ export default function App() {
       <div className="min-h-screen bg-neutral-50 flex flex-col items-center justify-center p-6 text-center">
         <RefreshCw className="w-10 h-10 text-indigo-600 animate-spin" />
         <h2 className="font-display font-semibold text-lg text-neutral-800 mt-4">Vacanță Activă...</h2>
-        <p className="text-sm text-neutral-400 mt-1 max-w-sm">Mijloacele didactice Gemini și regulile de control casnic se încarcă în sandbox...</p>
+        <p className="text-sm text-neutral-400 mt-1 max-w-sm">Mijloacele didactice și regulile de control casnic se încarcă...</p>
       </div>
     );
   }
@@ -728,6 +728,8 @@ export default function App() {
                       setIsParentAuthorized(false);
                       localStorage.setItem("arcadia_parent_authorized", "false");
                     }}
+                    theme={theme}
+                    onChangeTheme={setTheme}
                   />
                 ) : (
                   <div className="max-w-md mx-auto bg-white rounded-3xl p-8 border-3 border-slate-900 shadow-[6px_6px_0_0_#1e293b] space-y-6 text-center mt-12" id="parent-pin-challenge">
@@ -822,6 +824,9 @@ export function LoginRegisterScreen({ onLoginSuccess }: LoginRegisterProps) {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [pin, setPin] = useState("");
+  const [children, setChildren] = useState<{ name: string; age: number }[]>([]);
+  const [childName, setChildName] = useState("");
+  const [childAge, setChildAge] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -878,7 +883,13 @@ export function LoginRegisterScreen({ onLoginSuccess }: LoginRegisterProps) {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name, password: pin, pin })
+        body: JSON.stringify({
+          email,
+          name,
+          password: pin,
+          pin,
+          customChildren: children.length > 0 ? children.map(c => ({ name: c.name, age: c.age })) : undefined
+        })
       });
       const data = await res.json();
       if (data.success) {
@@ -1081,6 +1092,58 @@ export function LoginRegisterScreen({ onLoginSuccess }: LoginRegisterProps) {
                   <p className="text-[9.5px] text-slate-400 font-bold uppercase tracking-wide mt-1.5 leading-tight">
                     💡 Fără parole complicate! Te loghezi și controlezi panoul folosind doar adresa de email și acest PIN sigur de 4 cifre.
                   </p>
+                </div>
+
+                {/* Copii - configurare multi-familie */}
+                <div className="border-2 border-dashed border-slate-300 rounded-2xl p-3 space-y-2">
+                  <label className="block text-slate-500 font-black uppercase tracking-wider text-[9px]">
+                    👶 Adaugă Copii (opțional — poți adăuga oricând mai târziu)
+                  </label>
+                  
+                  {children.map((child, idx) => (
+                    <div key={idx} className="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2 border border-slate-200">
+                      <span className="text-sm font-black text-slate-700 flex-1">{child.name} ({child.age} ani)</span>
+                      <button
+                        type="button"
+                        onClick={() => setChildren(children.filter((_, i) => i !== idx))}
+                        className="text-red-500 hover:text-red-700 font-black text-xs cursor-pointer"
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                  
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={childName}
+                      onChange={(e) => setChildName(e.target.value)}
+                      placeholder="Nume copil"
+                      className="flex-1 px-3 py-2 border-2 border-slate-300 rounded-xl focus:outline-none focus:border-indigo-600 text-xs"
+                    />
+                    <input
+                      type="number"
+                      min={2}
+                      max={18}
+                      value={childAge}
+                      onChange={(e) => setChildAge(e.target.value)}
+                      placeholder="Vârstă"
+                      className="w-20 px-3 py-2 border-2 border-slate-300 rounded-xl focus:outline-none focus:border-indigo-600 text-xs text-center"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (childName.trim() && childAge) {
+                          setChildren([...children, { name: childName.trim(), age: Number(childAge) }]);
+                          setChildName("");
+                          setChildAge("");
+                        }
+                      }}
+                      className="px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl font-black text-xs cursor-pointer"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
 
                 <button

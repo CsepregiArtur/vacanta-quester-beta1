@@ -3,10 +3,10 @@
   "activeTasks": [],
   "notifications": [
     {
-      "id": "init-notification-1782329800433",
+      "id": "init-notification-1782330052049",
       "childName": "Sistem",
       "message": "Vacanța de vară a început! Aplicația Arcadia Smart Vacation a pornit cu succes. Adaugă copiii în panoul de administrare pentru a începe.",
-      "timestamp": "2026-06-24T19:36:40.433Z",
+      "timestamp": "2026-06-24T19:40:52.049Z",
       "type": "info"
     }
   ],
@@ -48,7 +48,7 @@
     }
   },
   "parentPin": "0000",
-  "parentEmail": "",
+  "parentEmail": "test@cs-hu.xyz",
   "emailsSent": [],
   "readingHistory": [],
   "suggestions": [],
@@ -107,7 +107,7 @@
     "pass": "",
     "secure": false
   },
-  "lastUpdated": "2026-06-24T20:37:01.984Z",
+  "lastUpdated": "2026-06-24T19:50:53.014Z",
   "tomorrowSchedule": {},
   "currentDateKey": "2026-06-24"
 }
