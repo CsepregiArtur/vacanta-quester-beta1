@@ -1,0 +1,157 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Client-side JWT Auth Module
+ * =============================
+ *
+ * Access Token:  15 minute expiry — sent as Bearer header
+ * Refresh Token: 30 days expiry — stored for silent refresh
+ *
+ * Token refresh is automatic:
+ *   - Before each request, checks if access token is expired
+ *   - On 401 response, tries to refresh
+ *   - If refresh fails, redirects to login
+ */
+
+const ACCESS_TOKEN_KEY = "arcadia_access_token";
+const REFRESH_TOKEN_KEY = "arcadia_refresh_token";
+const TOKEN_EXPIRY_KEY = "arcadia_token_expires_at";
+const USER_KEY = "arcadia_logged_parent";
+const USER_EMAIL_KEY = "arcadia_logged_parent_email";
+
+// ─── Token Storage ───────────────────────────────────────────────────
+
+export function getAccessToken(): string | null {
+  return localStorage.getItem(ACCESS_TOKEN_KEY);
+}
+
+export function getRefreshToken(): string | null {
+  return localStorage.getItem(REFRESH_TOKEN_KEY);
+}
+
+export function getTokenExpiry(): number | null {
+  const val = localStorage.getItem(TOKEN_EXPIRY_KEY);
+  return val ? parseInt(val, 10) : null;
+}
+
+export function storeTokens(accessToken: string, refreshToken: string, expiresIn: number): void {
+  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+  // expiresIn comes from server in seconds — store absolute timestamp
+  const expiresAt = Date.now() + expiresIn * 1000;
+  localStorage.setItem(TOKEN_EXPIRY_KEY, String(expiresAt));
+}
+
+export function clearTokens(): void {
+  localStorage.removeItem(ACCESS_TOKEN_KEY);
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
+  localStorage.removeItem(TOKEN_EXPIRY_KEY);
+  localStorage.removeItem(USER_KEY);
+  localStorage.removeItem(USER_EMAIL_KEY);
+  localStorage.removeItem("arcadia_state");
+  localStorage.removeItem("arcadia_parent_authorized");
+  localStorage.removeItem("arcadia_active_tab");
+}
+
+export function isLoggedIn(): boolean {
+  return !!getAccessToken() && !!localStorage.getItem(USER_KEY);
+}
+
+// ─── Check if token needs refresh ───────────────────────────────────
+export function isTokenExpired(): boolean {
+  const expiry = getTokenExpiry();
+  if (!expiry) return true;
+  // Refresh 2 minutes before actual expiry to be safe
+  return Date.now() >= expiry - 120_000;
+}
+
+// ─── Silent Token Refresh ───────────────────────────────────────────
+export async function refreshAccessToken(): Promise<boolean> {
+  const refreshToken = getRefreshToken();
+  if (!refreshToken) return false;
+
+  try {
+    const res = await fetch("/api/auth/refresh", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (!res.ok) {
+      clearTokens();
+      return false;
+    }
+
+    const data = await res.json();
+    if (data.success) {
+      storeTokens(data.accessToken, data.refreshToken, data.expiresIn);
+      return true;
+    }
+    return false;
+  } catch {
+    // Network error — keep existing tokens and try again later
+    return false;
+  }
+}
+
+// ─── Ensure valid token before fetch ────────────────────────────────
+export async function ensureValidToken(): Promise<string | null> {
+  const token = getAccessToken();
+  if (!token) return null;
+
+  if (isTokenExpired()) {
+    const refreshed = await refreshAccessToken();
+    if (!refreshed) return null;
+    return getAccessToken();
+  }
+
+  return token;
+}
+
+// ─── Auth-Aware Fetch ────────────────────────────────────────────────
+export async function authFetch(
+  input: RequestInfo | URL,
+  init?: RequestInit
+): Promise<Response> {
+  // Ensure we have a valid token first
+  const token = await ensureValidToken();
+  const loggedEmail = localStorage.getItem(USER_EMAIL_KEY);
+
+  const headers = new Headers(init?.headers || {});
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+  if (loggedEmail) {
+    headers.set("x-parent-email", loggedEmail);
+  }
+
+  const response = await fetch(input, {
+    ...init,
+    headers,
+  });
+
+  // If 401, try refreshing once and retry
+  if (response.status === 401 && token) {
+    const refreshed = await refreshAccessToken();
+    if (refreshed) {
+      const newToken = getAccessToken();
+      headers.set("Authorization", `Bearer ${newToken}`);
+      return fetch(input, { ...init, headers });
+    }
+  }
+
+  return response;
+}
+
+// ─── Install global fetch interceptor ────────────────────────────────
+export function installAuthInterceptor(): void {
+  if (typeof window === "undefined") return;
+  if ((window.fetch as any).__authInstalled) return;
+
+  const originalFetch = window.fetch;
+  window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+    return authFetch(input, init);
+  };
+  (window.fetch as any).__authInstalled = true;
+}

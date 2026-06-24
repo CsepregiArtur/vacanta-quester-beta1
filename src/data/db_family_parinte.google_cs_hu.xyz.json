@@ -407,7 +407,7 @@
     }
   },
   "parentPin": "0000",
-  "parentEmail": "csepregi.arthur@gmail.com",
+  "parentEmail": "parinte.google@cs-hu.xyz",
   "emailsSent": [
     {
       "id": "email-1781866286065",
@@ -539,6 +539,7 @@
     "pass": "",
     "secure": false
   },
+  "lastUpdated": "2026-06-24T14:23:06.022Z",
   "tomorrowSchedule": {},
   "pointsHistory": [
     {
@@ -592,7 +593,7 @@
       "activityType": "reading",
       "activityName": "Lectură: Misterele Universului și ale Găurilor Negre",
       "durationSeconds": 312,
-      "timestamp": "2026-06-21T15:05:33.724Z",
+      "timestamp": "2026-06-21T14:23:05.991Z",
       "details": "512 cuvinte. Viteză lectură medie: 98 cuv/min."
     },
     {
@@ -602,7 +603,7 @@
       "activityType": "quiz",
       "activityName": "Chestionar: Misterele Universului și ale Găurilor Negre",
       "durationSeconds": 94,
-      "timestamp": "2026-06-21T15:07:33.724Z",
+      "timestamp": "2026-06-21T14:25:05.991Z",
       "details": "Răspunsuri la 3 întrebări. Scor: 3/3"
     },
     {
@@ -612,7 +613,7 @@
       "activityType": "reading",
       "activityName": "Lectură: Cum Modifică Inteligența Artificială Medicina",
       "durationSeconds": 288,
-      "timestamp": "2026-06-23T15:05:33.724Z",
+      "timestamp": "2026-06-23T14:23:05.991Z",
       "details": "485 cuvinte. Viteză lectură medie: 101 cuv/min."
     },
     {
@@ -622,7 +623,7 @@
       "activityType": "quiz",
       "activityName": "Chestionar: Cum Modifică Inteligența Artificială Medicina",
       "durationSeconds": 78,
-      "timestamp": "2026-06-23T15:07:13.724Z",
+      "timestamp": "2026-06-23T14:24:45.991Z",
       "details": "Răspunsuri la 3 întrebări. Scor: 3/3"
     },
     {
@@ -632,7 +633,7 @@
       "activityType": "reading",
       "activityName": "Lectură: Vânătoarea Dinozaurilor Acvatici în Triasici",
       "durationSeconds": 185,
-      "timestamp": "2026-06-22T15:05:33.724Z",
+      "timestamp": "2026-06-22T14:23:05.991Z",
       "details": "165 cuvinte. Viteză lectură medie: 54 cuv/min."
     },
     {
@@ -642,7 +643,7 @@
       "activityType": "quiz",
       "activityName": "Chestionar: Vânătoarea Dinozaurilor Acvatici în Triasici",
       "durationSeconds": 62,
-      "timestamp": "2026-06-22T15:06:53.724Z",
+      "timestamp": "2026-06-22T14:24:25.991Z",
       "details": "Răspunsuri la 3 întrebări. Scor: 3/3"
     },
     {
@@ -652,7 +653,7 @@
       "activityType": "reading",
       "activityName": "Lectură: Senzorii și Motoarele din Programarea Roboților",
       "durationSeconds": 242,
-      "timestamp": "2026-06-24T03:05:33.724Z",
+      "timestamp": "2026-06-24T02:23:05.991Z",
       "details": "215 cuvinte. Viteză lectură medie: 53 cuv/min."
     },
     {
@@ -662,7 +663,7 @@
       "activityType": "quiz",
       "activityName": "Chestionar: Senzorii și Motoarele din Programarea Roboților",
       "durationSeconds": 80,
-      "timestamp": "2026-06-24T03:07:13.724Z",
+      "timestamp": "2026-06-24T02:24:45.991Z",
       "details": "Răspunsuri la 3 întrebări. Scor: 3/3"
     },
     {
@@ -672,7 +673,7 @@
       "activityType": "dog_walk",
       "activityName": "Activitate: Plimbat Câinele (Dimineață)",
       "durationSeconds": 1020,
-      "timestamp": "2026-06-22T13:05:33.724Z",
+      "timestamp": "2026-06-22T12:23:05.991Z",
       "details": "Plimbare terminată în siguranță. Confirmare cu poză: DA."
     },
     {
@@ -682,7 +683,7 @@
       "activityType": "chore",
       "activityName": "Sarcina: Aspirat Living & Hol Mare",
       "durationSeconds": 1680,
-      "timestamp": "2026-06-23T12:05:33.724Z",
+      "timestamp": "2026-06-23T11:23:05.991Z",
       "details": "Sarcina finalizată. Analizat și aprobat de părinte / AI în 28 minute."
     }
   ],
@@ -694,7 +695,7 @@
       "childName": "Dominic",
       "activityName": "Curățenie în Cameră",
       "photoUrl": "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&q=80&w=300",
-      "timestamp": "2026-06-23T15:05:33.724Z",
+      "timestamp": "2026-06-23T14:23:05.991Z",
       "status": "approved",
       "feedback": "Excelente organizare, Dominic! Toate cărțile sunt ordonate frumos pe raft și patul este întins ca la carte."
     },
@@ -704,7 +705,7 @@
       "childName": "Sofia",
       "activityName": "Plimbare Câine: Tura de Dimineață",
       "photoUrl": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=300",
-      "timestamp": "2026-06-22T15:05:33.724Z",
+      "timestamp": "2026-06-22T14:23:05.991Z",
       "status": "approved",
       "feedback": "Ce cățel fericit! Se observă clar parcul în fundal și lesa bine asigurată. Bravo pentru implicare!"
     },
@@ -714,10 +715,10 @@
       "childName": "Dominic",
       "activityName": "Clătire & Aranjare Vase",
       "photoUrl": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=300",
-      "timestamp": "2026-06-22T03:05:33.724Z",
+      "timestamp": "2026-06-22T02:23:05.991Z",
       "status": "approved",
       "feedback": "Mașina de spălat vase este aranjată optim pentru a permite circulația apei. AI-ul este super încântat!"
     }
   ],
-  "lastUpdated": "2026-06-24T15:05:33.725Z"
+  "currentDateKey": "2026-06-24"
 }

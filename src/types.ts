@@ -34,7 +34,6 @@ export interface ActiveTask {
   points: number;
   status: TaskStatus;
   completedAt?: string;
-  photoUrl?: string; // base64 representation or mock path
   
   // Specific for reading task
   readingTopic?: string;
@@ -122,17 +121,6 @@ export interface ScreenTimeRequest {
   pointsDebited?: boolean;
 }
 
-export interface UploadedPhotoResult {
-  id: string;
-  childId: string;
-  childName: string;
-  activityName: string;
-  photoUrl: string;
-  timestamp: string;
-  status: "approved" | "rejected" | "submitted";
-  feedback: string;
-}
-
 export interface AppState {
   children: Child[];
   activeTasks: ActiveTask[];
@@ -140,13 +128,12 @@ export interface AppState {
   topicProposals: NextDayTopicProposal[];
   suggestions: ChildSuggestion[];
   screenTimeRequests?: ScreenTimeRequest[];
-  uploadedPhotosHistory?: UploadedPhotoResult[];
   customRewards?: StoreReward[];
   homeAssistant: HomeAssistantConfig;
   dogWalkStatus: {
-    morning: { childId: string | null; time: string | null; photoUrl?: string; feedback?: string; approved?: boolean };
-    midday: { childId: string | null; time: string | null; photoUrl?: string; feedback?: string; approved?: boolean };
-    evening: { childId: string | null; time: string | null; photoUrl?: string; feedback?: string; approved?: boolean };
+    morning: { childId: string | null; time: string | null; feedback?: string; approved?: boolean };
+    midday: { childId: string | null; time: string | null; feedback?: string; approved?: boolean };
+    evening: { childId: string | null; time: string | null; feedback?: string; approved?: boolean };
   };
   tomorrowSchedule?: Record<string, {
     app: string;

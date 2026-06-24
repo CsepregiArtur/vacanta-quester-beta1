@@ -24,45 +24,25 @@ import { motion, AnimatePresence } from "motion/react";
 import KidDashboard from "./components/KidDashboard";
 import ParentDashboard from "./components/ParentDashboard";
 import { AppState } from "./types";
+import { useOfflineSync } from "./modules/sync/useOfflineSync";
+import type { SyncActionType } from "./modules/sync/types";
+import {
+  storeTokens,
+  clearTokens,
+  getAccessToken,
+  getRefreshToken,
+  isLoggedIn,
+  ensureValidToken,
+  installAuthInterceptor,
+} from "./modules/auth";
 
 export interface UserEntry {
   email: string;
   name: string;
-  pin: string;
 }
 
-// Establish fetch interceptor to append current parent email context to keep databases separate.
-// We wrap this inside a solid try-catch block and use Object.defineProperty to safely shadow prototype getters.
-try {
-  if (typeof window !== "undefined" && !(window.fetch as any).isInterceptorWrapped) {
-    const originalFetch = window.fetch;
-    const wrappedFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
-      const loggedEmail = localStorage.getItem("arcadia_logged_parent_email");
-      if (loggedEmail) {
-        init = init || {};
-        const headers = new Headers(init.headers || {});
-        headers.set("x-parent-email", loggedEmail);
-        init.headers = headers;
-      }
-      return originalFetch(input, init);
-    };
-    (wrappedFetch as any).isInterceptorWrapped = true;
-    
-    try {
-      Object.defineProperty(window, "fetch", {
-        value: wrappedFetch,
-        writable: true,
-        configurable: true,
-        enumerable: true
-      });
-    } catch (definePropertyError) {
-      // Direct assignment fallback
-      (window as any).fetch = wrappedFetch;
-    }
-  }
-} catch (e) {
-  console.warn("Could not wrap window.fetch directly:", e);
-}
+// Install JWT-aware fetch interceptor
+installAuthInterceptor();
 
 
 const themeStyles = {
@@ -151,12 +131,38 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem("arcadia_logged_parent");
-    localStorage.removeItem("arcadia_logged_parent_email");
-    localStorage.removeItem("arcadia_state");
-    localStorage.removeItem("arcadia_active_tab");
-    localStorage.removeItem("arcadia_parent_authorized");
+  // ─── Offline-First Sync Engine ──────────────────────────────────
+  const {
+    isOnline: isOnlineSync,
+    enqueue,
+    enqueueBatch,
+    saveSnapshot,
+    retryFailed,
+    clearCompleted,
+    syncStatus,
+  } = useOfflineSync();
+
+  // Save snapshot whenever state changes (for offline resilience)
+  useEffect(() => {
+    if (state) {
+      saveSnapshot(state as unknown as Record<string, unknown>);
+    }
+  }, [state, saveSnapshot]);
+
+  const handleLogout = async () => {
+    const refreshToken = getRefreshToken();
+    if (refreshToken) {
+      try {
+        await fetch("/api/auth/logout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refreshToken }),
+        });
+      } catch {
+        /* best effort */
+      }
+    }
+    clearTokens();
     setLoggedUser(null);
     setState(null);
     setIsParentAuthorized(false);
@@ -274,18 +280,38 @@ export default function App() {
   const fetchState = async (silent = false) => {
     if (!loggedUser) return;
     if (!silent) setIsLoading(true);
+
+    // ── OFFLINE-FIRST: Try local snapshot first ──
+    const localStateRaw = localStorage.getItem("arcadia_state");
+    let localState: AppState | null = null;
+    if (localStateRaw) {
+      try {
+        localState = JSON.parse(localStateRaw) as AppState;
+      } catch {
+        /* ignore corrupt cache */
+      }
+    }
+
+    // If offline, use local snapshot immediately
+    if (!navigator.onLine && localState) {
+      console.log("[OFFLINE] Using local snapshot");
+      setState(localState);
+      setIsLoading(false);
+      setIsRefreshing(false);
+      return;
+    }
+
+    // ── ONLINE: Fetch from server, then reconcile ──
     try {
       const localToday = new Date().toLocaleDateString("en-CA");
       const res = await fetch(`/api/state?today=${localToday}`);
       const serverData = await res.json();
-      
-      const localStateRaw = localStorage.getItem("arcadia_state");
-      if (localStateRaw) {
+
+      if (localState) {
         try {
-          const localState = JSON.parse(localStateRaw) as AppState;
           const localTime = new Date(localState.lastUpdated || "1970-01-01T00:00:00.000Z").getTime();
           const serverTime = new Date(serverData.lastUpdated || "1970-01-01T00:00:00.000Z").getTime();
-          
+
           if (localTime > serverTime) {
             console.log("[SYNC] Client state is newer. Synchronizing...", localState.lastUpdated, "vs", serverData.lastUpdated);
             const syncRes = await fetch("/api/state/sync", {
@@ -304,11 +330,16 @@ export default function App() {
           console.error("Error synchronizing local state with server:", e);
         }
       }
-      
+
       setState(serverData);
       localStorage.setItem("arcadia_state", JSON.stringify(serverData));
     } catch (err) {
       console.error("Failed to load application state:", err);
+      // Fallback to local state if server is unreachable
+      if (localState) {
+        console.log("[OFFLINE FALLBACK] Using cached state");
+        setState(localState);
+      }
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -493,6 +524,39 @@ export default function App() {
                 <RefreshCw className={`w-4 h-4 text-emerald-600 shrink-0 ${isRefreshing ? "animate-spin" : ""}`} />
                 <span className="truncate">Sincronizare scor</span>
               </button>
+
+              {/* ── Sync Queue Status Indicator ── */}
+              <div className={`p-2 rounded-xl border-2 flex items-center gap-2 text-[10px] font-display font-black transition-colors ${
+                !isOnlineSync
+                  ? "bg-amber-50 border-amber-400 text-amber-800"
+                  : syncStatus.pendingCount > 0
+                    ? "bg-sky-50 border-sky-400 text-sky-800"
+                    : "bg-emerald-50 border-emerald-400 text-emerald-800"
+              }`} id="sync-status-indicator">
+                <div className={`w-2.5 h-2.5 rounded-full shrink-0 ${
+                  !isOnlineSync
+                    ? "bg-amber-500 animate-pulse"
+                    : syncStatus.pendingCount > 0
+                      ? "bg-sky-500 animate-pulse"
+                      : "bg-emerald-500"
+                }`} />
+                <span className="truncate">
+                  {!isOnlineSync
+                    ? "Offline — modificări locale"
+                    : syncStatus.pendingCount > 0
+                      ? `${syncStatus.pendingCount} în așteptare`
+                      : "Sincronizat ✅"}
+                </span>
+                {syncStatus.failedCount > 0 && (
+                  <button
+                    onClick={retryFailed}
+                    className="ml-auto text-[9px] px-1.5 py-0.5 bg-red-100 border border-red-300 rounded-md text-red-700 hover:bg-red-200 cursor-pointer"
+                    title="Reîncearcă acțiunile eșuate"
+                  >
+                    {syncStatus.failedCount} eșuate ↻
+                  </button>
+                )}
+              </div>
             </div>
           </nav>
 
@@ -785,6 +849,8 @@ export function LoginRegisterScreen({ onLoginSuccess }: LoginRegisterProps) {
       });
       const data = await res.json();
       if (data.success) {
+        // Store JWT tokens
+        storeTokens(data.accessToken, data.refreshToken, data.expiresIn);
         onLoginSuccess(data.user, data.db);
       } else {
         setError(data.error || "Acreditări de logare incorecte!");
@@ -816,6 +882,8 @@ export function LoginRegisterScreen({ onLoginSuccess }: LoginRegisterProps) {
       });
       const data = await res.json();
       if (data.success) {
+        // Store JWT tokens
+        storeTokens(data.accessToken, data.refreshToken, data.expiresIn);
         onLoginSuccess(data.user, data.db);
       } else {
         setError(data.error || "Adresa de email este deja înregistrată!");
@@ -846,6 +914,8 @@ export function LoginRegisterScreen({ onLoginSuccess }: LoginRegisterProps) {
       });
       const data = await res.json();
       if (data.success) {
+        // Store JWT tokens
+        storeTokens(data.accessToken, data.refreshToken, data.expiresIn);
         setSocialModal(null);
         onLoginSuccess(data.user, data.db);
       } else {

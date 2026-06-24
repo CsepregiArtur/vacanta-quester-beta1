@@ -6,7 +6,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReadingWidget from "../modules/reading/ReadingWidget";
 import RewardsWidget from "../modules/rewards/RewardsWidget";
-import CameraWidget from "../modules/camera/CameraWidget";
 import HomeAssistantWidget from "../modules/homeassistant/HomeAssistantWidget";
 import { 
   BookOpen, 
@@ -16,7 +15,6 @@ import {
   Compass, 
   CheckCircle2, 
   AlertTriangle, 
-  Upload, 
   RefreshCw, 
   Tv, 
   Gamepad2, 

@@ -1,0 +1,17 @@
+[
+  {
+    "email": "csepregi.arthur@gmail.com",
+    "name": "Arthur",
+    "pin": "0000"
+  },
+  {
+    "email": "test@cs-hu.xyz",
+    "name": "Dominic Developer",
+    "pin": "test"
+  },
+  {
+    "email": "parinte.google@cs-hu.xyz",
+    "name": "Google Parent",
+    "pin": "0000"
+  }
+]

@@ -6,12 +6,24 @@ import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 
+// ─── JWT Auth Module ─────────────────────────────────────────────────
+import {
+  hashPin,
+  verifyPin,
+  generateAccessToken,
+  generateRefreshToken,
+  verifyAccessToken,
+  refreshTokens,
+  revokeRefreshToken,
+  revokeAllUserTokens,
+  authMiddleware,
+} from "./server/auth.ts";
+
 dotenv.config();
 
 const app = express();
 const PORT = 3000;
 
-// Maximum payload size for photo uploads
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ limit: "20mb", extended: true }));
 
@@ -27,8 +39,12 @@ app.use((req, res, next) => {
   }
 });
 
-// Authentication and Registry Routes
-app.post("/api/auth/register", (req, res) => {
+// ═════════════════════════════════════════════════════════════════════
+// AUTHENTICATION — JWT (Access 15min + Refresh 30zile)
+// ═════════════════════════════════════════════════════════════════════
+
+// POST /api/auth/register
+app.post("/api/auth/register", async (req, res) => {
   try {
     const { email, name, pin, customChildren } = req.body;
     if (!email || !name) {
@@ -41,7 +57,9 @@ app.post("/api/auth/register", (req, res) => {
     }
 
     const userPin = pin || "0000";
-    const newUser = { email: email.toLowerCase(), name, pin: userPin };
+    // Hash the PIN with bcrypt
+    const pinHash = await hashPin(userPin);
+    const newUser = { email: email.toLowerCase(), name, pin: userPin, pinHash };
     users.push(newUser);
     saveUsers(users);
 
@@ -54,12 +72,10 @@ app.post("/api/auth/register", (req, res) => {
       baseState = createDefaultState();
     }
 
-    // Customize parent configuration
     baseState.parentEmail = email.toLowerCase();
     baseState.parentPin = userPin;
     baseState.lastUpdated = new Date().toISOString();
 
-    // If custom kids are configured
     if (customChildren && Array.isArray(customChildren) && customChildren.length > 0) {
       baseState.children = customChildren.map((item: any) => ({
         id: item.name.toLowerCase().replace(/[^a-z0-9]/g, ""),
@@ -72,7 +88,6 @@ app.post("/api/auth/register", (req, res) => {
         activeTimer: null
       }));
 
-      // tailormade starting chores
       let updatedTasks: any[] = [];
       baseState.children.forEach((c: any) => {
         const isOlder = c.age >= 12;
@@ -83,9 +98,16 @@ app.post("/api/auth/register", (req, res) => {
 
     fs.writeFileSync(familyPath, JSON.stringify(baseState, null, 2), "utf-8");
 
+    // Generate JWT tokens
+    const accessToken = generateAccessToken(email.toLowerCase(), name);
+    const refreshToken = await generateRefreshToken(email.toLowerCase());
+
     res.json({
       success: true,
-      user: newUser,
+      user: { email: email.toLowerCase(), name },
+      accessToken,
+      refreshToken,
+      expiresIn: 900, // 15 min in seconds
       db: baseState
     });
   } catch (error: any) {
@@ -94,7 +116,8 @@ app.post("/api/auth/register", (req, res) => {
   }
 });
 
-app.post("/api/auth/login", (req, res) => {
+// POST /api/auth/login
+app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, pin, password } = req.body;
     if (!email) {
@@ -105,15 +128,36 @@ app.post("/api/auth/login", (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "Acest utilizator nu există. Te rugăm să te înregistrezi!" });
     }
+
     const pinToCheck = pin !== undefined ? pin : password;
-    if (pinToCheck && user.pin !== pinToCheck) {
+    // Verify PIN — try bcrypt first, fall back to plaintext for old accounts
+    let pinValid = false;
+    if (user.pinHash) {
+      pinValid = await verifyPin(pinToCheck, user.pinHash);
+    } else {
+      pinValid = user.pin === pinToCheck;
+      // Migrate to hashed PIN on successful login
+      if (pinValid) {
+        user.pinHash = await hashPin(user.pin);
+        saveUsers(users);
+      }
+    }
+
+    if (!pinValid) {
       return res.status(400).json({ error: "Codul PIN sau parola introdusă este incorectă!" });
     }
+
+    // Generate JWT tokens
+    const accessToken = generateAccessToken(user.email, user.name);
+    const refreshToken = await generateRefreshToken(user.email);
 
     const familyState = loadDB(user.email);
     res.json({
       success: true,
-      user,
+      user: { email: user.email, name: user.name },
+      accessToken,
+      refreshToken,
+      expiresIn: 900, // 15 min in seconds
       db: familyState
     });
   } catch (error: any) {
@@ -121,18 +165,20 @@ app.post("/api/auth/login", (req, res) => {
   }
 });
 
-app.post("/api/auth/social-login", (req, res) => {
+// POST /api/auth/social-login
+app.post("/api/auth/social-login", async (req, res) => {
   try {
     const { email, name } = req.body;
     if (!email) {
-      return res.status(400).json({ error: "Email-ul este obligatoriu pentru conectare socială dorește!" });
+      return res.status(400).json({ error: "Email-ul este obligatoriu pentru conectare socială!" });
     }
     const users = loadUsers();
     let user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
 
     if (!user) {
       const parentName = name || email.split("@")[0];
-      user = { email: email.toLowerCase(), name: parentName, pin: "0000" };
+      const pinHash = await hashPin("0000");
+      user = { email: email.toLowerCase(), name: parentName, pin: "0000", pinHash };
       users.push(user);
       saveUsers(users);
 
@@ -150,14 +196,58 @@ app.post("/api/auth/social-login", (req, res) => {
       fs.writeFileSync(familyPath, JSON.stringify(baseState, null, 2), "utf-8");
     }
 
+    const accessToken = generateAccessToken(user.email, user.name);
+    const refreshToken = await generateRefreshToken(user.email);
+
     const familyState = loadDB(user.email);
     res.json({
       success: true,
-      user,
+      user: { email: user.email, name: user.name },
+      accessToken,
+      refreshToken,
+      expiresIn: 900,
       db: familyState
     });
   } catch (error: any) {
     res.status(500).json({ error: error.message || "Eroare la social login." });
+  }
+});
+
+// POST /api/auth/refresh — reîmprospătare token
+app.post("/api/auth/refresh", async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json({ error: "Refresh token lipsă!" });
+    }
+
+    const result = await refreshTokens(refreshToken);
+    if (!result) {
+      return res.status(401).json({ error: "Refresh token invalid sau expirat. Conectează-te din nou!" });
+    }
+
+    res.json({
+      success: true,
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
+      expiresIn: 900,
+      email: result.email
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message || "Eroare la reîmprospătare token." });
+  }
+});
+
+// POST /api/auth/logout — invalidare refresh token
+app.post("/api/auth/logout", async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (refreshToken) {
+      await revokeRefreshToken(refreshToken);
+    }
+    res.json({ success: true, message: "Deconectare reușită." });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message || "Eroare la deconectare." });
   }
 });
 
@@ -192,6 +282,7 @@ interface UserEntry {
   email: string;
   name: string;
   pin: string;
+  pinHash?: string;
 }
 
 const loadUsers = (): UserEntry[] => {
@@ -458,57 +549,6 @@ const createDefaultActivityTimeLogs = () => {
       details: "Sarcina finalizată. Analizat și aprobat de părinte / AI în 28 minute."
     }
   ];
-};
-
-const createDefaultUploadedPhotosHistory = () => {
-  return [
-    {
-      id: "photo-1",
-      childId: "dominic",
-      childName: "Dominic",
-      activityName: "Curățenie în Cameră",
-      photoUrl: "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&q=80&w=300",
-      timestamp: new Date(Date.now() - 3600000 * 24 * 1).toISOString(),
-      status: "approved",
-      feedback: "Excelente organizare, Dominic! Toate cărțile sunt ordonate frumos pe raft și patul este întins ca la carte."
-    },
-    {
-      id: "photo-2",
-      childId: "sofia",
-      childName: "Sofia",
-      activityName: "Plimbare Câine: Tura de Dimineață",
-      photoUrl: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=300",
-      timestamp: new Date(Date.now() - 3600000 * 24 * 2).toISOString(),
-      status: "approved",
-      feedback: "Ce cățel fericit! Se observă clar parcul în fundal și lesa bine asigurată. Bravo pentru implicare!"
-    },
-    {
-      id: "photo-3",
-      childId: "dominic",
-      childName: "Dominic",
-      activityName: "Clătire & Aranjare Vase",
-      photoUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=300",
-      timestamp: new Date(Date.now() - 3600000 * 24 * 2.5).toISOString(),
-      status: "approved",
-      feedback: "Mașina de spălat vase este aranjată optim pentru a permite circulația apei. AI-ul este super încântat!"
-    }
-  ];
-};
-
-const logUploadedPhoto = (db: any, childId: string, childName: string, activityName: string, photoUrl: string, status: "approved" | "rejected" | "submitted", feedback: string) => {
-  if (!db.uploadedPhotosHistory) {
-    db.uploadedPhotosHistory = [];
-  }
-  db.uploadedPhotosHistory.unshift({
-    id: `photo-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-    childId,
-    childName,
-    activityName,
-    photoUrl,
-    timestamp: new Date().toISOString(),
-    status,
-    feedback
-  });
 };
 
 const createDefaultPointsHistory = (children?: any[]) => {
@@ -809,7 +849,6 @@ const createDefaultState = (): any => {
     ],
     pointsHistory: createDefaultPointsHistory(),
     activityTimeLogs: createDefaultActivityTimeLogs(),
-    uploadedPhotosHistory: createDefaultUploadedPhotosHistory(),
     customRewards: [],
     smtpConfig: {
       enabled: false,
@@ -883,10 +922,6 @@ const loadDB = (overrideEmail?: string): any => {
       }
       if (!db.screenTimeRequests) {
         db.screenTimeRequests = [];
-        changed = true;
-      }
-      if (!db.uploadedPhotosHistory) {
-        db.uploadedPhotosHistory = createDefaultUploadedPhotosHistory();
         changed = true;
       }
       if (changed) {
@@ -1435,71 +1470,7 @@ function executeDailyTransition(db: any, dayLabel: string) {
 
 
 // --- HELPER TO MERGE STATE AND PRESERVE ORIGINAL BASE64 IMAGES ---
-const mergeStateAndPreservePhotos = (clientState: any, serverDb: any) => {
-  const merged = JSON.parse(JSON.stringify(clientState));
-  
-  // Restore uploadedPhotosHistory photoUrls
-  if (merged.uploadedPhotosHistory && serverDb.uploadedPhotosHistory) {
-    merged.uploadedPhotosHistory = merged.uploadedPhotosHistory.map((cItem: any) => {
-      const sItem = serverDb.uploadedPhotosHistory.find((x: any) => x.id === cItem.id);
-      if (sItem && sItem.photoUrl && sItem.photoUrl.startsWith("data:image/") && cItem.photoUrl && cItem.photoUrl.startsWith("/api/photo/")) {
-        return { ...cItem, photoUrl: sItem.photoUrl };
-      }
-      return cItem;
-    });
-  }
-  
-  // Restore dogWalkStatus photoUrls
-  if (merged.dogWalkStatus && serverDb.dogWalkStatus) {
-    const slots = ["morning", "midday", "evening"] as const;
-    slots.forEach(slot => {
-      const cWalk = merged.dogWalkStatus[slot];
-      const sWalk = serverDb.dogWalkStatus[slot];
-      if (cWalk && sWalk && sWalk.photoUrl && sWalk.photoUrl.startsWith("data:image/") && cWalk.photoUrl && cWalk.photoUrl.startsWith("/api/photo/")) {
-        cWalk.photoUrl = sWalk.photoUrl;
-      }
-    });
-  }
-  
-  return merged;
-};
-
-
 // --- API ROUTING ---
-
-// GET photo by id
-app.get("/api/photo/:photoId", (req, res) => {
-  const db = loadDB();
-  const item = (db.uploadedPhotosHistory || []).find((x: any) => x.id === req.params.photoId);
-  if (!item || !item.photoUrl) {
-    return res.status(404).send("Photo not found");
-  }
-  
-  const match = item.photoUrl.match(/^data:([^;]+);base64,(.+)$/);
-  if (match) {
-    res.setHeader("Content-Type", match[1]);
-    return res.send(Buffer.from(match[2], "base64"));
-  }
-  
-  return res.redirect(item.photoUrl);
-});
-
-// GET walk photo by slot
-app.get("/api/photo/walk/:slot", (req, res) => {
-  const db = loadDB();
-  const walk = db.dogWalkStatus ? db.dogWalkStatus[req.params.slot as "morning" | "midday" | "evening"] : null;
-  if (!walk || !walk.photoUrl) {
-    return res.status(404).send("Walk photo not found");
-  }
-  
-  const match = walk.photoUrl.match(/^data:([^;]+);base64,(.+)$/);
-  if (match) {
-    res.setHeader("Content-Type", match[1]);
-    return res.send(Buffer.from(match[2], "base64"));
-  }
-  
-  return res.redirect(walk.photoUrl);
-});
 
 // GET state
 app.get("/api/state", (req, res) => {
@@ -1518,32 +1489,10 @@ app.get("/api/state", (req, res) => {
     }
   }
 
-  // Optimize and clean response: DO NOT return the massive 30MB state.
-  // 1. Clone db to avoid mutating the master on-disk state.
+  // Clone db to avoid mutating the master on-disk state.
   const responseDb = JSON.parse(JSON.stringify(db));
 
-  // 2. Erase/substitute high-volume base64 strings with dynamic relative endpoints
-  if (responseDb.uploadedPhotosHistory) {
-    responseDb.uploadedPhotosHistory = responseDb.uploadedPhotosHistory.map((item: any) => {
-      if (item.photoUrl && item.photoUrl.startsWith("data:image/")) {
-        return { ...item, photoUrl: `/api/photo/${item.id}` };
-      }
-      return item;
-    });
-  }
-
-  if (responseDb.dogWalkStatus) {
-    const slots = ["morning", "midday", "evening"] as const;
-    slots.forEach(slot => {
-      const walk = responseDb.dogWalkStatus[slot];
-      if (walk && walk.photoUrl && walk.photoUrl.startsWith("data:image/")) {
-        const timestamp = new Date(walk.time || "").getTime() || Date.now();
-        walk.photoUrl = `/api/photo/walk/${slot}?t=${timestamp}`;
-      }
-    });
-  }
-
-  // 3. For extra cleanliness, limit any overly long lists (like emailsSent, audit logs or redundant history)
+  // For extra cleanliness, limit any overly long lists (like emailsSent, audit logs or redundant history)
   if (responseDb.notifications) {
     responseDb.notifications = responseDb.notifications.slice(0, 30);
   }
@@ -1577,9 +1526,8 @@ app.post("/api/state/sync", (req, res) => {
     if (!clientState.parentPin) clientState.parentPin = serverDb.parentPin;
     if (!clientState.parentEmail) clientState.parentEmail = serverDb.parentEmail;
     
-    const preservedState = mergeStateAndPreservePhotos(clientState, serverDb);
-    saveDB(preservedState);
-    return res.json({ success: true, db: preservedState, source: "client" });
+    saveDB(clientState);
+    return res.json({ success: true, db: clientState, source: "client" });
   }
   
   res.json({ success: true, db: serverDb, source: "server" });
@@ -3658,6 +3606,205 @@ app.get("/api/parent/emails", (req, res) => {
     parentEmail: db.parentEmail || "csepregi.arthur@gmail.com",
     smtpConfig: db.smtpConfig || { enabled: false, host: "smtp.gmail.com", port: 587, user: "", pass: "", secure: false }
   });
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// SYNC QUEUE ENDPOINT — receives batch sync actions from client
+// ═══════════════════════════════════════════════════════════════════
+// The offline-first SyncEngine sends individual actions here.
+// Each action is processed, applied to the DB, and the updated state
+// is returned so the client can reconcile.
+// ═══════════════════════════════════════════════════════════════════
+
+app.post("/api/sync/action", (req, res) => {
+  const { action, childId, activityId, taskId, payload } = req.body;
+  const db = loadDB();
+
+  if (!action) {
+    return res.status(400).json({ success: false, error: "Missing action field" });
+  }
+
+  console.log(`[SYNC] Processing action: ${action}`, { childId, activityId, taskId });
+
+  try {
+    switch (action) {
+      case "complete_activity": {
+        const task = db.activeTasks.find((t: any) => t.id === (taskId || activityId) && t.childId === childId);
+        if (!task) return res.status(404).json({ success: false, error: "Task not found" });
+        task.status = "completed";
+        task.completedAt = new Date().toISOString();
+        break;
+      }
+
+      case "approve_activity": {
+        const task = db.activeTasks.find((t: any) => t.id === (taskId || activityId) && t.childId === childId);
+        if (!task) return res.status(404).json({ success: false, error: "Task not found" });
+        task.status = "approved";
+        task.completedAt = task.completedAt || new Date().toISOString();
+        const child = db.children.find((c: any) => c.id === childId);
+        if (child && payload?.points) {
+          child.points += Number(payload.points);
+        }
+        break;
+      }
+
+      case "award_points": {
+        const child = db.children.find((c: any) => c.id === childId);
+        if (!child) return res.status(404).json({ success: false, error: "Child not found" });
+        const pts = Number(payload?.points) || 0;
+        child.points += pts;
+        if (!db.transactions) db.transactions = [];
+        db.transactions.unshift({
+          id: `txn-${Date.now()}`,
+          childId,
+          points: pts,
+          reason: payload?.reason || "Activitate",
+          created_at: new Date().toISOString()
+        });
+        break;
+      }
+
+      case "cashout_points": {
+        const child = db.children.find((c: any) => c.id === childId);
+        if (!child) return res.status(404).json({ success: false, error: "Child not found" });
+        const pts = Number(payload?.points) || 0;
+        if (child.points < pts) return res.status(400).json({ success: false, error: "Insufficient points" });
+        child.points -= pts;
+        break;
+      }
+
+      case "buy_reward": {
+        const child = db.children.find((c: any) => c.id === childId);
+        if (!child) return res.status(404).json({ success: false, error: "Child not found" });
+        const cost = Number(payload?.costPoints) || 0;
+        if (child.points < cost) return res.status(400).json({ success: false, error: "Insufficient points" });
+        child.points -= cost;
+        break;
+      }
+
+      case "update_settings": {
+        if (payload?.homeAssistant) {
+          Object.assign(db.homeAssistant, payload.homeAssistant);
+        }
+        if (payload?.parentPin) {
+          db.parentPin = String(payload.parentPin);
+        }
+        if (payload?.parentEmail) {
+          db.parentEmail = payload.parentEmail;
+        }
+        break;
+      }
+
+      case "claim_walk_slot": {
+        const slot = payload?.slot as string;
+        if (slot && db.dogWalkStatus && db.dogWalkStatus[slot as keyof typeof db.dogWalkStatus]) {
+          db.dogWalkStatus[slot as keyof typeof db.dogWalkStatus] = {
+            childId,
+            time: new Date().toISOString(),
+            photoUrl: payload?.photoUrl || null,
+            feedback: payload?.feedback || "Sincronizat din coadă",
+            approved: true
+          };
+        }
+        break;
+      }
+
+      case "submit_suggestion": {
+        if (!db.suggestions) db.suggestions = [];
+        db.suggestions.push({
+          id: `sug-sync-${Date.now()}`,
+          childId,
+          childName: payload?.childName || "Copil",
+          type: payload?.sugType || "activity",
+          title: payload?.title || "Activitate",
+          description: payload?.description || "",
+          proposedPointsOrCost: Number(payload?.points) || 0,
+          proposedDurationMinutes: Number(payload?.duration) || 0,
+          status: "pending",
+          createdAt: new Date().toISOString()
+        });
+        break;
+      }
+
+      case "upload_photo": {
+        logUploadedPhoto(
+          db,
+          childId,
+          payload?.childName || "Copil",
+          payload?.activityName || "Activitate",
+          payload?.photoUrl || "",
+          "submitted",
+          payload?.feedback || "Încărcat din mod offline"
+        );
+        break;
+      }
+
+      default:
+        return res.status(400).json({ success: false, error: `Unknown action: ${action}` });
+    }
+
+    saveDB(db);
+    res.json({ success: true, db });
+
+  } catch (err: any) {
+    console.error(`[SYNC] Error processing action ${action}:`, err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// POST sync batch — process multiple actions atomically
+app.post("/api/sync/batch", (req, res) => {
+  const { actions } = req.body;
+  if (!Array.isArray(actions) || actions.length === 0) {
+    return res.status(400).json({ success: false, error: "Missing actions array" });
+  }
+
+  console.log(`[SYNC BATCH] Processing ${actions.length} actions`);
+  const results: Array<{ action: string; success: boolean; error?: string }> = [];
+  const db = loadDB();
+
+  for (const item of actions) {
+    try {
+      const { action, childId, activityId, taskId, payload } = item;
+      
+      switch (action) {
+        case "complete_activity": {
+          const task = db.activeTasks.find((t: any) => t.id === (taskId || activityId) && t.childId === childId);
+          if (task) { task.status = "completed"; task.completedAt = new Date().toISOString(); }
+          break;
+        }
+        case "award_points": {
+          const child = db.children.find((c: any) => c.id === childId);
+          if (child && payload?.points) child.points += Number(payload.points);
+          break;
+        }
+        case "buy_reward": {
+          const child = db.children.find((c: any) => c.id === childId);
+          if (child && payload?.costPoints) child.points -= Number(payload.costPoints);
+          break;
+        }
+        default:
+          results.push({ action, success: false, error: `Unsupported in batch: ${action}` });
+          continue;
+      }
+      results.push({ action, success: true });
+    } catch (err: any) {
+      results.push({ action: item.action, success: false, error: err.message });
+    }
+  }
+
+  saveDB(db);
+  res.json({ success: true, results, db });
+});
+
+// ─── AI Service Health Check ─────────────────────────────────────────
+app.get("/api/ai/status", (req, res) => {
+  try {
+    const { aiService } = require("./server/ai");
+    res.json(aiService.getStatus());
+  } catch {
+    res.json({ provider: "unknown", available: false, queueEnabled: false });
+  }
 });
 
 // Serve Vite preview / Static assets
