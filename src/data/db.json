@@ -1,0 +1,542 @@
+{
+  "children": [
+    {
+      "id": "dominic",
+      "name": "Dominic",
+      "age": 10,
+      "points": 80,
+      "avatar": "🐶",
+      "readingStreak": 3,
+      "daysSinceLastReading": 0,
+      "activeTimer": null
+    },
+    {
+      "id": "sofia",
+      "name": "Sofia",
+      "age": 14,
+      "points": 140,
+      "avatar": "🐈",
+      "readingStreak": 3,
+      "daysSinceLastReading": 2,
+      "activeTimer": null
+    }
+  ],
+  "activeTasks": [
+    {
+      "id": "dominic-chore-vacuum",
+      "childId": "dominic",
+      "name": "Aspirat în Cameră & Hol",
+      "type": "chore",
+      "description": "Aspiră cu atenție camera proprie și holul de la intrare folosind aspiratorul vertical inteligent.",
+      "points": 70,
+      "status": "pending"
+    },
+    {
+      "id": "dominic-chore-room",
+      "childId": "dominic",
+      "name": "Curățenie în Cameră",
+      "type": "chore",
+      "description": "Sortează jucăriile în cutii, fă-ți patul excelent și ordonează-ți cărțile pe bibliotecă.",
+      "points": 60,
+      "status": "pending"
+    },
+    {
+      "id": "dominic-chore-dishes",
+      "childId": "dominic",
+      "name": "Clătire & Aranjare Vase",
+      "type": "chore",
+      "description": "Ajută-ți părinții clătind ușor farfuriile și așezându-le ordonat în mașina de spălat.",
+      "points": 50,
+      "status": "pending"
+    },
+    {
+      "id": "dominic-chore-clothes",
+      "childId": "dominic",
+      "name": "Sortare Haine de Spălat",
+      "type": "chore",
+      "description": "Adună hainele lăsate în cameră și sortează-le pe culori (coșul alb vs coșul colorat).",
+      "points": 40,
+      "status": "pending"
+    },
+    {
+      "id": "dominic-hygiene-morning",
+      "childId": "dominic",
+      "name": "🧼 Igienă de Dimineață",
+      "type": "chore",
+      "description": "Spală-te pe dinți timp de 2 minute, spală-te bine pe față, piaptănă-te și îmbracă-te cu haine curate de vacanță.",
+      "points": 30,
+      "status": "pending"
+    },
+    {
+      "id": "dominic-hygiene-evening",
+      "childId": "dominic",
+      "name": "🚿 Igienă de Seară",
+      "type": "chore",
+      "description": "Fă un duș sau o baie revigorantă, spală-te corect pe dinți înainte de culcare și pune-ți pijamalele curate.",
+      "points": 30,
+      "status": "pending"
+    },
+    {
+      "id": "sofia-chore-vacuum",
+      "childId": "sofia",
+      "name": "Aspirat Living & Hol Mare",
+      "type": "chore",
+      "description": "Aspiră covorul și parchetul din living, holul de legătură și sub biblioteca principală.",
+      "points": 85,
+      "status": "pending"
+    },
+    {
+      "id": "sofia-chore-room",
+      "childId": "sofia",
+      "name": "Curățenie Generală & Praf",
+      "type": "chore",
+      "description": "Șterge praful pe rafturi, pe blatul de bucătărie și living, și aranjează pernele canapelei ca la carte.",
+      "points": 80,
+      "status": "pending"
+    },
+    {
+      "id": "sofia-chore-dishes",
+      "childId": "sofia",
+      "name": "Spălare Manuală & Ordonat Vase",
+      "type": "chore",
+      "description": "Spală tigaia și cratița mare, golește vasele curate din mașina de spălat și așază-le în dulapul corespunzător.",
+      "points": 75,
+      "status": "pending"
+    },
+    {
+      "id": "sofia-chore-washing",
+      "childId": "sofia",
+      "name": "Operat Mașină de Spălat Haine",
+      "type": "chore",
+      "description": "Sortează haina murdară, adaugă capsule de detergent și balsam de rufe, selectează Eco 40° și pornește mașina.",
+      "points": 70,
+      "status": "pending"
+    },
+    {
+      "id": "sofia-chore-ironing",
+      "childId": "sofia",
+      "name": "Călcat Tricouri & Haine Simple",
+      "type": "chore",
+      "description": "Folosind stația de călcat setată la putere medie, calcă cu atenție 3 tricouri și întinde-le frumos pe umeraș în sifonier.",
+      "points": 90,
+      "status": "pending"
+    },
+    {
+      "id": "sofia-hygiene-morning",
+      "childId": "sofia",
+      "name": "🧼 Igienă de Dimineață",
+      "type": "chore",
+      "description": "Rutina completă de dimineață: spălat pe dinți, curățarea tenului/spălat pe față, pieptănat și haine curate pentru o zi excelentă.",
+      "points": 30,
+      "status": "pending"
+    },
+    {
+      "id": "sofia-hygiene-evening",
+      "childId": "sofia",
+      "name": "🚿 Igienă de Seară",
+      "type": "chore",
+      "description": "Duș sau baie completă, igienă dentară de seară temeinică și așezat pijamale curate pentru un somn odihnitor.",
+      "points": 30,
+      "status": "pending"
+    },
+    {
+      "id": "walk-morning-1781858792341",
+      "childId": "dominic",
+      "name": "Plimbare Câine (morning)",
+      "type": "dog_walk",
+      "description": "Plimbare responsabilă a câinelui în intervalul: morning",
+      "points": 40,
+      "status": "approved",
+      "completedAt": "2026-06-19T08:46:32.341Z",
+      "walkTimeSlot": "morning"
+    },
+    {
+      "id": "reading-dominic-1781858835496",
+      "childId": "dominic",
+      "name": "Lectură: Dinozauri acvatici (Failsafe)",
+      "type": "reading",
+      "description": "Citește textul de vacanță adaptat și răspunde corect la cele 3 întrebări.",
+      "points": 60,
+      "status": "approved",
+      "readingTopic": "Dinozauri acvatici",
+      "readingPassage": "Subiect: Fascinanta călătorie a cunoașterii despre \"Dinozauri acvatici\" ✨\n\nBun venit în lumea special creată în jurul temei alese de tine: \"Dinozauri acvatici\"! Fiecare domeniu, oricât de izolat sau inovator, ascunde propriile sale secrete, invenții și învățături prețioase. Când copiii isteți își aleg singuri subiectele pe care doresc să le studieze în timpul vacanței active, ei își accelerează capacitatea de concentrare și devin exploratori autonomi.\n\nSă parcurgi o lectură despre \"Dinozauri acvatici\" la vârsta de 10 ani reprezintă un pas uriaș în educarea atenției tale. Învățarea continuă nu se termină niciodată, ci reprezintă o super-putere pe care o cultivi zi de zi, lectură după lectură. Ești pe drumul cel bun spre excelență, iar curiozitatea ta crescută este un dar deosebit!\n\n[Secțiune Antrenament Grad - Pasul 1] Bravo Dominic! Menții cu succes o serie de citit. Știai că procesul de memorare funcționează precum mușchii corpului? Cu cât citești mai mult zi de zi, cu atât creierul tău reține secretele mai ușor. Acesta este primul pas al lecturii tale progresive!",
+      "readingQuestions": [
+        {
+          "id": 1,
+          "question": "Care este subiectul central ales de tine pentru explorarea de astăzi?",
+          "options": [
+            "Despre \"Dinozauri acvatici\"",
+            "Despre cum se face curățenie forțată",
+            "Despre istoria ceasurilor elvețiene"
+          ],
+          "correctAnswerIndex": 0,
+          "selectedAnswerIndex": 0,
+          "feedback": "Răspuns corect! Excelent."
+        },
+        {
+          "id": 2,
+          "question": "Cum te ajută alegerea și lectura liberă a unor subiecte în timpul vacanței?",
+          "options": [
+            "Să te plictisești mai repede în casă",
+            "Să îți dezvolți atenția și capacitatea de concentrare autonomă",
+            "Să uiți tot ce ai învățat la școală"
+          ],
+          "correctAnswerIndex": 1,
+          "selectedAnswerIndex": 1,
+          "feedback": "Răspuns corect! Excelent."
+        },
+        {
+          "id": 3,
+          "question": "Ce reprezintă în esență dragostea de a descoperi lucruri noi în fiecare zi?",
+          "options": [
+            "O obligație plictisitoare",
+            "O super-putere prețioasă pe care o cultivi inteligent",
+            "Un mod de a te fofili de la curățat farfurii"
+          ],
+          "correctAnswerIndex": 1,
+          "selectedAnswerIndex": 1,
+          "feedback": "Răspuns corect! Excelent."
+        }
+      ],
+      "readingScore": 3,
+      "completedAt": "2026-06-19T08:47:44.613Z"
+    },
+    {
+      "id": "reading-dominic-1781866274685",
+      "childId": "dominic",
+      "name": "Lectură: Dinozauri acvatici",
+      "type": "reading",
+      "description": "Citește textul personalizat adaptat vârstei tale și răspunde corect la cele 3 întrebări din el.",
+      "points": 60,
+      "status": "rejected",
+      "readingTopic": "Dinozauri acvatici",
+      "readingPassage": "Imaginează-ți că te scufunzi în oceanul de acum o sută de milioane de ani. Apa caldă și limpede ascunde creaturi uriașe, uluitoare, care stăpâneau mările în timp ce dinozaurii dominau uscatul. Deși îi numim adesea „dinozauri acvatici”, oamenii de știință ne explică un secret: aceste fiare marine erau, de fapt, reptile gigantice adaptate perfect la viața în apă. Una dintre cele mai faimoase creaturi a fost Plesiosaurus. Cu un gât incredibil de lung, asemănător unui șarpe, și un corp robust dotat cu patru înotătoare mari, el se deplasa prin apă ca și cum ar fi zburat. Imaginați-vă un animal care își folosea gâtul flexibil pentru a vâna pești rapizi, strecurându-se nevăzut printre stâncile subacvatice. El respira aer ridicându-și capul la suprafață, exact ca o țestoasă modernă. În adâncuri pândea însă un prădător mult mai de temut: Mosasaurus. Acesta era un adevărat „monstru” al abisului, cu o lungime ce depășea adesea cincisprezece metri. Avea fălci uriașe, pline de dinți ascuțiți ca niște pumnale, capabili să zdrobească carapacea celor mai dure prăzi. Coada sa puternică îl propulsa cu o viteză uluitoare, transformându-l în regele de necontestat al oceanelor preistorice. Pe lângă acești uriași, Ichthyosaurus semăna izbitor cu delfinii din zilele noastre, având un corp aerodinamic care îi permitea să înoate extrem de rapid. Toate aceste reptile uimitoare au dispărut în același timp cu dinozaurii de pe uscat, dar fosilele lor, găsite astăzi în stânci străvechi, continuă să ne aprindă imaginația și să ne poarte într-o călătorie fascinantă în trecutul planetei noastre albastre.",
+      "readingQuestions": [
+        {
+          "id": 1,
+          "question": "Care este adevărul științific despre așa-numiții „dinozauri acvatici”?",
+          "options": [
+            "Erau de fapt reptile marine gigantice adaptate la viața în apă.",
+            "Erau pești uriași care au învățat să respire aer.",
+            "Erau mamifere marine, strămoșii balenelor albastre."
+          ],
+          "correctAnswerIndex": 0,
+          "selectedAnswerIndex": 0,
+          "feedback": "Răspuns corect! Excelent."
+        },
+        {
+          "id": 2,
+          "question": "Ce trăsătură fizică deosebită folosea Plesiosaurus pentru a vâna pești?",
+          "options": [
+            "O coadă extrem de rapidă în formă de seceră.",
+            "Un gât incredibil de lung și flexibil.",
+            "Fălci uriașe care zdrobeau carcasele dure."
+          ],
+          "correctAnswerIndex": 1,
+          "selectedAnswerIndex": 1,
+          "feedback": "Răspuns corect! Excelent."
+        },
+        {
+          "id": 3,
+          "question": "Cu ce animal modern semăna foarte mult Ichthyosaurus din punct de vedere al formei corpului?",
+          "options": [
+            "Cu țestoasa marină.",
+            "Cu rechinul alb.",
+            "Cu delfinul."
+          ],
+          "correctAnswerIndex": 2,
+          "selectedAnswerIndex": 1,
+          "feedback": "Răspuns greșit! Varianta corectă era \"Cu delfinul.\"."
+        }
+      ],
+      "attemptsCount": 1,
+      "firstAttemptScore": 2,
+      "readingScore": 2
+    },
+    {
+      "id": "reading-sofia-1781866409901",
+      "childId": "sofia",
+      "name": "Lectură: Inteligenta Artificiala",
+      "type": "reading",
+      "description": "Citește textul personalizat adaptat vârstei tale și răspunde corect la cele 3 întrebări din el.",
+      "points": 60,
+      "status": "pending",
+      "readingTopic": "Inteligenta Artificiala",
+      "readingPassage": "Imaginează-ți, Sofia, o oglindă uriașă în care omenirea nu își privește chipul fizic, ci propria minte, cu toate labirinturile și sclipirile ei de geniu. Această oglindă fascinantă este Inteligența Artificială (IA), o creație tehnologică ce a încetat de mult să mai aparțină doar tărâmului science-fiction, devenind o prezență subtilă și profundă în dinamica vieții noastre de zi cu zi. Ea ne provoacă să regândim granițele cunoașterii. Originile acestei aventuri intelectuale coboară în timp până la mijlocul secolului trecut, când genialul matematician britanic Alan Turing s-a întrebat, cu o îndrăzneală uluitoare pentru epoca sa, dacă mașinile pot gândi cu adevărat. El a propus un experiment conceptual celebru, cunoscut astăzi sub numele de \"Testul Turing\", sugerând că un computer ar putea fi considerat dotat cu inteligență dacă, în timpul unei conversații textuale, un interlocutor uman nu ar putea să își dea seama că discută cu o mașină, ci ar crede că interacționează cu o altă ființă umană. Astăzi, însă, IA a depășit cu mult aceste simple jocuri de mimă și imitație. Tehnologia modernă se bazează pe rețele neuronale artificiale, structuri matematice complexe care încearcă să replice, la nivel digital, modul în care neuronii din creierul uman comunică și procesează informațiile. Spre deosebire de noi, care asimilăm lumea înconjurătoare prin simțuri, trăiri emoționale, intuiție și experiențe de viață, algoritmii de învățare automată (Machine Learning) decodifică realitatea exclusiv prin intermediul tiparelor matematice și al statisticilor avansate. Atunci când o inteligență artificială recunoaște o melodie melancolică, ea nu simte cu adevărat tristețea sau dorul din spatele acordurilor muzicale; ea identifică o anumită frecvență a undelor sonore și o succesiune specifică de note pe care le-a corelat statistic cu eticheta de \"melancolie\" în urma analizării a milioane de alte piese muzicale. La fel se întâmplă și cu arta generativă sau eseurile literare pe care computerele le pot compune în doar câteva secunde. Acestea nu sunt rezultatul unei inspirații divine sau al unei trăiri interioare, ci reprezintă o sinteză extrem de rafinată a întregii culturi scrise de oameni, reorganizată elegant pe baza unor probabilități lingvistice. Aici intervine marea întrebare filosofică și etică pe care generația ta va fi chemată să o dezlege: unde se termină calculul matematic riguros și unde începe cu adevărat conștiința? Deși un sistem de IA ne poate învinge fără efort la șah, poate diagnostica afecțiuni medicale extrem de rare cu o precizie uluitoare sau poate redacta poezii de o frumusețe academică, el rămâne complet lipsit de conștiință de sine, de empatie și de sentimente autentice. O inteligență artificială nu va simți niciodată emoția primei zile de liceu, nostalgia unui apus de soare la malul mării sau căldura sufletească a unei prietenii adevărate. Ea reflectă strălucirea minții noastre, dar este lipsită de acea scânteie vitală pe care o numim suflet. De aceea, viitorul pe care îl construim nu ar trebui să fie unul al rivalității, ci al unei sinergii armonioase între rigoarea rece a algoritmilor și profunzimea caldă a spiritului uman. Ca adolescentă pasionată de cunoaștere, ai ocazia extraordinară de a privi aceste tehnologii nu ca pe niște înlocuitori ai gândirii proprii, ci ca pe niște instrumente formidabile care îți pot amplifica creativitatea și curiozitatea intelectuală. Inteligența Artificială este, în esență, o oglindă a dorinței noastre de autodepășire, o invitație constantă de a explora necunoscutul și de a prețui, cu atât mai mult, calitățile unice care ne definesc umanitatea.",
+      "readingQuestions": [
+        {
+          "id": 1,
+          "question": "Care a fost testul propus de Alan Turing pentru a evalua dacă o mașină este inteligentă?",
+          "options": [
+            "Un test de calcul matematic ultra-rapid și rezolvare de ecuații.",
+            "O conversație textuală prin care mașina trebuia să nu poată fi deosebită de un om.",
+            "Un test fizic de îndemânare și asamblare a pieselor de computer."
+          ],
+          "correctAnswerIndex": 1
+        },
+        {
+          "id": 2,
+          "question": "Cum percepe un algoritm de învățare automată o melodie melancolică?",
+          "options": [
+            "Prin trăirea interioară a sentimentului de nostalgie.",
+            "Prin corelarea statistică a frecvențelor sonore cu datele analizate anterior.",
+            "Prin generarea automată a unor amintiri din copilărie."
+          ],
+          "correctAnswerIndex": 1
+        },
+        {
+          "id": 3,
+          "question": "Ce element fundamental deosebește mintea umană de inteligența artificială conform textului?",
+          "options": [
+            "Conștiința de sine, empatia și trăirile subiective autentice.",
+            "Capacitatea de a stoca milioane de cărți și date statistice.",
+            "Viteza de calcul și precizia în realizarea traducerilor."
+          ],
+          "correctAnswerIndex": 0
+        }
+      ]
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif-gen-1781866409901",
+      "childName": "Sofia",
+      "message": "A inițiat o lectură adaptată despre \"Inteligenta Artificiala\". Lectura are statut Opțional.",
+      "timestamp": "2026-06-19T10:53:29.901Z",
+      "type": "info"
+    },
+    {
+      "id": "notif-read-fail-1781866286065",
+      "childName": "Dominic",
+      "message": "A încercat chestionarul pentru \"Dinozauri acvatici\", dar a răspuns corect doar la 2/3 întrebări. Sarcina rămâne deschisă ca \"revalidare\" pentru a reîncerca lecturarea cu atenție.",
+      "timestamp": "2026-06-19T10:51:26.065Z",
+      "type": "warning"
+    },
+    {
+      "id": "notif-gen-1781866274685",
+      "childName": "Dominic",
+      "message": "A inițiat o lectură adaptată despre \"Dinozauri acvatici\". Lectura are statut Opțional.",
+      "timestamp": "2026-06-19T10:51:14.685Z",
+      "type": "info"
+    },
+    {
+      "id": "notif-exp-1781862398815",
+      "childName": "Sistem",
+      "message": "Timpul pentru reward-ul \"1 oră timp pe TV (Smart TV)\" a expirat pentru Dominic.",
+      "timestamp": "2026-06-19T09:46:38.814Z",
+      "type": "warning"
+    },
+    {
+      "id": "notif-read-ok-1781858864613",
+      "childName": "Dominic",
+      "message": "A citit textul \"Dinozauri acvatici\" și a răspuns CORECT la toate cele 3 întrebări! A acumulat 60 puncte. Streak de lectură: 3 zile consecutive!",
+      "timestamp": "2026-06-19T08:47:44.613Z",
+      "type": "success"
+    },
+    {
+      "id": "notif-read-fail-1781858857666",
+      "childName": "Dominic",
+      "message": "A încercat chestionarul pentru \"Dinozauri acvatici\", dar a răspuns corect doar la 2/3 întrebări. Sarcina rămâne deschisă pentru a reîncerca lecturarea cu atenție.",
+      "timestamp": "2026-06-19T08:47:37.666Z",
+      "type": "warning"
+    },
+    {
+      "id": "notif-read-fail-1781858840251",
+      "childName": "Dominic",
+      "message": "A încercat chestionarul pentru \"Dinozauri acvatici\", dar a răspuns corect doar la 2/3 întrebări. Sarcina rămâne deschisă pentru a reîncerca lecturarea cu atenție.",
+      "timestamp": "2026-06-19T08:47:20.251Z",
+      "type": "warning"
+    },
+    {
+      "id": "buy-1781858797931",
+      "childName": "Dominic",
+      "message": "A cumpărat recompensa \"1 oră timp pe TV (Smart TV)\" pentru 100 puncte! Cronometrul a început automat.",
+      "timestamp": "2026-06-19T08:46:37.930Z",
+      "type": "success"
+    },
+    {
+      "id": "notif-walk-1781858792341",
+      "childName": "Dominic",
+      "message": "A plimbat câinele la tura de \"Dimineață\" și a obținut 40 puncte! Cealaltă tura nu mai poate fi bifata de altcineva.",
+      "timestamp": "2026-06-19T08:46:32.341Z",
+      "type": "success"
+    },
+    {
+      "id": "init-notification",
+      "childName": "Sistem",
+      "message": "Vacanța de vară a început! Aplicația Arcadia Smart Vacation a pornit cu succes. Spor deopotrivă la activități fizice și la lectură!",
+      "timestamp": "2026-06-19T08:46:26.103Z",
+      "type": "info"
+    }
+  ],
+  "topicProposals": [
+    {
+      "childId": "dominic",
+      "topic": "Dinozauri acvatici",
+      "customPrompt": "",
+      "customQuestions": "",
+      "approved": false
+    },
+    {
+      "childId": "sofia",
+      "topic": "Inteligenta Artificiala",
+      "customPrompt": "",
+      "customQuestions": "",
+      "approved": false
+    }
+  ],
+  "homeAssistant": {
+    "url": "",
+    "token": "",
+    "enabled": false,
+    "tvEntityId": "input_boolean.tv_kids_time",
+    "xboxEntityId": "input_boolean.xbox_kids_time"
+  },
+  "dogWalkStatus": {
+    "morning": {
+      "childId": "dominic",
+      "time": "2026-06-19T08:46:32.341Z"
+    },
+    "midday": {
+      "childId": null,
+      "time": null
+    },
+    "evening": {
+      "childId": null,
+      "time": null
+    }
+  },
+  "parentPin": "0000",
+  "parentEmail": "csepregi.arthur@gmail.com",
+  "emailsSent": [
+    {
+      "id": "email-1781866286065",
+      "to": "csepregi.arthur@gmail.com",
+      "subject": "⚠️ Încercare Lectură Neterminată - Dominic",
+      "body": "\n<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\">\n  <!-- Header -->\n  <div style=\"background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 32px 24px; text-align: center; color: #ffffff;\">\n    <span style=\"font-size: 32px; display: block; margin-bottom: 8px;\">🛡️</span>\n    <h1 style=\"margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;\">ARCADIA SMART VACATION</h1>\n    <p style=\"margin: 4px 0 0 0; font-size: 11px; color: #c7d2fe; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;\">Notificare Automată Părinte</p>\n  </div>\n  \n  <!-- Body -->\n  <div style=\"padding: 28px 24px; background-color: #ffffff;\">\n    <div style=\"display: block; margin-bottom: 24px; background-color: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #f1f5f9;\">\n      <span style=\"font-size: 28px; margin-right: 12px; display: inline-block; vertical-align: middle;\">🐶</span>\n      <div style=\"display: inline-block; vertical-align: middle;\">\n        <h2 style=\"margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;\">Dominic</h2>\n        <p style=\"margin: 2px 0 0 0; font-size: 10px; text-transform: uppercase; font-weight: 800; color: #64748b; letter-spacing: 0.05em;\">Sold curent: 80 Puncte</p>\n      </div>\n    </div>\n\n    <h3 style=\"margin-top: 0; font-size: 16px; font-weight: 800; color: #1e1b4b; line-height: 1.3; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;\">Lectură în Desfășurare: \"Dinozauri acvatici\"</h3>\n    \n    <div style=\"font-size: 13.5px; line-height: 1.6; color: #334155; font-weight: 550; margin: 16px 0;\">\n      <p>Salutare, părinte!</p>\n       <p>Te informăm că <strong>Dominic</strong> a completat chestionarul pentru lectura <strong>\"Dinozauri acvatici\"</strong>, dar nu a obținut scorul maxim.</p>\n       <p>Rezultat test: <strong>2 din 3 răspunsuri corecte</strong>.</p>\n       <p>Pentru a încuraja înțelegerea deplină a textului, sistemul Arcadia a menținut sarcina deschisă. Copilul este îndrumat politicos să reîncercă chestionarul după o lecturare mai atentă a pasajului.</p>\n    </div>\n  </div>\n  \n  <!-- Footer -->\n  <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9; font-size: 10.5px; color: #64748b; font-weight: 600; line-height: 1.5;\">\n    <p style=\"margin: 0 0 4px 0;\">Sistem inteligent securizat în timp real alimentat de Gemini AI.</p>\n    <p style=\"margin: 0; color: #94a3b8;\">Trimis cu succes către <strong style=\"color: #64748b;\">csepregi.arthur@gmail.com</strong>. Poți configura destinația în panoul admin.</p>\n  </div>\n</div>\n  ",
+      "timestamp": "2026-06-19T10:51:26.065Z",
+      "status": "Delivered (Simulat și Arhivat)"
+    },
+    {
+      "id": "email-1781858864613",
+      "to": "csepregi.arthur@gmail.com",
+      "subject": "📚 Dominic a finalizat lectura zilnică! 🌟",
+      "body": "\n<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\">\n  <!-- Header -->\n  <div style=\"background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 32px 24px; text-align: center; color: #ffffff;\">\n    <span style=\"font-size: 32px; display: block; margin-bottom: 8px;\">🛡️</span>\n    <h1 style=\"margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;\">ARCADIA SMART VACATION</h1>\n    <p style=\"margin: 4px 0 0 0; font-size: 11px; color: #c7d2fe; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;\">Notificare Automată Părinte</p>\n  </div>\n  \n  <!-- Body -->\n  <div style=\"padding: 28px 24px; background-color: #ffffff;\">\n    <div style=\"display: block; margin-bottom: 24px; background-color: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #f1f5f9;\">\n      <span style=\"font-size: 28px; margin-right: 12px; display: inline-block; vertical-align: middle;\">🐶</span>\n      <div style=\"display: inline-block; vertical-align: middle;\">\n        <h2 style=\"margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;\">Dominic</h2>\n        <p style=\"margin: 2px 0 0 0; font-size: 10px; text-transform: uppercase; font-weight: 800; color: #64748b; letter-spacing: 0.05em;\">Sold curent: 80 Puncte</p>\n      </div>\n    </div>\n\n    <h3 style=\"margin-top: 0; font-size: 16px; font-weight: 800; color: #1e1b4b; line-height: 1.3; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;\">Lectură de Vacanță Reușită: \"Dinozauri acvatici\"</h3>\n    \n    <div style=\"font-size: 13.5px; line-height: 1.6; color: #334155; font-weight: 550; margin: 16px 0;\">\n      <p>Salutare, părinte drag!</p>\n       <p>Avem vești minunate! <strong>Dominic</strong> a finalizat cu brio lectura de astăzi dedicată subiectului: <strong>\"Dinozauri acvatici\"</strong>.</p>\n       <p>A răspuns perfect, obținând un scor impecabil de <strong>3/3 răspunsuri corecte</strong> la testul de verificare rapidă!</p>\n       <p>Detalii performanță:</p>\n       <ul style=\"padding-left: 20px; font-weight: 600;\">\n         <li>Puncte câștigate: <strong style=\"color: #059669;\">+60 puncte</strong></li>\n         <li>Serie curentă: <strong style=\"color: #6366f1;\">3 zile consecutive</strong></li>\n       </ul>\n       <p>Acum se poate relaxa sau folosi punctele dobândite în magazinul de recompense digitale.</p>\n    </div>\n  </div>\n  \n  <!-- Footer -->\n  <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9; font-size: 10.5px; color: #64748b; font-weight: 600; line-height: 1.5;\">\n    <p style=\"margin: 0 0 4px 0;\">Sistem inteligent securizat în timp real alimentat de Gemini AI.</p>\n    <p style=\"margin: 0; color: #94a3b8;\">Trimis cu succes către <strong style=\"color: #64748b;\">csepregi.arthur@gmail.com</strong>. Poți configura destinația în panoul admin.</p>\n  </div>\n</div>\n  ",
+      "timestamp": "2026-06-19T08:47:44.613Z",
+      "status": "Delivered (Simulat și Arhivat)"
+    },
+    {
+      "id": "email-1781858857666",
+      "to": "csepregi.arthur@gmail.com",
+      "subject": "⚠️ Încercare Lectură Neterminată - Dominic",
+      "body": "\n<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\">\n  <!-- Header -->\n  <div style=\"background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 32px 24px; text-align: center; color: #ffffff;\">\n    <span style=\"font-size: 32px; display: block; margin-bottom: 8px;\">🛡️</span>\n    <h1 style=\"margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;\">ARCADIA SMART VACATION</h1>\n    <p style=\"margin: 4px 0 0 0; font-size: 11px; color: #c7d2fe; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;\">Notificare Automată Părinte</p>\n  </div>\n  \n  <!-- Body -->\n  <div style=\"padding: 28px 24px; background-color: #ffffff;\">\n    <div style=\"display: block; margin-bottom: 24px; background-color: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #f1f5f9;\">\n      <span style=\"font-size: 28px; margin-right: 12px; display: inline-block; vertical-align: middle;\">🐶</span>\n      <div style=\"display: inline-block; vertical-align: middle;\">\n        <h2 style=\"margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;\">Dominic</h2>\n        <p style=\"margin: 2px 0 0 0; font-size: 10px; text-transform: uppercase; font-weight: 800; color: #64748b; letter-spacing: 0.05em;\">Sold curent: 20 Puncte</p>\n      </div>\n    </div>\n\n    <h3 style=\"margin-top: 0; font-size: 16px; font-weight: 800; color: #1e1b4b; line-height: 1.3; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;\">Lectură în Desfășurare: \"Dinozauri acvatici\"</h3>\n    \n    <div style=\"font-size: 13.5px; line-height: 1.6; color: #334155; font-weight: 550; margin: 16px 0;\">\n      <p>Salutare, părinte!</p>\n       <p>Te informăm că <strong>Dominic</strong> a completat chestionarul pentru lectura <strong>\"Dinozauri acvatici\"</strong>, dar nu a obținut scorul maxim.</p>\n       <p>Rezultat test: <strong>2 din 3 răspunsuri corecte</strong>.</p>\n       <p>Pentru a încuraja înțelegerea deplină a textului, sistemul Arcadia a menținut sarcina deschisă. Copilul este îndrumat politicos să reîncercă chestionarul după o lecturare mai atentă a pasajului.</p>\n    </div>\n  </div>\n  \n  <!-- Footer -->\n  <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9; font-size: 10.5px; color: #64748b; font-weight: 600; line-height: 1.5;\">\n    <p style=\"margin: 0 0 4px 0;\">Sistem inteligent securizat în timp real alimentat de Gemini AI.</p>\n    <p style=\"margin: 0; color: #94a3b8;\">Trimis cu succes către <strong style=\"color: #64748b;\">csepregi.arthur@gmail.com</strong>. Poți configura destinația în panoul admin.</p>\n  </div>\n</div>\n  ",
+      "timestamp": "2026-06-19T08:47:37.666Z",
+      "status": "Delivered (Simulat și Arhivat)"
+    },
+    {
+      "id": "email-1781858840251",
+      "to": "csepregi.arthur@gmail.com",
+      "subject": "⚠️ Încercare Lectură Neterminată - Dominic",
+      "body": "\n<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\">\n  <!-- Header -->\n  <div style=\"background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 32px 24px; text-align: center; color: #ffffff;\">\n    <span style=\"font-size: 32px; display: block; margin-bottom: 8px;\">🛡️</span>\n    <h1 style=\"margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;\">ARCADIA SMART VACATION</h1>\n    <p style=\"margin: 4px 0 0 0; font-size: 11px; color: #c7d2fe; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;\">Notificare Automată Părinte</p>\n  </div>\n  \n  <!-- Body -->\n  <div style=\"padding: 28px 24px; background-color: #ffffff;\">\n    <div style=\"display: block; margin-bottom: 24px; background-color: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #f1f5f9;\">\n      <span style=\"font-size: 28px; margin-right: 12px; display: inline-block; vertical-align: middle;\">🐶</span>\n      <div style=\"display: inline-block; vertical-align: middle;\">\n        <h2 style=\"margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;\">Dominic</h2>\n        <p style=\"margin: 2px 0 0 0; font-size: 10px; text-transform: uppercase; font-weight: 800; color: #64748b; letter-spacing: 0.05em;\">Sold curent: 20 Puncte</p>\n      </div>\n    </div>\n\n    <h3 style=\"margin-top: 0; font-size: 16px; font-weight: 800; color: #1e1b4b; line-height: 1.3; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;\">Lectură în Desfășurare: \"Dinozauri acvatici\"</h3>\n    \n    <div style=\"font-size: 13.5px; line-height: 1.6; color: #334155; font-weight: 550; margin: 16px 0;\">\n      <p>Salutare, părinte!</p>\n       <p>Te informăm că <strong>Dominic</strong> a completat chestionarul pentru lectura <strong>\"Dinozauri acvatici\"</strong>, dar nu a obținut scorul maxim.</p>\n       <p>Rezultat test: <strong>2 din 3 răspunsuri corecte</strong>.</p>\n       <p>Pentru a încuraja înțelegerea deplină a textului, sistemul Arcadia a menținut sarcina deschisă. Copilul este îndrumat politicos să reîncercă chestionarul după o lecturare mai atentă a pasajului.</p>\n    </div>\n  </div>\n  \n  <!-- Footer -->\n  <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9; font-size: 10.5px; color: #64748b; font-weight: 600; line-height: 1.5;\">\n    <p style=\"margin: 0 0 4px 0;\">Sistem inteligent securizat în timp real alimentat de Gemini AI.</p>\n    <p style=\"margin: 0; color: #94a3b8;\">Trimis cu succes către <strong style=\"color: #64748b;\">csepregi.arthur@gmail.com</strong>. Poți configura destinația în panoul admin.</p>\n  </div>\n</div>\n  ",
+      "timestamp": "2026-06-19T08:47:20.251Z",
+      "status": "Delivered (Simulat și Arhivat)"
+    },
+    {
+      "id": "email-1781858797931",
+      "to": "csepregi.arthur@gmail.com",
+      "subject": "🎁 Schimb Recompensă - Dominic a deblocat \"1 oră timp pe TV (Smart TV)\"",
+      "body": "\n<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\">\n  <!-- Header -->\n  <div style=\"background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 32px 24px; text-align: center; color: #ffffff;\">\n    <span style=\"font-size: 32px; display: block; margin-bottom: 8px;\">🛡️</span>\n    <h1 style=\"margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;\">ARCADIA SMART VACATION</h1>\n    <p style=\"margin: 4px 0 0 0; font-size: 11px; color: #c7d2fe; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;\">Notificare Automată Părinte</p>\n  </div>\n  \n  <!-- Body -->\n  <div style=\"padding: 28px 24px; background-color: #ffffff;\">\n    <div style=\"display: block; margin-bottom: 24px; background-color: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #f1f5f9;\">\n      <span style=\"font-size: 28px; margin-right: 12px; display: inline-block; vertical-align: middle;\">🐶</span>\n      <div style=\"display: inline-block; vertical-align: middle;\">\n        <h2 style=\"margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;\">Dominic</h2>\n        <p style=\"margin: 2px 0 0 0; font-size: 10px; text-transform: uppercase; font-weight: 800; color: #64748b; letter-spacing: 0.05em;\">Sold curent: 20 Puncte</p>\n      </div>\n    </div>\n\n    <h3 style=\"margin-top: 0; font-size: 16px; font-weight: 800; color: #1e1b4b; line-height: 1.3; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;\">Schimb de Puncte în Recompense Digitale & Ecran!</h3>\n    \n    <div style=\"font-size: 13.5px; line-height: 1.6; color: #334155; font-weight: 550; margin: 16px 0;\">\n      <p>Salutare, deținător de cont principal,</p>\n     <p>Te anunțăm că <strong>Dominic</strong> a efectuat un schimb de puncte în magazinul digital Arcadia!</p>\n     <div style=\"background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; margin: 20px 0;\">\n       <h4 style=\"margin: 0 0 10px 0; font-size: 14px; font-weight: 805; color: #1e1b4b;\">Detalii Tranzacție:</h4>\n       <table style=\"width: 100%; border-collapse: collapse; font-size: 13.5px;\">\n         <tr>\n           <td style=\"padding: 6px 0; color: #64748b; font-weight: 600;\">Recompensă:</td>\n           <td style=\"padding: 6px 0; font-weight: 800; color: #0f172a; text-align: right;\">1 oră timp pe TV (Smart TV)</td>\n         </tr>\n         <tr>\n           <td style=\"padding: 6px 0; color: #64748b; font-weight: 600;\">Cost debitor:</td>\n           <td style=\"padding: 6px 0; font-weight: 800; color: #b45309; text-align: right;\">-100 Puncte</td>\n         </tr>\n         <tr>\n           <td style=\"padding: 6px 0; color: #64748b; font-weight: 600;\">Cronometru activ:</td>\n           <td style=\"padding: 6px 0; font-weight: 800; color: #4f46e5; text-align: right;\">DA (60 min)</td>\n         </tr>\n         \n         <tr>\n           <td style=\"padding: 6px 0; color: #64748b; font-weight: 600;\">Integrare smart home:</td>\n           <td style=\"padding: 6px 0; font-weight: 800; color: #059669; text-align: right;\">Dezactivat (Cerință manuală)</td>\n         </tr>\n         \n       </table>\n     </div>\n     <p>Noul sold de puncte al copilului este de <strong>20 puncte</strong>.</p>\n     <p>Dacă este vorba de un cronometru de tip screen time, acesta va expira automat la terminarea timpului, stingând televizorul sau consola prin integrările noastre din rețea.</p>\n    </div>\n  </div>\n  \n  <!-- Footer -->\n  <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9; font-size: 10.5px; color: #64748b; font-weight: 600; line-height: 1.5;\">\n    <p style=\"margin: 0 0 4px 0;\">Sistem inteligent securizat în timp real alimentat de Gemini AI.</p>\n    <p style=\"margin: 0; color: #94a3b8;\">Trimis cu succes către <strong style=\"color: #64748b;\">csepregi.arthur@gmail.com</strong>. Poți configura destinația în panoul admin.</p>\n  </div>\n</div>\n  ",
+      "timestamp": "2026-06-19T08:46:37.931Z",
+      "status": "Delivered (Simulat și Arhivat)"
+    },
+    {
+      "id": "email-1781858792341",
+      "to": "csepregi.arthur@gmail.com",
+      "subject": "🐶 Dominic a plimbat câinele! (Dimineață)",
+      "body": "\n<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\">\n  <!-- Header -->\n  <div style=\"background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 32px 24px; text-align: center; color: #ffffff;\">\n    <span style=\"font-size: 32px; display: block; margin-bottom: 8px;\">🛡️</span>\n    <h1 style=\"margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;\">ARCADIA SMART VACATION</h1>\n    <p style=\"margin: 4px 0 0 0; font-size: 11px; color: #c7d2fe; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;\">Notificare Automată Părinte</p>\n  </div>\n  \n  <!-- Body -->\n  <div style=\"padding: 28px 24px; background-color: #ffffff;\">\n    <div style=\"display: block; margin-bottom: 24px; background-color: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #f1f5f9;\">\n      <span style=\"font-size: 28px; margin-right: 12px; display: inline-block; vertical-align: middle;\">🐶</span>\n      <div style=\"display: inline-block; vertical-align: middle;\">\n        <h2 style=\"margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;\">Dominic</h2>\n        <p style=\"margin: 2px 0 0 0; font-size: 10px; text-transform: uppercase; font-weight: 800; color: #64748b; letter-spacing: 0.05em;\">Sold curent: 120 Puncte</p>\n      </div>\n    </div>\n\n    <h3 style=\"margin-top: 0; font-size: 16px; font-weight: 800; color: #1e1b4b; line-height: 1.3; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;\">Activitate de Plimbat Câine Finalizată cu Succes!</h3>\n    \n    <div style=\"font-size: 13.5px; line-height: 1.6; color: #334155; font-weight: 550; margin: 16px 0;\">\n      <p>Salutare, părinte drag!</p>\n     <p>Te informăm că <strong>Dominic</strong> a finalizat tura de plimbat câinele de <strong>Dimineață</strong>.</p>\n     <p>A avut o atitudine excelentă, responsabilă și a fost recompensat instantaneu cu <strong>+40 puncte</strong> de vacanță!</p>\n     <p>Sistemul Arcadia a logat această activitate cu amprenta temporală completă pentru audit.</p>\n    </div>\n  </div>\n  \n  <!-- Footer -->\n  <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9; font-size: 10.5px; color: #64748b; font-weight: 600; line-height: 1.5;\">\n    <p style=\"margin: 0 0 4px 0;\">Sistem inteligent securizat în timp real alimentat de Gemini AI.</p>\n    <p style=\"margin: 0; color: #94a3b8;\">Trimis cu succes către <strong style=\"color: #64748b;\">csepregi.arthur@gmail.com</strong>. Poți configura destinația în panoul admin.</p>\n  </div>\n</div>\n  ",
+      "timestamp": "2026-06-19T08:46:32.341Z",
+      "status": "Delivered (Simulat și Arhivat)"
+    }
+  ],
+  "readingHistory": [
+    {
+      "id": "hist-1781858864613",
+      "childId": "dominic",
+      "childName": "Dominic",
+      "topic": "Dinozauri acvatici",
+      "wordCount": 168,
+      "completedAt": "2026-06-19T08:47:44.613Z",
+      "score": 3
+    },
+    {
+      "id": "hist-1",
+      "childId": "sofia",
+      "childName": "Sofia",
+      "topic": "Misterele Universului și ale Găurilor Negre",
+      "wordCount": 512,
+      "completedAt": "2026-06-16T08:46:26.103Z",
+      "score": 3
+    },
+    {
+      "id": "hist-2",
+      "childId": "sofia",
+      "childName": "Sofia",
+      "topic": "Cum Modifică Inteligența Artificială Medicina",
+      "wordCount": 485,
+      "completedAt": "2026-06-18T08:46:26.103Z",
+      "score": 3
+    },
+    {
+      "id": "hist-3",
+      "childId": "dominic",
+      "childName": "Dominic",
+      "topic": "Vânătoarea Dinozaurilor Acvatici în Triasici",
+      "wordCount": 165,
+      "completedAt": "2026-06-17T08:46:26.103Z",
+      "score": 3
+    },
+    {
+      "id": "hist-4",
+      "childId": "dominic",
+      "childName": "Dominic",
+      "topic": "Senzorii și Motoarele din Programarea Roboților",
+      "wordCount": 215,
+      "completedAt": "2026-06-18T20:46:26.103Z",
+      "score": 3
+    }
+  ],
+  "suggestions": [
+    {
+      "id": "sug-dominic-skate",
+      "childId": "dominic",
+      "childName": "Dominic",
+      "type": "reward",
+      "title": "🛹 30 minute extra de Skateboarding",
+      "description": "Aș vrea să pot cumpăra 30 de minute de dat cu skate-ul pe alee cu băieții după amiază.",
+      "proposedPointsOrCost": 40,
+      "proposedDurationMinutes": 30,
+      "status": "pending",
+      "createdAt": "2026-06-19T05:00:00.000Z"
+    },
+    {
+      "id": "sug-sofia-plants",
+      "childId": "sofia",
+      "childName": "Sofia",
+      "type": "activity",
+      "title": "🪴 Udarea și curățenia plantelor de pe terasă",
+      "description": "Pot să primesc puncte dacă curăț frunzele uscate de la mușcate și ud toate plantele de pe terasă și living?",
+      "proposedPointsOrCost": 50,
+      "status": "pending",
+      "createdAt": "2026-06-19T05:10:00.000Z"
+    }
+  ],
+  "customRewards": [],
+  "smtpConfig": {
+    "enabled": false,
+    "host": "smtp.gmail.com",
+    "port": 587,
+    "user": "",
+    "pass": "",
+    "secure": false
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Remix: Vacanta Activa - Manager Activitati Copii v2",
+  "description": "Aplicatie inteligenta de vacanta pentru managerierea activitatilor copiilor, cu lecturi si chestionare generate de AI, validare poze cu Gemini si integrare de recompense digitale in Home Assistant.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
