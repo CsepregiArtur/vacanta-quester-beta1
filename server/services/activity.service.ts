@@ -71,8 +71,37 @@ export async function getChildActivities(childId: string): Promise<ActivityRow[]
 // ─── Finalizează activitate ─────────────────────────────────────────
 export async function completeActivity(
   activityId: string,
-  photoUrl?: string
-): Promise<ActivityRow | null> {
+  photoUrl?: string,
+  expectedVersion?: number
+): Promise<ActivityRow | { conflict: true; currentVersion?: number } | null> {
+  if (expectedVersion !== undefined) {
+    // Version check: actualizează DOAR dacă versiunea corespunde
+    const result = await query<ActivityRow>(
+      `UPDATE activities SET status = 'completed', completed_at = NOW(), updated_at = NOW(), photo_url = COALESCE($2, photo_url), version = version + 1
+       WHERE id = $1 AND version = $3 RETURNING *`,
+      [activityId, photoUrl, expectedVersion]
+    );
+
+    if (result.rowCount === 0) {
+      // Verifică dacă activitatea există (conflict real vs. inexistentă)
+      const { rows } = await query(`SELECT version FROM activities WHERE id = $1`, [activityId]);
+      if (rows.length > 0) {
+        return { conflict: true, currentVersion: rows[0].version };
+      }
+      return null; // nu există
+    }
+
+    const completed = result.rows[0];
+    trackEvent({
+      eventName: "activity_completed",
+      familyId: completed.family_id,
+      childId: completed.child_id,
+      properties: { activityId: completed.id, title: completed.title, points: completed.points },
+    });
+    return completed;
+  }
+
+  // Fără version check (fallback)
   const { rows } = await query<ActivityRow>(
     `UPDATE activities SET status = 'completed', completed_at = NOW(), updated_at = NOW(), photo_url = COALESCE($2, photo_url), version = version + 1
      WHERE id = $1 RETURNING *`,

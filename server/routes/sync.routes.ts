@@ -25,6 +25,16 @@ router.post("/push", async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Familia nu a fost identificată." });
     }
 
+    const deviceId = req.headers["x-device-id"] as string;
+    // Auto-registrare dispozitiv
+    if (deviceId) {
+      syncService.upsertDevice({
+        family_id: familyId,
+        device_id: deviceId,
+        platform: req.headers["x-platform"] as string || "web",
+      }).catch(() => {});
+    }
+
     const { actions } = req.body;
     if (!actions || !Array.isArray(actions)) {
       return res.status(400).json({ error: " 'actions' trebuie să fie un array." });
@@ -34,11 +44,11 @@ router.post("/push", async (req: Request, res: Response) => {
 
     for (const item of actions) {
       try {
-        const queueItem = await syncService.enqueueSyncAction({
+        await syncService.enqueueSyncAction({
           family_id: familyId,
           action: item.action,
           payload: item.payload,
-          device_id: req.headers["x-device-id"] as string,
+          device_id: deviceId,
         });
         results.push({ action: item.action, success: true });
       } catch (err: any) {
@@ -66,6 +76,16 @@ router.post("/action", async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Familia nu a fost identificată." });
     }
 
+    const deviceId = req.headers["x-device-id"] as string;
+    // Auto-registrare dispozitiv
+    if (deviceId) {
+      syncService.upsertDevice({
+        family_id: familyId,
+        device_id: deviceId,
+        platform: req.headers["x-platform"] as string || "web",
+      }).catch(() => {});
+    }
+
     const { action, payload } = req.body;
     if (!action) {
       return res.status(400).json({ error: "'action' este obligatoriu." });
@@ -75,7 +95,7 @@ router.post("/action", async (req: Request, res: Response) => {
       family_id: familyId,
       action,
       payload: payload || {},
-      device_id: req.headers["x-device-id"] as string,
+      device_id: deviceId,
     });
 
     // Procesează imediat

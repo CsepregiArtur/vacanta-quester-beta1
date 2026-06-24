@@ -11,3 +11,4 @@ export * as rewardsService from "./rewards.service";
 export * as notificationService from "./notification.service";
 export * as syncService from "./sync.service";
 export * as analyticsService from "./analytics.service";
+export * as auditService from "./audit.service";

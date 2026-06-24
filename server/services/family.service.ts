@@ -119,18 +119,39 @@ export async function addChild(
 // ─── Actualizare copil ──────────────────────────────────────────────
 export async function updateChild(
   childId: string,
-  data: Partial<Pick<ChildRow, "points" | "reading_streak" | "days_since_last_reading">>
-): Promise<ChildRow | null> {
+  data: Partial<Pick<ChildRow, "points" | "reading_streak" | "days_since_last_reading">> & { expectedVersion?: number }
+): Promise<ChildRow | { conflict: true; currentVersion?: number } | null> {
   const sets: string[] = [];
   const vals: any[] = [];
   let idx = 1;
   for (const [key, val] of Object.entries(data)) {
-    if (val !== undefined) {
+    if (val !== undefined && key !== "expectedVersion") {
       sets.push(`${key} = $${idx++}`);
       vals.push(val);
     }
   }
   if (sets.length === 0) return null;
+
+  const expectedVersion = (data as any).expectedVersion;
+
+  if (expectedVersion !== undefined) {
+    sets.push(`updated_at = NOW(), version = version + 1`);
+    vals.push(childId, expectedVersion);
+    const result = await query<ChildRow>(
+      `UPDATE children SET ${sets.join(", ")} WHERE id = $${idx} AND version = $${idx + 1} RETURNING *`,
+      vals
+    );
+    if (result.rowCount === 0) {
+      const { rows } = await query(`SELECT version FROM children WHERE id = $1`, [childId]);
+      if (rows.length > 0) {
+        return { conflict: true, currentVersion: rows[0].version };
+      }
+      return null;
+    }
+    return result.rows[0] || null;
+  }
+
+  // Fără version check
   sets.push(`updated_at = NOW()`);
   vals.push(childId);
   const { rows } = await query<ChildRow>(

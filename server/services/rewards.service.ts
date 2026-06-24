@@ -7,6 +7,7 @@
 
 import { query, transaction } from "../db";
 import { trackEvent } from "./analytics.service";
+import { logAudit } from "./audit.service";
 
 export interface RewardRow {
   id: string;
@@ -61,25 +62,33 @@ export async function getChildTransactions(childId: string): Promise<Transaction
   return rows;
 }
 
-// ─── Adăugare puncte (cu version number pentru conflict resolution) ─
+// ─── Adăugare puncte (cu version number + SELECT FOR UPDATE) ───────
 export async function awardPoints(
   childId: string,
   points: number,
   reason: string,
   expectedVersion?: number
-): Promise<{ success: boolean; newVersion: number; newPoints: number } | null> {
+): Promise<
+  { success: boolean; newVersion: number; newPoints: number } |
+  { conflict: true; currentVersion?: number } |
+  null
+> {
   return transaction(async (client) => {
-    // Verifică versiunea pentru conflict detection
-    if (expectedVersion !== undefined) {
-      const { rows: [child] } = await client.query(
-        `SELECT points FROM children WHERE id = $1`,
-        [childId]
-      );
-      // Last Write Wins — simply proceed
+    // Blochează rândul — previne race condition între telefon+tabletă
+    const { rows: [child] } = await client.query(
+      `SELECT version, points FROM children WHERE id = $1 FOR UPDATE`,
+      [childId]
+    );
+
+    if (!child) return null;
+
+    // Version check real
+    if (expectedVersion !== undefined && child.version !== expectedVersion) {
+      return { conflict: true, currentVersion: child.version };
     }
 
     const { rows: [updated] } = await client.query(
-      `UPDATE children SET points = GREATEST(0, points + $1), updated_at = NOW() WHERE id = $2 RETURNING points`,
+      `UPDATE children SET points = GREATEST(0, points + $1), updated_at = NOW(), version = version + 1 WHERE id = $2 RETURNING points, version`,
       [points, childId]
     );
 
@@ -88,9 +97,19 @@ export async function awardPoints(
       [childId, points, reason]
     );
 
+    // Audit log
+    logAudit({
+      familyId: undefined, // will be resolved from context if available
+      childId,
+      action: "award_points",
+      entityType: "child",
+      entityId: childId,
+      newValues: { points_delta: points, reason },
+    });
+
     return {
       success: true,
-      newVersion: txn.version,
+      newVersion: updated.version,
       newPoints: updated.points,
     };
   });

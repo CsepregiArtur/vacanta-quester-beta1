@@ -23,12 +23,39 @@ dotenv.config();
 
 import { analyticsService } from "../services";
 import syncRoutes from "../routes/sync.routes";
+import deviceRoutes from "../routes/devices.routes";
+import auditRoutes from "../routes/audit.routes";
+
+import rateLimit from "express-rate-limit";
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ limit: "20mb", extended: true }));
+
+// ═════════════════════════════════════════════════════════════════════
+// RATE LIMITING — protecție împotriva atacurilor
+// ═════════════════════════════════════════════════════════════════════
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minut
+  max: 100,            // 100 request-uri per minut
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Prea multe request-uri. Încearcă din nou într-un minut." },
+});
+const authLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Prea multe încercări de autentificare. Așteaptă un minut." },
+});
+
+// Aplică rate limiting global pe /api/*
+app.use("/api", apiLimiter);
+// Limitare mai strictă pe auth
+app.use("/api/auth", authLimiter);
 
 // Middleware: context DB + urmărire utilizatori activi
 app.use((req, res, next) => {
@@ -3656,6 +3683,8 @@ app.get("/api/health", (_req, res) => {
 
 // Montează rutele noi ÎNAINTE de catch-all
 app.use("/api/sync", syncRoutes);
+app.use("/api/devices", deviceRoutes);
+app.use("/api/audit", auditRoutes);
 
 // Serve Vite preview / Static assets
 const viteDevMode = process.env.NODE_ENV !== "production";

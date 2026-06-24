@@ -136,9 +136,23 @@ export async function initDatabase(): Promise<void> {
       action VARCHAR(100) NOT NULL,
       payload JSONB NOT NULL DEFAULT '{}',
       status VARCHAR(20) NOT NULL DEFAULT 'pending',
+      retry_count INTEGER NOT NULL DEFAULT 0,
+      next_retry_at TIMESTAMPTZ,
+      last_error TEXT,
       version INTEGER NOT NULL DEFAULT 1,
       device_id VARCHAR(255),
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`,
+    `CREATE INDEX IF NOT EXISTS idx_sync_queue_retry ON sync_queue(status, next_retry_at) WHERE status = 'pending'`,
+    `CREATE TABLE IF NOT EXISTS devices (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      family_id UUID NOT NULL REFERENCES families(id) ON DELETE CASCADE,
+      device_id VARCHAR(255) NOT NULL,
+      device_name VARCHAR(255),
+      platform VARCHAR(50) DEFAULT 'web',
+      last_seen TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE(family_id, device_id)
     )`,
     `CREATE TABLE IF NOT EXISTS analytics_events (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -154,6 +168,21 @@ export async function initDatabase(): Promise<void> {
     `CREATE INDEX IF NOT EXISTS idx_analytics_events_name ON analytics_events(event_name)`,
     `CREATE INDEX IF NOT EXISTS idx_analytics_events_family ON analytics_events(family_id)`,
     `CREATE INDEX IF NOT EXISTS idx_analytics_events_created ON analytics_events(created_at)`,
+    `CREATE TABLE IF NOT EXISTS audit_log (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      family_id UUID REFERENCES families(id) ON DELETE SET NULL,
+      parent_id UUID REFERENCES parents(id) ON DELETE SET NULL,
+      child_id UUID REFERENCES children(id) ON DELETE SET NULL,
+      action VARCHAR(100) NOT NULL,
+      entity_type VARCHAR(50) NOT NULL,
+      entity_id VARCHAR(255),
+      old_values JSONB,
+      new_values JSONB,
+      ip_address VARCHAR(45),
+      user_agent TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`,
+    `CREATE INDEX IF NOT EXISTS idx_audit_log_family ON audit_log(family_id, created_at)`,
   ];
 
   for (const sql of tables) {
