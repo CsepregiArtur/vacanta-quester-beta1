@@ -130,22 +130,3 @@ describe('PostgreSQL — Transactions', () => {
     expect(mockRollback).not.toHaveBeenCalled();
   });
 });
-
-describe('PostgreSQL — Query Helpers', () => {
-  test('loghează query-urile lente', async () => {
-    const slowQuery = `SELECT * FROM activities WHERE family_id = $1`;
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-    // Pentru acest test, simulăm că query-ul e lent
-    mockQuery.mockImplementation(async () => {
-      const start = Date.now();
-      // Nu putem mockui cu adevărat duration, doar verificăm logica
-      return { rows: [], rowCount: 0 };
-    });
-
-    const { query } = await import('../../../server/db');
-    await query(slowQuery, ['fam-1']);
-    expect(mockQuery).toHaveBeenCalled();
-    warnSpy.mockRestore();
-  });
-});

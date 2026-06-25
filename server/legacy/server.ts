@@ -578,12 +578,19 @@ const createDefaultActivityTimeLogs = () => {
 /**
  * Log an uploaded photo to the database for parent review.
  */
-function logUploadedPhoto(db: any, childId: string, childName: string, activityName: string, photoUrl: string, status: string, feedback: string) {
-  if (!db.uploadedPhotosHistory) {
-    db.uploadedPhotosHistory = [];
-  }
+function logUploadedPhoto(
+  db: any,
+  childId: string,
+  childName: string,
+  activityName: string,
+  photoUrl: string,
+  status: string,
+  feedback: string
+) {
+  if (!db.uploadedPhotosHistory) db.uploadedPhotosHistory = [];
+
   db.uploadedPhotosHistory.unshift({
-    id: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    id: `photo-${crypto.randomUUID()}`,
     childId,
     childName,
     activityName,
@@ -592,6 +599,9 @@ function logUploadedPhoto(db: any, childId: string, childName: string, activityN
     feedback,
     timestamp: new Date().toISOString(),
   });
+
+  // Prevent unbounded growth
+  if (db.uploadedPhotosHistory.length > 200) db.uploadedPhotosHistory.length = 200;
 }
 
 const createDefaultPointsHistory = (children?: any[]) => {
