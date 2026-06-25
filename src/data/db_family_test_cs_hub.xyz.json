@@ -4,26 +4,26 @@
       "id": "adrian",
       "name": "adrian",
       "age": 9,
-      "points": 80,
+      "points": 130,
       "avatar": "🐶",
       "readingStreak": 0,
-      "daysSinceLastReading": 0,
+      "daysSinceLastReading": 1,
       "activeTimer": null
     },
     {
       "id": "jonel",
       "name": "jonel",
       "age": 4,
-      "points": 80,
+      "points": 180,
       "avatar": "🐶",
       "readingStreak": 0,
-      "daysSinceLastReading": 0,
+      "daysSinceLastReading": 1,
       "activeTimer": null
     }
   ],
   "activeTasks": [
     {
-      "id": "adrian-chore-vacuum",
+      "id": "adrian-chore-vacuum-1782368574714",
       "childId": "adrian",
       "name": "Aspirat în Cameră & Hol",
       "type": "chore",
@@ -34,7 +34,7 @@
       "streak": 3
     },
     {
-      "id": "adrian-chore-room",
+      "id": "adrian-chore-room-1782368574714",
       "childId": "adrian",
       "name": "Curățenie în Cameră",
       "type": "chore",
@@ -45,7 +45,7 @@
       "streak": 2
     },
     {
-      "id": "adrian-chore-dishes",
+      "id": "adrian-chore-dishes-1782368574714",
       "childId": "adrian",
       "name": "Aranjat și Clătit Vase",
       "type": "chore",
@@ -56,7 +56,7 @@
       "streak": 1
     },
     {
-      "id": "adrian-hygiene-morning",
+      "id": "adrian-hygiene-morning-1782368574714",
       "childId": "adrian",
       "name": "🧼 Igienă de Dimineață",
       "type": "chore",
@@ -67,7 +67,7 @@
       "streak": 5
     },
     {
-      "id": "adrian-hygiene-evening",
+      "id": "adrian-hygiene-evening-1782368574714",
       "childId": "adrian",
       "name": "🚿 Igienă de Seară",
       "type": "chore",
@@ -78,7 +78,7 @@
       "streak": 4
     },
     {
-      "id": "jonel-chore-vacuum",
+      "id": "jonel-chore-vacuum-1782368574714",
       "childId": "jonel",
       "name": "Aspirat în Cameră & Hol",
       "type": "chore",
@@ -89,7 +89,7 @@
       "streak": 3
     },
     {
-      "id": "jonel-chore-room",
+      "id": "jonel-chore-room-1782368574714",
       "childId": "jonel",
       "name": "Curățenie în Cameră",
       "type": "chore",
@@ -100,7 +100,7 @@
       "streak": 2
     },
     {
-      "id": "jonel-chore-dishes",
+      "id": "jonel-chore-dishes-1782368574714",
       "childId": "jonel",
       "name": "Aranjat și Clătit Vase",
       "type": "chore",
@@ -111,7 +111,7 @@
       "streak": 1
     },
     {
-      "id": "jonel-hygiene-morning",
+      "id": "jonel-hygiene-morning-1782368574714",
       "childId": "jonel",
       "name": "🧼 Igienă de Dimineață",
       "type": "chore",
@@ -122,7 +122,7 @@
       "streak": 5
     },
     {
-      "id": "jonel-hygiene-evening",
+      "id": "jonel-hygiene-evening-1782368574714",
       "childId": "jonel",
       "name": "🚿 Igienă de Seară",
       "type": "chore",
@@ -131,9 +131,146 @@
       "status": "pending",
       "category": "Household",
       "streak": 4
+    },
+    {
+      "id": "reading-jonel-1782404770785",
+      "childId": "jonel",
+      "name": "Lectură: 🦁 Animale din Junglă (Failsafe)",
+      "type": "reading",
+      "description": "Citește textul de vacanță adaptat și răspunde corect la cele 3 întrebări.",
+      "points": 75,
+      "status": "rejected",
+      "readingTopic": "🦁 Animale din Junglă",
+      "readingPassage": "Subiect: Secretele și Supraviețuirea în Junglă 🦁\n\nJunglele sau pădurile tropicale sunt adevărate paradisuri ale biodiversității! Deși acoperă doar 6% din suprafața Pământului, ele găzduiesc mai mult de jumătate din toate speciile de plante și animale ale lumii. Aici, fiecare animal are o tactică specială de supraviețuire.\n\nDe exemplu, tigrii folosesc dungile lor unice pentru a se camufla în vegetația înaltă, permițându-le să se apropie de pradă nevăzuți. Ghepardul folosește viteza sa incredibilă de peste 100 km/h, în timp ce elefanții din jungle folosesc sunete de joasă frecvență, numite infrasunete, pentru a comunica între ei la distanțe de câțiva kilometri, sunete pe care urechea umană nici nu le poate auzi. Protejarea junglei este vitală pentru aerul pe care îl respirăm și pentru viitorul acestor specii spectaculoase!",
+      "readingQuestions": [
+        {
+          "id": 1,
+          "question": "Ce procent din suprafața Pământului este acoperit în prezent de jungle?",
+          "options": [
+            "Aproximativ 50%",
+            "Aproximativ 6%",
+            "Mai puțin de 1%"
+          ],
+          "correctAnswerIndex": 1,
+          "selectedAnswerIndex": 1,
+          "feedback": "Răspuns corect! Excelent."
+        },
+        {
+          "id": 2,
+          "question": "Cum comunică elefanții la distanțe uimitoare de mii de metri?",
+          "options": [
+            "Folosind infrasunete de joasă frecvență",
+            "Prin semnale cu lanterne",
+            "Prin gesturi ciudate cu coada"
+          ],
+          "correctAnswerIndex": 0,
+          "selectedAnswerIndex": 1,
+          "feedback": "Răspuns greșit! Varianta corectă era \"Folosind infrasunete de joasă frecvență\"."
+        },
+        {
+          "id": 3,
+          "question": "La ce le folosesc cu precădere tigrilor dungile lor faimoase?",
+          "options": [
+            "Să îi sperie pe elefanți",
+            "Pentru camuflaj natural în ierburi",
+            "Să atragă privirile pasagerilor din jeep"
+          ],
+          "correctAnswerIndex": 1,
+          "selectedAnswerIndex": 1,
+          "feedback": "Răspuns corect! Excelent."
+        }
+      ],
+      "difficultyClass": "Standard",
+      "attemptsCount": 3,
+      "firstAttemptScore": 2,
+      "readingScore": 2
     }
   ],
   "notifications": [
+    {
+      "id": "notif-read-fail-1782404796686",
+      "childName": "jonel",
+      "message": "A încercat chestionarul pentru \"🦁 Animale din Junglă\", dar a răspuns corect doar la 2/3 întrebări. Sarcina rămâne deschisă ca \"revalidare\" pentru a reîncerca lecturarea cu atenție.",
+      "timestamp": "2026-06-25T16:26:36.686Z",
+      "type": "warning"
+    },
+    {
+      "id": "notif-read-fail-1782404794461",
+      "childName": "jonel",
+      "message": "A încercat chestionarul pentru \"🦁 Animale din Junglă\", dar a răspuns corect doar la 2/3 întrebări. Sarcina rămâne deschisă ca \"revalidare\" pentru a reîncerca lecturarea cu atenție.",
+      "timestamp": "2026-06-25T16:26:34.461Z",
+      "type": "warning"
+    },
+    {
+      "id": "notif-read-fail-1782404781695",
+      "childName": "jonel",
+      "message": "A încercat chestionarul pentru \"🦁 Animale din Junglă\", dar a răspuns corect doar la 2/3 întrebări. Sarcina rămâne deschisă ca \"revalidare\" pentru a reîncerca lecturarea cu atenție.",
+      "timestamp": "2026-06-25T16:26:21.695Z",
+      "type": "warning"
+    },
+    {
+      "id": "abandon-read-1782404748484",
+      "childName": "jonel",
+      "message": "A abandonat lectura pornită. Un nou text poate fi generat la alegere.",
+      "timestamp": "2026-06-25T16:25:48.484Z",
+      "type": "warning"
+    },
+    {
+      "id": "notif-read-fail-1782404744995",
+      "childName": "jonel",
+      "message": "A încercat chestionarul pentru \"🛸 Spațiul și Sistemul Solar\", dar a răspuns corect doar la 2/3 întrebări. Sarcina rămâne deschisă ca \"revalidare\" pentru a reîncerca lecturarea cu atenție.",
+      "timestamp": "2026-06-25T16:25:44.995Z",
+      "type": "warning"
+    },
+    {
+      "id": "notif-read-fail-1782404734454",
+      "childName": "jonel",
+      "message": "A încercat chestionarul pentru \"🛸 Spațiul și Sistemul Solar\", dar a răspuns corect doar la 2/3 întrebări. Sarcina rămâne deschisă ca \"revalidare\" pentru a reîncerca lecturarea cu atenție.",
+      "timestamp": "2026-06-25T16:25:34.454Z",
+      "type": "warning"
+    },
+    {
+      "id": "notif-read-fail-1782404733399",
+      "childName": "jonel",
+      "message": "A încercat chestionarul pentru \"🛸 Spațiul și Sistemul Solar\", dar a răspuns corect doar la 2/3 întrebări. Sarcina rămâne deschisă ca \"revalidare\" pentru a reîncerca lecturarea cu atenție.",
+      "timestamp": "2026-06-25T16:25:33.399Z",
+      "type": "warning"
+    },
+    {
+      "id": "notif-read-fail-1782404724804",
+      "childName": "jonel",
+      "message": "A încercat chestionarul pentru \"🛸 Spațiul și Sistemul Solar\", dar a răspuns corect doar la 2/3 întrebări. Sarcina rămâne deschisă ca \"revalidare\" pentru a reîncerca lecturarea cu atenție.",
+      "timestamp": "2026-06-25T16:25:24.804Z",
+      "type": "warning"
+    },
+    {
+      "id": "adjust-1782368606545",
+      "childName": "Părinte",
+      "message": "A ajustat manual datele lui jonel. Puncte: 130 ➔ 180, Serie: 0 ➔ 0 zile, Zile nelogate: 1 ➔ 1.",
+      "timestamp": "2026-06-25T06:23:26.545Z",
+      "type": "info"
+    },
+    {
+      "id": "adjust-1782368604681",
+      "childName": "Părinte",
+      "message": "A ajustat manual datele lui jonel. Puncte: 80 ➔ 130, Serie: 0 ➔ 0 zile, Zile nelogate: 1 ➔ 1.",
+      "timestamp": "2026-06-25T06:23:24.681Z",
+      "type": "info"
+    },
+    {
+      "id": "adjust-1782368600771",
+      "childName": "Părinte",
+      "message": "A ajustat manual datele lui adrian. Puncte: 80 ➔ 130, Serie: 0 ➔ 0 zile, Zile nelogate: 1 ➔ 1.",
+      "timestamp": "2026-06-25T06:23:20.771Z",
+      "type": "info"
+    },
+    {
+      "id": "next-day-auto-1782368574714",
+      "childName": "Sistem",
+      "message": "S-a activat automat trecerea la următoarea zi calendaristică de vacanță (2026-06-25)! Sarcinile, igiena și turele de plimbat câinele au fost resetate cu succes.",
+      "timestamp": "2026-06-25T06:22:54.714Z",
+      "type": "success"
+    },
     {
       "id": "init-notification-1782331137983",
       "childName": "Sistem",
@@ -181,7 +318,64 @@
   },
   "parentPin": "1234",
   "parentEmail": "test@cs-hub.xyz",
-  "emailsSent": [],
+  "emailsSent": [
+    {
+      "id": "email-1782404796686",
+      "to": "test@cs-hub.xyz",
+      "subject": "⚠️ Încercare Lectură Neterminată - jonel",
+      "body": "\n<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\">\n  <!-- Header -->\n  <div style=\"background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 32px 24px; text-align: center; color: #ffffff;\">\n    <span style=\"font-size: 32px; display: block; margin-bottom: 8px;\">🛡️</span>\n    <h1 style=\"margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;\">ARCADIA SMART VACATION</h1>\n    <p style=\"margin: 4px 0 0 0; font-size: 11px; color: #c7d2fe; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;\">Notificare Automată Părinte</p>\n  </div>\n  \n  <!-- Body -->\n  <div style=\"padding: 28px 24px; background-color: #ffffff;\">\n    <div style=\"display: block; margin-bottom: 24px; background-color: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #f1f5f9;\">\n      <span style=\"font-size: 28px; margin-right: 12px; display: inline-block; vertical-align: middle;\">🐶</span>\n      <div style=\"display: inline-block; vertical-align: middle;\">\n        <h2 style=\"margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;\">jonel</h2>\n        <p style=\"margin: 2px 0 0 0; font-size: 10px; text-transform: uppercase; font-weight: 800; color: #64748b; letter-spacing: 0.05em;\">Sold curent: 180 Puncte</p>\n      </div>\n    </div>\n\n    <h3 style=\"margin-top: 0; font-size: 16px; font-weight: 800; color: #1e1b4b; line-height: 1.3; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;\">Lectură în Desfășurare: \"🦁 Animale din Junglă\"</h3>\n    \n    <div style=\"font-size: 13.5px; line-height: 1.6; color: #334155; font-weight: 550; margin: 16px 0;\">\n      <p>Salutare, părinte!</p>\n       <p>Te informăm că <strong>jonel</strong> a completat chestionarul pentru lectura <strong>\"🦁 Animale din Junglă\"</strong>, dar nu a obținut scorul maxim.</p>\n       <p>Rezultat test: <strong>2 din 3 răspunsuri corecte</strong>.</p>\n       <p>Pentru a încuraja înțelegerea deplină a textului, sistemul Arcadia a menținut sarcina deschisă. Copilul este îndrumat politicos să reîncercă chestionarul după o lecturare mai atentă a pasajului.</p>\n    </div>\n  </div>\n  \n  <!-- Footer -->\n  <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9; font-size: 10.5px; color: #64748b; font-weight: 600; line-height: 1.5;\">\n    <p style=\"margin: 0 0 4px 0;\">Sistem inteligent securizat în timp real alimentat de Gemini AI.</p>\n    <p style=\"margin: 0; color: #94a3b8;\">Trimis cu succes către <strong style=\"color: #64748b;\">test@cs-hub.xyz</strong>. Poți configura destinația în panoul admin.</p>\n  </div>\n</div>\n  ",
+      "timestamp": "2026-06-25T16:26:36.686Z",
+      "status": "Delivered (Simulat și Arhivat)"
+    },
+    {
+      "id": "email-1782404794461",
+      "to": "test@cs-hub.xyz",
+      "subject": "⚠️ Încercare Lectură Neterminată - jonel",
+      "body": "\n<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\">\n  <!-- Header -->\n  <div style=\"background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 32px 24px; text-align: center; color: #ffffff;\">\n    <span style=\"font-size: 32px; display: block; margin-bottom: 8px;\">🛡️</span>\n    <h1 style=\"margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;\">ARCADIA SMART VACATION</h1>\n    <p style=\"margin: 4px 0 0 0; font-size: 11px; color: #c7d2fe; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;\">Notificare Automată Părinte</p>\n  </div>\n  \n  <!-- Body -->\n  <div style=\"padding: 28px 24px; background-color: #ffffff;\">\n    <div style=\"display: block; margin-bottom: 24px; background-color: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #f1f5f9;\">\n      <span style=\"font-size: 28px; margin-right: 12px; display: inline-block; vertical-align: middle;\">🐶</span>\n      <div style=\"display: inline-block; vertical-align: middle;\">\n        <h2 style=\"margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;\">jonel</h2>\n        <p style=\"margin: 2px 0 0 0; font-size: 10px; text-transform: uppercase; font-weight: 800; color: #64748b; letter-spacing: 0.05em;\">Sold curent: 180 Puncte</p>\n      </div>\n    </div>\n\n    <h3 style=\"margin-top: 0; font-size: 16px; font-weight: 800; color: #1e1b4b; line-height: 1.3; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;\">Lectură în Desfășurare: \"🦁 Animale din Junglă\"</h3>\n    \n    <div style=\"font-size: 13.5px; line-height: 1.6; color: #334155; font-weight: 550; margin: 16px 0;\">\n      <p>Salutare, părinte!</p>\n       <p>Te informăm că <strong>jonel</strong> a completat chestionarul pentru lectura <strong>\"🦁 Animale din Junglă\"</strong>, dar nu a obținut scorul maxim.</p>\n       <p>Rezultat test: <strong>2 din 3 răspunsuri corecte</strong>.</p>\n       <p>Pentru a încuraja înțelegerea deplină a textului, sistemul Arcadia a menținut sarcina deschisă. Copilul este îndrumat politicos să reîncercă chestionarul după o lecturare mai atentă a pasajului.</p>\n    </div>\n  </div>\n  \n  <!-- Footer -->\n  <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9; font-size: 10.5px; color: #64748b; font-weight: 600; line-height: 1.5;\">\n    <p style=\"margin: 0 0 4px 0;\">Sistem inteligent securizat în timp real alimentat de Gemini AI.</p>\n    <p style=\"margin: 0; color: #94a3b8;\">Trimis cu succes către <strong style=\"color: #64748b;\">test@cs-hub.xyz</strong>. Poți configura destinația în panoul admin.</p>\n  </div>\n</div>\n  ",
+      "timestamp": "2026-06-25T16:26:34.461Z",
+      "status": "Delivered (Simulat și Arhivat)"
+    },
+    {
+      "id": "email-1782404781695",
+      "to": "test@cs-hub.xyz",
+      "subject": "⚠️ Încercare Lectură Neterminată - jonel",
+      "body": "\n<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\">\n  <!-- Header -->\n  <div style=\"background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 32px 24px; text-align: center; color: #ffffff;\">\n    <span style=\"font-size: 32px; display: block; margin-bottom: 8px;\">🛡️</span>\n    <h1 style=\"margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;\">ARCADIA SMART VACATION</h1>\n    <p style=\"margin: 4px 0 0 0; font-size: 11px; color: #c7d2fe; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;\">Notificare Automată Părinte</p>\n  </div>\n  \n  <!-- Body -->\n  <div style=\"padding: 28px 24px; background-color: #ffffff;\">\n    <div style=\"display: block; margin-bottom: 24px; background-color: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #f1f5f9;\">\n      <span style=\"font-size: 28px; margin-right: 12px; display: inline-block; vertical-align: middle;\">🐶</span>\n      <div style=\"display: inline-block; vertical-align: middle;\">\n        <h2 style=\"margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;\">jonel</h2>\n        <p style=\"margin: 2px 0 0 0; font-size: 10px; text-transform: uppercase; font-weight: 800; color: #64748b; letter-spacing: 0.05em;\">Sold curent: 180 Puncte</p>\n      </div>\n    </div>\n\n    <h3 style=\"margin-top: 0; font-size: 16px; font-weight: 800; color: #1e1b4b; line-height: 1.3; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;\">Lectură în Desfășurare: \"🦁 Animale din Junglă\"</h3>\n    \n    <div style=\"font-size: 13.5px; line-height: 1.6; color: #334155; font-weight: 550; margin: 16px 0;\">\n      <p>Salutare, părinte!</p>\n       <p>Te informăm că <strong>jonel</strong> a completat chestionarul pentru lectura <strong>\"🦁 Animale din Junglă\"</strong>, dar nu a obținut scorul maxim.</p>\n       <p>Rezultat test: <strong>2 din 3 răspunsuri corecte</strong>.</p>\n       <p>Pentru a încuraja înțelegerea deplină a textului, sistemul Arcadia a menținut sarcina deschisă. Copilul este îndrumat politicos să reîncercă chestionarul după o lecturare mai atentă a pasajului.</p>\n    </div>\n  </div>\n  \n  <!-- Footer -->\n  <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9; font-size: 10.5px; color: #64748b; font-weight: 600; line-height: 1.5;\">\n    <p style=\"margin: 0 0 4px 0;\">Sistem inteligent securizat în timp real alimentat de Gemini AI.</p>\n    <p style=\"margin: 0; color: #94a3b8;\">Trimis cu succes către <strong style=\"color: #64748b;\">test@cs-hub.xyz</strong>. Poți configura destinația în panoul admin.</p>\n  </div>\n</div>\n  ",
+      "timestamp": "2026-06-25T16:26:21.695Z",
+      "status": "Delivered (Simulat și Arhivat)"
+    },
+    {
+      "id": "email-1782404744995",
+      "to": "test@cs-hub.xyz",
+      "subject": "⚠️ Încercare Lectură Neterminată - jonel",
+      "body": "\n<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\">\n  <!-- Header -->\n  <div style=\"background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 32px 24px; text-align: center; color: #ffffff;\">\n    <span style=\"font-size: 32px; display: block; margin-bottom: 8px;\">🛡️</span>\n    <h1 style=\"margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;\">ARCADIA SMART VACATION</h1>\n    <p style=\"margin: 4px 0 0 0; font-size: 11px; color: #c7d2fe; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;\">Notificare Automată Părinte</p>\n  </div>\n  \n  <!-- Body -->\n  <div style=\"padding: 28px 24px; background-color: #ffffff;\">\n    <div style=\"display: block; margin-bottom: 24px; background-color: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #f1f5f9;\">\n      <span style=\"font-size: 28px; margin-right: 12px; display: inline-block; vertical-align: middle;\">🐶</span>\n      <div style=\"display: inline-block; vertical-align: middle;\">\n        <h2 style=\"margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;\">jonel</h2>\n        <p style=\"margin: 2px 0 0 0; font-size: 10px; text-transform: uppercase; font-weight: 800; color: #64748b; letter-spacing: 0.05em;\">Sold curent: 180 Puncte</p>\n      </div>\n    </div>\n\n    <h3 style=\"margin-top: 0; font-size: 16px; font-weight: 800; color: #1e1b4b; line-height: 1.3; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;\">Lectură în Desfășurare: \"🛸 Spațiul și Sistemul Solar\"</h3>\n    \n    <div style=\"font-size: 13.5px; line-height: 1.6; color: #334155; font-weight: 550; margin: 16px 0;\">\n      <p>Salutare, părinte!</p>\n       <p>Te informăm că <strong>jonel</strong> a completat chestionarul pentru lectura <strong>\"🛸 Spațiul și Sistemul Solar\"</strong>, dar nu a obținut scorul maxim.</p>\n       <p>Rezultat test: <strong>2 din 3 răspunsuri corecte</strong>.</p>\n       <p>Pentru a încuraja înțelegerea deplină a textului, sistemul Arcadia a menținut sarcina deschisă. Copilul este îndrumat politicos să reîncercă chestionarul după o lecturare mai atentă a pasajului.</p>\n    </div>\n  </div>\n  \n  <!-- Footer -->\n  <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9; font-size: 10.5px; color: #64748b; font-weight: 600; line-height: 1.5;\">\n    <p style=\"margin: 0 0 4px 0;\">Sistem inteligent securizat în timp real alimentat de Gemini AI.</p>\n    <p style=\"margin: 0; color: #94a3b8;\">Trimis cu succes către <strong style=\"color: #64748b;\">test@cs-hub.xyz</strong>. Poți configura destinația în panoul admin.</p>\n  </div>\n</div>\n  ",
+      "timestamp": "2026-06-25T16:25:44.995Z",
+      "status": "Delivered (Simulat și Arhivat)"
+    },
+    {
+      "id": "email-1782404734454",
+      "to": "test@cs-hub.xyz",
+      "subject": "⚠️ Încercare Lectură Neterminată - jonel",
+      "body": "\n<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\">\n  <!-- Header -->\n  <div style=\"background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 32px 24px; text-align: center; color: #ffffff;\">\n    <span style=\"font-size: 32px; display: block; margin-bottom: 8px;\">🛡️</span>\n    <h1 style=\"margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;\">ARCADIA SMART VACATION</h1>\n    <p style=\"margin: 4px 0 0 0; font-size: 11px; color: #c7d2fe; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;\">Notificare Automată Părinte</p>\n  </div>\n  \n  <!-- Body -->\n  <div style=\"padding: 28px 24px; background-color: #ffffff;\">\n    <div style=\"display: block; margin-bottom: 24px; background-color: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #f1f5f9;\">\n      <span style=\"font-size: 28px; margin-right: 12px; display: inline-block; vertical-align: middle;\">🐶</span>\n      <div style=\"display: inline-block; vertical-align: middle;\">\n        <h2 style=\"margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;\">jonel</h2>\n        <p style=\"margin: 2px 0 0 0; font-size: 10px; text-transform: uppercase; font-weight: 800; color: #64748b; letter-spacing: 0.05em;\">Sold curent: 180 Puncte</p>\n      </div>\n    </div>\n\n    <h3 style=\"margin-top: 0; font-size: 16px; font-weight: 800; color: #1e1b4b; line-height: 1.3; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;\">Lectură în Desfășurare: \"🛸 Spațiul și Sistemul Solar\"</h3>\n    \n    <div style=\"font-size: 13.5px; line-height: 1.6; color: #334155; font-weight: 550; margin: 16px 0;\">\n      <p>Salutare, părinte!</p>\n       <p>Te informăm că <strong>jonel</strong> a completat chestionarul pentru lectura <strong>\"🛸 Spațiul și Sistemul Solar\"</strong>, dar nu a obținut scorul maxim.</p>\n       <p>Rezultat test: <strong>2 din 3 răspunsuri corecte</strong>.</p>\n       <p>Pentru a încuraja înțelegerea deplină a textului, sistemul Arcadia a menținut sarcina deschisă. Copilul este îndrumat politicos să reîncercă chestionarul după o lecturare mai atentă a pasajului.</p>\n    </div>\n  </div>\n  \n  <!-- Footer -->\n  <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9; font-size: 10.5px; color: #64748b; font-weight: 600; line-height: 1.5;\">\n    <p style=\"margin: 0 0 4px 0;\">Sistem inteligent securizat în timp real alimentat de Gemini AI.</p>\n    <p style=\"margin: 0; color: #94a3b8;\">Trimis cu succes către <strong style=\"color: #64748b;\">test@cs-hub.xyz</strong>. Poți configura destinația în panoul admin.</p>\n  </div>\n</div>\n  ",
+      "timestamp": "2026-06-25T16:25:34.454Z",
+      "status": "Delivered (Simulat și Arhivat)"
+    },
+    {
+      "id": "email-1782404733399",
+      "to": "test@cs-hub.xyz",
+      "subject": "⚠️ Încercare Lectură Neterminată - jonel",
+      "body": "\n<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\">\n  <!-- Header -->\n  <div style=\"background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 32px 24px; text-align: center; color: #ffffff;\">\n    <span style=\"font-size: 32px; display: block; margin-bottom: 8px;\">🛡️</span>\n    <h1 style=\"margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;\">ARCADIA SMART VACATION</h1>\n    <p style=\"margin: 4px 0 0 0; font-size: 11px; color: #c7d2fe; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;\">Notificare Automată Părinte</p>\n  </div>\n  \n  <!-- Body -->\n  <div style=\"padding: 28px 24px; background-color: #ffffff;\">\n    <div style=\"display: block; margin-bottom: 24px; background-color: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #f1f5f9;\">\n      <span style=\"font-size: 28px; margin-right: 12px; display: inline-block; vertical-align: middle;\">🐶</span>\n      <div style=\"display: inline-block; vertical-align: middle;\">\n        <h2 style=\"margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;\">jonel</h2>\n        <p style=\"margin: 2px 0 0 0; font-size: 10px; text-transform: uppercase; font-weight: 800; color: #64748b; letter-spacing: 0.05em;\">Sold curent: 180 Puncte</p>\n      </div>\n    </div>\n\n    <h3 style=\"margin-top: 0; font-size: 16px; font-weight: 800; color: #1e1b4b; line-height: 1.3; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;\">Lectură în Desfășurare: \"🛸 Spațiul și Sistemul Solar\"</h3>\n    \n    <div style=\"font-size: 13.5px; line-height: 1.6; color: #334155; font-weight: 550; margin: 16px 0;\">\n      <p>Salutare, părinte!</p>\n       <p>Te informăm că <strong>jonel</strong> a completat chestionarul pentru lectura <strong>\"🛸 Spațiul și Sistemul Solar\"</strong>, dar nu a obținut scorul maxim.</p>\n       <p>Rezultat test: <strong>2 din 3 răspunsuri corecte</strong>.</p>\n       <p>Pentru a încuraja înțelegerea deplină a textului, sistemul Arcadia a menținut sarcina deschisă. Copilul este îndrumat politicos să reîncercă chestionarul după o lecturare mai atentă a pasajului.</p>\n    </div>\n  </div>\n  \n  <!-- Footer -->\n  <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9; font-size: 10.5px; color: #64748b; font-weight: 600; line-height: 1.5;\">\n    <p style=\"margin: 0 0 4px 0;\">Sistem inteligent securizat în timp real alimentat de Gemini AI.</p>\n    <p style=\"margin: 0; color: #94a3b8;\">Trimis cu succes către <strong style=\"color: #64748b;\">test@cs-hub.xyz</strong>. Poți configura destinația în panoul admin.</p>\n  </div>\n</div>\n  ",
+      "timestamp": "2026-06-25T16:25:33.399Z",
+      "status": "Delivered (Simulat și Arhivat)"
+    },
+    {
+      "id": "email-1782404724804",
+      "to": "test@cs-hub.xyz",
+      "subject": "⚠️ Încercare Lectură Neterminată - jonel",
+      "body": "\n<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\">\n  <!-- Header -->\n  <div style=\"background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 32px 24px; text-align: center; color: #ffffff;\">\n    <span style=\"font-size: 32px; display: block; margin-bottom: 8px;\">🛡️</span>\n    <h1 style=\"margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;\">ARCADIA SMART VACATION</h1>\n    <p style=\"margin: 4px 0 0 0; font-size: 11px; color: #c7d2fe; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;\">Notificare Automată Părinte</p>\n  </div>\n  \n  <!-- Body -->\n  <div style=\"padding: 28px 24px; background-color: #ffffff;\">\n    <div style=\"display: block; margin-bottom: 24px; background-color: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #f1f5f9;\">\n      <span style=\"font-size: 28px; margin-right: 12px; display: inline-block; vertical-align: middle;\">🐶</span>\n      <div style=\"display: inline-block; vertical-align: middle;\">\n        <h2 style=\"margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;\">jonel</h2>\n        <p style=\"margin: 2px 0 0 0; font-size: 10px; text-transform: uppercase; font-weight: 800; color: #64748b; letter-spacing: 0.05em;\">Sold curent: 180 Puncte</p>\n      </div>\n    </div>\n\n    <h3 style=\"margin-top: 0; font-size: 16px; font-weight: 800; color: #1e1b4b; line-height: 1.3; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;\">Lectură în Desfășurare: \"🛸 Spațiul și Sistemul Solar\"</h3>\n    \n    <div style=\"font-size: 13.5px; line-height: 1.6; color: #334155; font-weight: 550; margin: 16px 0;\">\n      <p>Salutare, părinte!</p>\n       <p>Te informăm că <strong>jonel</strong> a completat chestionarul pentru lectura <strong>\"🛸 Spațiul și Sistemul Solar\"</strong>, dar nu a obținut scorul maxim.</p>\n       <p>Rezultat test: <strong>2 din 3 răspunsuri corecte</strong>.</p>\n       <p>Pentru a încuraja înțelegerea deplină a textului, sistemul Arcadia a menținut sarcina deschisă. Copilul este îndrumat politicos să reîncercă chestionarul după o lecturare mai atentă a pasajului.</p>\n    </div>\n  </div>\n  \n  <!-- Footer -->\n  <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9; font-size: 10.5px; color: #64748b; font-weight: 600; line-height: 1.5;\">\n    <p style=\"margin: 0 0 4px 0;\">Sistem inteligent securizat în timp real alimentat de Gemini AI.</p>\n    <p style=\"margin: 0; color: #94a3b8;\">Trimis cu succes către <strong style=\"color: #64748b;\">test@cs-hub.xyz</strong>. Poți configura destinația în panoul admin.</p>\n  </div>\n</div>\n  ",
+      "timestamp": "2026-06-25T16:25:24.804Z",
+      "status": "Delivered (Simulat și Arhivat)"
+    }
+  ],
   "readingHistory": [],
   "suggestions": [],
   "pointsHistory": [
@@ -226,9 +420,86 @@
       "dateKey": "2026-06-24",
       "adrian": 80,
       "jonel": 80
+    },
+    {
+      "date": "25 iun.",
+      "dateKey": "2026-06-25",
+      "adrian": 130,
+      "jonel": 180
     }
   ],
-  "activityTimeLogs": [],
+  "activityTimeLogs": [
+    {
+      "id": "time-quiz-fail-1782404796686",
+      "childId": "jonel",
+      "childName": "jonel",
+      "activityType": "quiz",
+      "activityName": "Chestionar (Eșuat): 🦁 Animale din Junglă",
+      "durationSeconds": 180,
+      "timestamp": "2026-06-25T16:26:36.686Z",
+      "details": "Încercare test grilă nereușită. Scor: 2/3 corecte. Sarcina rămâne deschisă."
+    },
+    {
+      "id": "time-quiz-fail-1782404794461",
+      "childId": "jonel",
+      "childName": "jonel",
+      "activityType": "quiz",
+      "activityName": "Chestionar (Eșuat): 🦁 Animale din Junglă",
+      "durationSeconds": 180,
+      "timestamp": "2026-06-25T16:26:34.461Z",
+      "details": "Încercare test grilă nereușită. Scor: 2/3 corecte. Sarcina rămâne deschisă."
+    },
+    {
+      "id": "time-quiz-fail-1782404781695",
+      "childId": "jonel",
+      "childName": "jonel",
+      "activityType": "quiz",
+      "activityName": "Chestionar (Eșuat): 🦁 Animale din Junglă",
+      "durationSeconds": 180,
+      "timestamp": "2026-06-25T16:26:21.695Z",
+      "details": "Încercare test grilă nereușită. Scor: 2/3 corecte. Sarcina rămâne deschisă."
+    },
+    {
+      "id": "time-quiz-fail-1782404744995",
+      "childId": "jonel",
+      "childName": "jonel",
+      "activityType": "quiz",
+      "activityName": "Chestionar (Eșuat): 🛸 Spațiul și Sistemul Solar",
+      "durationSeconds": 180,
+      "timestamp": "2026-06-25T16:25:44.995Z",
+      "details": "Încercare test grilă nereușită. Scor: 2/3 corecte. Sarcina rămâne deschisă."
+    },
+    {
+      "id": "time-quiz-fail-1782404734453",
+      "childId": "jonel",
+      "childName": "jonel",
+      "activityType": "quiz",
+      "activityName": "Chestionar (Eșuat): 🛸 Spațiul și Sistemul Solar",
+      "durationSeconds": 180,
+      "timestamp": "2026-06-25T16:25:34.453Z",
+      "details": "Încercare test grilă nereușită. Scor: 2/3 corecte. Sarcina rămâne deschisă."
+    },
+    {
+      "id": "time-quiz-fail-1782404733399",
+      "childId": "jonel",
+      "childName": "jonel",
+      "activityType": "quiz",
+      "activityName": "Chestionar (Eșuat): 🛸 Spațiul și Sistemul Solar",
+      "durationSeconds": 180,
+      "timestamp": "2026-06-25T16:25:33.399Z",
+      "details": "Încercare test grilă nereușită. Scor: 2/3 corecte. Sarcina rămâne deschisă."
+    },
+    {
+      "id": "time-quiz-fail-1782404724804",
+      "childId": "jonel",
+      "childName": "jonel",
+      "activityType": "quiz",
+      "activityName": "Chestionar (Eșuat): 🛸 Spațiul și Sistemul Solar",
+      "durationSeconds": 180,
+      "timestamp": "2026-06-25T16:25:24.804Z",
+      "details": "Încercare test grilă nereușită. Scor: 2/3 corecte. Sarcina rămâne deschisă."
+    }
+  ],
   "customRewards": [],
   "screenTimeRequests": [],
   "smtpConfig": {
@@ -239,7 +510,7 @@
     "pass": "",
     "secure": false
   },
-  "lastUpdated": "2026-06-24T19:58:58.146Z",
+  "lastUpdated": "2026-06-25T16:26:36.687Z",
   "tomorrowSchedule": {},
-  "currentDateKey": "2026-06-24"
+  "currentDateKey": "2026-06-25"
 }

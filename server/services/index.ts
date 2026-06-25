@@ -12,3 +12,4 @@ export * as notificationService from "./notification.service";
 export * as syncService from "./sync.service";
 export * as analyticsService from "./analytics.service";
 export * as auditService from "./audit.service";
+export * as githubIssuesService from "./github-issues.service";
