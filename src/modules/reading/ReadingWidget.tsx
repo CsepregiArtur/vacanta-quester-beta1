@@ -166,45 +166,61 @@ export default function ReadingWidget({
             <div className="space-y-5">
               {activeReadingTask.readingQuestions?.map((q: any, qIndex: number) => {
                 const hasFeedback = q.feedback && q.selectedAnswerIndex !== undefined;
-                const isInteractiveReset = quizAnswers[qIndex] !== q.selectedAnswerIndex;
-                const showFeedback = hasFeedback && !isInteractiveReset;
+                const isRejected = activeReadingTask.status === "rejected";
+                const showFeedback = hasFeedback && isRejected; // păstrăm feedback-ul vizibil
+                const userClickedCorrect = quizAnswers[qIndex] === q.correctAnswerIndex;
+                const needsAck = isRejected && hasFeedback && !userClickedCorrect;
 
                 return (
-                  <div key={q.id || qIndex} className="space-y-3 p-4 rounded-2xl bg-neutral-50 border-3 border-slate-900 shadow-[2px_2px_0_0_#1e293b]">
+                  <div key={q.id || qIndex} className={`space-y-3 p-4 rounded-2xl border-3 shadow-[2px_2px_0_0_#1e293b] transition-all duration-300 ${
+                    needsAck ? 'bg-amber-50 border-amber-400 ring-2 ring-amber-300' : 
+                    isRejected && hasFeedback && userClickedCorrect ? 'bg-emerald-50 border-emerald-400' : 'bg-neutral-50 border-slate-900'
+                  }`}>
                     <p className="text-sm font-black text-neutral-900">
                       {qIndex + 1}. {q.question}
+                      {needsAck && <span className="ml-2 text-[9px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-bold uppercase animate-pulse">Atinge răspunsul corect</span>}
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       {q.options.map((option: string, optIdx: number) => {
                         const isCurrentSelected = quizAnswers[qIndex] === optIdx;
+                        const isCorrectOption = optIdx === q.correctAnswerIndex;
+                        const isUserWrongOption = optIdx === q.selectedAnswerIndex && !isCorrectOption;
                         
-                        // Dynamic styling based on previous feedback
-                        let btnClasses = "p-3 rounded-xl border-3 text-xs text-left transition-all flex items-center justify-between cursor-pointer ";
+                        let btnClasses = "p-3 rounded-xl border-3 text-xs text-left transition-all flex items-center justify-between ";
                         let labelSuffix = null;
+                        let isDisabled = false;
 
                         if (showFeedback) {
-                          if (optIdx === q.correctAnswerIndex) {
-                            btnClasses += "border-emerald-500 bg-emerald-50 text-emerald-950 font-black shadow-[1.5px_1.5px_0_0_#10b981]";
-                            labelSuffix = <span className="text-[8px] bg-emerald-600 text-white px-1.5 py-0.5 rounded font-black tracking-wider uppercase shrink-0 border border-slate-950">✓ Corect</span>;
-                          } else if (optIdx === q.selectedAnswerIndex) {
-                            btnClasses += "border-rose-500 bg-rose-50 text-rose-950 font-black shadow-[1.5px_1.5px_0_0_#ef4444]";
+                          // Revalidare: doar răspunsul corect e clickabil
+                          if (isCorrectOption) {
+                            if (isCurrentSelected) {
+                              btnClasses += "border-emerald-500 bg-emerald-100 text-emerald-950 font-black shadow-[1.5px_1.5px_0_0_#10b981] cursor-pointer hover:bg-emerald-200";
+                              labelSuffix = <span className="text-[8px] bg-emerald-600 text-white px-1.5 py-0.5 rounded font-black tracking-wider uppercase shrink-0 border border-slate-950">✓ Răspuns corect</span>;
+                            } else {
+                              btnClasses += "border-emerald-400 bg-emerald-50 text-emerald-900 font-bold shadow-[1.5px_1.5px_0_0_#10b981] cursor-pointer hover:bg-emerald-100 hover:scale-[1.02]";
+                              labelSuffix = <span className="text-[8px] bg-emerald-600 text-white px-1.5 py-0.5 rounded font-black tracking-wider uppercase shrink-0 border border-slate-950">✓ Atinge aici</span>;
+                            }
+                          } else if (isUserWrongOption) {
+                            btnClasses += "border-rose-500 bg-rose-50 text-rose-950 font-black shadow-[1.5px_1.5px_0_0_#ef4444] opacity-80";
                             labelSuffix = <span className="text-[8px] bg-rose-600 text-white px-1.5 py-0.5 rounded font-black tracking-wider uppercase shrink-0 border border-slate-950">✗ Greșit</span>;
+                            isDisabled = true;
                           } else {
-                            btnClasses += "border-slate-300 text-slate-400 bg-white opacity-60";
+                            btnClasses += "border-slate-300 text-slate-400 bg-white opacity-50";
+                            isDisabled = true;
                           }
                         } else {
                           // Standard interactive styling
                           if (isCurrentSelected) {
-                            btnClasses += "border-indigo-600 bg-indigo-50 text-indigo-950 font-black shadow-[1.5px_1.5px_0_0_#4f46e5]";
+                            btnClasses += "border-indigo-600 bg-indigo-50 text-indigo-950 font-black shadow-[1.5px_1.5px_0_0_#4f46e5] cursor-pointer";
                           } else {
-                            btnClasses += "border-slate-900 hover:bg-[#fffcf0] text-neutral-800 bg-white shadow-[1.5px_1.5px_0_0_#1e293b]";
+                            btnClasses += "border-slate-900 hover:bg-[#fffcf0] text-neutral-800 bg-white shadow-[1.5px_1.5px_0_0_#1e293b] cursor-pointer";
                           }
                         }
 
                         return (
                           <button
                             key={optIdx}
-                            disabled={showFeedback}
+                            disabled={isDisabled}
                             onClick={() => setQuizAnswers(prev => ({ ...prev, [qIndex]: optIdx }))}
                             className={btnClasses}
                           >
@@ -215,8 +231,15 @@ export default function ReadingWidget({
                       })}
                     </div>
                     {showFeedback && (
-                      <p className="text-[11px] font-black text-rose-700 bg-rose-50 border border-rose-100 p-2.5 rounded-xl leading-relaxed mt-2.5">
+                      <p className={"text-[11px] font-black p-2.5 rounded-xl leading-relaxed mt-2.5 border " + (
+                        userClickedCorrect ? 'text-emerald-700 bg-emerald-50 border-emerald-100' : 'text-rose-700 bg-rose-50 border-rose-100'
+                      )}>
                         💡 {q.feedback}
+                      </p>
+                    )}
+                    {showFeedback && userClickedCorrect && (
+                      <p className="text-[11px] font-black text-emerald-700 bg-emerald-100 border border-emerald-200 p-2 rounded-xl leading-relaxed mt-1">
+                        ✅ Ai selectat răspunsul corect! Apasă "Confirmă și finalizează" mai jos.
                       </p>
                     )}
                   </div>
@@ -224,33 +247,50 @@ export default function ReadingWidget({
               })}
             </div>
 
-            <div className="flex gap-3 justify-end pt-4">
-              <button
-                onClick={onAbandonConfirm}
-                className="px-4 py-2 border-3 border-slate-900 rounded-xl text-xs font-black text-slate-600 hover:bg-slate-100 cursor-pointer transition-all duration-150"
-              >
-                Abandonează
-              </button>
-              <button
-                onClick={handleSubmitQuiz}
-                disabled={isSubmittingAnswers}
-                className="px-6 py-2.5 bg-[#58cc02] hover:bg-[#46a302] text-white rounded-xl text-xs font-black border-3 border-slate-900 transition-all duration-150 flex items-center gap-1.5 cursor-pointer shadow-[3px_3px_0_0_#1e293b] hover:translate-y-[-1.5px] active:translate-y-[1.5px] active:shadow-none"
-              >
-                {isSubmittingAnswers ? (
-                  <RefreshCw className="w-4.5 h-4.5 animate-spin" />
-                ) : activeReadingTask.status === "rejected" ? (
-                  <>
-                    <RefreshCw className="w-4.5 h-4.5" />
-                    Revalidează răspunsurile corectate
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-4.5 h-4.5" />
-                    Trimite răspunsurile testului
-                  </>
-                )}
-              </button>
-            </div>
+            {/* Buton Revalidare — activ doar când TOATE răspunsurile corecte sunt confirmate */}
+            {(() => {
+              const allCorrect = activeReadingTask.readingQuestions?.every(
+                (q: any, i: number) => quizAnswers[i] === q.correctAnswerIndex
+              );
+              return (
+                <div className="flex gap-3 justify-end pt-4 items-center">
+                  {activeReadingTask.status === "rejected" && !allCorrect && (
+                    <p className="text-[10px] font-black text-amber-600 uppercase tracking-wider mr-auto animate-pulse">
+                      ⚠️ Atinge răspunsul corect la fiecare întrebare
+                    </p>
+                  )}
+                  <button
+                    onClick={onAbandonConfirm}
+                    className="px-4 py-2 border-3 border-slate-900 rounded-xl text-xs font-black text-slate-600 hover:bg-slate-100 cursor-pointer transition-all duration-150"
+                  >
+                    Abandonează
+                  </button>
+                  <button
+                    onClick={handleSubmitQuiz}
+                    disabled={isSubmittingAnswers || (activeReadingTask.status === "rejected" && !allCorrect)}
+                    className={`px-6 py-2.5 rounded-xl text-xs font-black border-3 border-slate-900 transition-all duration-150 flex items-center gap-1.5 shadow-[3px_3px_0_0_#1e293b] hover:translate-y-[-1.5px] active:translate-y-[1.5px] active:shadow-none ${
+                      (activeReadingTask.status === "rejected" && !allCorrect)
+                        ? 'bg-slate-300 text-slate-500 cursor-not-allowed opacity-60'
+                        : 'bg-[#58cc02] hover:bg-[#46a302] text-white cursor-pointer'
+                    }`}
+                  >
+                    {isSubmittingAnswers ? (
+                      <RefreshCw className="w-4.5 h-4.5 animate-spin" />
+                    ) : activeReadingTask.status === "rejected" ? (
+                      <>
+                        <CheckCircle2 className="w-4.5 h-4.5" />
+                        {allCorrect ? 'Confirmă și finalizează' : 'Revalidează răspunsurile corectate'}
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="w-4.5 h-4.5" />
+                        Trimite răspunsurile testului
+                      </>
+                    )}
+                  </button>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}
