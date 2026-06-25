@@ -12,6 +12,13 @@ import { beforeAll, afterAll, afterEach, vi } from 'vitest';
 // 🔐 JWT_SECRET pentru teste
 process.env.JWT_SECRET = 'test-jwt-secret-for-unit-tests-only';
 
+// Ensure long-lived intervals created during module import don't keep Vitest running
+const _setInterval = globalThis.setInterval;
+globalThis.setInterval = ((handler: any, timeout?: any, ...args: any[]) => {
+  const t: any = _setInterval(handler as any, timeout as any, ...args);
+  if (typeof t?.unref === 'function') t.unref();
+  return t;
+}) as any;
 // ─── Mock pentru fs (refresh_tokens.json în memorie) ────────────────
 const mockTokenStore: { tokens: any[] } = { tokens: [] };
 
