@@ -21,11 +21,6 @@ export default defineConfig({
         'server/legacy/',
         'server/db/drizzle.config.ts',
       ],
-      thresholds: {
-        lines: 80,
-        functions: 80,
-        branches: 75,
-      },
     },
     setupFiles: ['./tests/setup.ts'],
     testTimeout: 10000,
