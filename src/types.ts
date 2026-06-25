@@ -107,6 +107,17 @@ export interface ChildSuggestion {
   adminFeedback?: string;
 }
 
+export interface UploadedPhoto {
+  id: string;
+  childId: string;
+  childName: string;
+  activityName: string;
+  photoUrl: string;
+  status: string;
+  feedback: string;
+  timestamp: string;
+}
+
 export interface ScreenTimeRequest {
   id: string;
   childId: string;
@@ -127,6 +138,7 @@ export interface AppState {
   notifications: ParentNotification[];
   topicProposals: NextDayTopicProposal[];
   suggestions: ChildSuggestion[];
+  uploadedPhotosHistory?: UploadedPhoto[];
   screenTimeRequests?: ScreenTimeRequest[];
   customRewards?: StoreReward[];
   homeAssistant: HomeAssistantConfig;

@@ -575,6 +575,35 @@ const createDefaultActivityTimeLogs = () => {
   ];
 };
 
+/**
+ * Log an uploaded photo to the database for parent review.
+ */
+function logUploadedPhoto(
+  db: any,
+  childId: string,
+  childName: string,
+  activityName: string,
+  photoUrl: string,
+  status: string,
+  feedback: string
+) {
+  if (!db.uploadedPhotosHistory) db.uploadedPhotosHistory = [];
+
+  db.uploadedPhotosHistory.unshift({
+    id: `photo-${crypto.randomUUID()}`,
+    childId,
+    childName,
+    activityName,
+    photoUrl,
+    status,
+    feedback,
+    timestamp: new Date().toISOString(),
+  });
+
+  // Prevent unbounded growth
+  if (db.uploadedPhotosHistory.length > 200) db.uploadedPhotosHistory.length = 200;
+}
+
 const createDefaultPointsHistory = (children?: any[]) => {
   const history = [];
   const now = new Date();

@@ -11,17 +11,16 @@
  */
 
 import { Queue, Worker, QueueEvents } from "bullmq";
-import IORedis from "ioredis";
 
 const REDIS_HOST = process.env.REDIS_HOST || "localhost";
 const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
 
-const connection = new IORedis({
+const connection = {
   host: REDIS_HOST,
   port: REDIS_PORT,
   maxRetriesPerRequest: null,
   enableOfflineQueue: false,
-});
+};
 
 // ─── Queue-uri ───────────────────────────────────────────────────────
 export const readingQueue = new Queue("ai-reading", {

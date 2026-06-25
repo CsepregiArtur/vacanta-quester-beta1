@@ -7,6 +7,7 @@ import React, { useState, useRef, useEffect } from "react";
 import ReadingWidget from "../modules/reading/ReadingWidget";
 import RewardsWidget from "../modules/rewards/RewardsWidget";
 import HomeAssistantWidget from "../modules/homeassistant/HomeAssistantWidget";
+import CameraWidget from "./CameraWidget";
 import { 
   BookOpen, 
   Flame, 
