@@ -279,7 +279,7 @@ describe('createErrorIssue — edge cases', () => {
 
   // ── Issue cu toate câmpurile populate ─────────────────────────
   test('creează issue cu toate câmpurile: labels multiple, context, stack', async () => {
-    let capturedBody: any = null;
+    let capturedBody: Record<string, any> = {};
     mockFetch.mockImplementation(async (url: string, options?: any) => {
       if (url.includes('/labels')) {
         return { ok: true, json: async () => ([]) };
