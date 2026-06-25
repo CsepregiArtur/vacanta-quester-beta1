@@ -42,6 +42,43 @@
       "email": "rotate@test.com",
       "issuedAt": "2026-06-25T12:41:00.060Z",
       "expiresAt": "2026-07-25T12:41:00.060Z"
+    },
+    {
+      "tokenHash": "$2b$06$yO7eV6GAGVORXYpScd/if.P46CZr4JZLenZ423BplkFkfzaeGkMw2",
+      "email": "refresh@test.com",
+      "issuedAt": "2026-06-25T16:45:31.521Z",
+      "expiresAt": "2026-07-25T16:45:31.521Z"
+    },
+    {
+      "tokenHash": "$2b$06$wImTXTOMQTBfJlNjcjq.H.uEPB2NNf3F32qDLXvJdbp1KMQe7fcH2",
+      "email": "multi@test.com",
+      "issuedAt": "2026-06-25T16:45:31.528Z",
+      "expiresAt": "2026-07-25T16:45:31.528Z"
+    },
+    {
+      "tokenHash": "$2b$06$lKbcidsBwmXWHojAdWMIgeMmh2JkNeIakAbJ4g/rJoYnnaMud9P5W",
+      "email": "multi@test.com",
+      "issuedAt": "2026-06-25T16:45:31.534Z",
+      "expiresAt": "2026-07-25T16:45:31.534Z"
+    },
+    {
+      "tokenHash": "$2b$06$p8hbzF6oly6AtUJ/hxqHnOKBnj4g2DMil2dGHUSSYmM2mJa67zPSG",
+      "email": "device@test.com",
+      "issuedAt": "2026-06-25T16:45:31.541Z",
+      "expiresAt": "2026-07-25T16:45:31.541Z",
+      "deviceInfo": "iPhone-15"
+    },
+    {
+      "tokenHash": "$2b$06$AbsLnuORbXWYmN0niciCwOx0kR772GqHpXM5cY.0DVx2PQ2T7Rrke",
+      "email": "rotate@test.com",
+      "issuedAt": "2026-06-25T16:45:31.579Z",
+      "expiresAt": "2026-07-25T16:45:31.579Z"
+    },
+    {
+      "tokenHash": "$2b$06$5uJLmeOxz5rA8GgcmJ77ROe.7IC2oB7sBFkUlEKbpnRpfvQRTj2ZK",
+      "email": "rotate@test.com",
+      "issuedAt": "2026-06-25T16:45:31.618Z",
+      "expiresAt": "2026-07-25T16:45:31.618Z"
     }
   ]
 }

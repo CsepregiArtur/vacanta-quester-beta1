@@ -94,6 +94,10 @@
       "dateKey": "2026-06-24",
       "dominic": 80,
       "sofia": 140
+    },
+    {
+      "date": "25 iun.",
+      "dateKey": "2026-06-25"
     }
   ],
   "activityTimeLogs": [],
@@ -107,7 +111,7 @@
     "pass": "",
     "secure": false
   },
-  "lastUpdated": "2026-06-24T20:52:59.943Z",
+  "lastUpdated": "2026-06-25T19:23:38.459Z",
   "tomorrowSchedule": {},
   "currentDateKey": "2026-06-24"
 }

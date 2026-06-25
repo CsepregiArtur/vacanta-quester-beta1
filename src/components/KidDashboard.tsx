@@ -142,7 +142,8 @@ export default function KidDashboard({ childId, state, onRefresh, theme, onChang
       buttonGreen: "px-4 py-2 bg-[#58cc02] hover:bg-[#46a302] text-white border-3 border-slate-900 font-display font-black rounded-xl text-xs uppercase tracking-wider shadow-[2px_2px_0_0_#1e293b] active:translate-y-[1px] active:shadow-none transition-all cursor-pointer",
       tag: "bg-slate-100 border-2 border-slate-900 text-slate-850 px-2.5 py-1 rounded-full text-xs font-black",
       label: "text-[10px] font-display font-black text-slate-400 uppercase tracking-widest",
-      text: "text-slate-600 font-medium text-xs md:text-sm"
+      text: "text-slate-600 font-medium text-xs md:text-sm",
+      milestoneBorder: "border-slate-900"
     },
     duolingo: {
       card: "bg-white border-3 border-slate-200 rounded-3xl p-6 shadow-[0_5px_0_0_#cbd5e1] hover:shadow-[0_2px_0_0_#cbd5e1] hover:translate-y-[1px] transition-all",
@@ -154,7 +155,8 @@ export default function KidDashboard({ childId, state, onRefresh, theme, onChang
       buttonGreen: "px-4 py-2 bg-[#58cc02] hover:bg-[#4ea602] text-white border-2 border-[#3e9e00] font-display font-black rounded-2xl text-xs uppercase tracking-wider shadow-[0_4px_0_0_#cbd5e1] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer",
       tag: "bg-sky-50 border-2 border-sky-100 text-sky-600 px-2.5 py-1 rounded-full text-xs font-black",
       label: "text-[10px] font-sans font-black text-slate-400 uppercase tracking-wider",
-      text: "text-slate-600 font-sans text-xs md:text-sm"
+      text: "text-slate-600 font-sans text-xs md:text-sm",
+      milestoneBorder: "border-slate-300"
     },
     pokemon: {
       card: "bg-white border-3 border-[#3b4cca] rounded-3xl p-6 shadow-[4px_4px_0_0_#3b4cca] hover:translate-y-[-2px] transition-all",
@@ -166,7 +168,8 @@ export default function KidDashboard({ childId, state, onRefresh, theme, onChang
       buttonGreen: "px-4 py-2 bg-[#4dad5b] hover:bg-[#5dbd6c] text-white border-3 border-[#3cb254] font-display font-black rounded-xl text-xs uppercase tracking-wider shadow-[2px_2px_0_0_#4dad5b] active:translate-y-[1px] active:shadow-none transition-all cursor-pointer",
       tag: "bg-yellow-50 border-2 border-[#ffcb05] text-amber-700 px-2.5 py-1 rounded-full text-xs font-black",
       label: "text-[10px] font-sans font-black text-[#3d7dca] uppercase tracking-widest",
-      text: "text-slate-600 font-sans text-xs md:text-sm"
+      text: "text-slate-600 font-sans text-xs md:text-sm",
+      milestoneBorder: "border-[#3b4cca]"
     },
     minecraft: {
       card: "bg-[#212121] border-3 border-[#3c3c3c] rounded-none p-6 shadow-[4px_4px_0_0_#000000] hover:translate-y-[-2px] transition-all text-stone-200",
@@ -178,7 +181,8 @@ export default function KidDashboard({ childId, state, onRefresh, theme, onChang
       buttonGreen: "px-4 py-2 bg-[#00aa00] hover:bg-[#55ff55] text-white border-2 border-[#005500] font-mono rounded-none text-xs uppercase tracking-wider shadow-[2px_2px_0_0_#000000] active:translate-y-[1px] active:shadow-none transition-all cursor-pointer",
       tag: "bg-stone-800 border border-stone-600 text-[#55ff55] px-2.5 py-1 rounded-none text-xs font-mono",
       label: "text-[10px] font-mono text-stone-500 uppercase tracking-widest",
-      text: "text-stone-400 font-mono text-xs md:text-sm"
+      text: "text-stone-400 font-mono text-xs md:text-sm",
+      milestoneBorder: "border-stone-600"
     }
   }[theme || "nintendo"];
 
@@ -505,6 +509,8 @@ export default function KidDashboard({ childId, state, onRefresh, theme, onChang
           setActiveReadingTask(null);
           setQuizAnswers({});
         } else {
+          // Actualizează task-ul cu feedback-ul de la server (selectedAnswerIndex, feedback)
+          setActiveReadingTask(data.task);
           setQuizAllCorrect(false);
           setQuizError("Ai făcut greșeli. Revizuiește textul și reîncearcă!");
         }
@@ -967,15 +973,26 @@ export default function KidDashboard({ childId, state, onRefresh, theme, onChang
         )}
 
         {/* 4 STREAK MILESTONES: 3 zile, 7 zile, 30 zile, 100 zile */}
+        <style>{`
+          @keyframes bronze-shimmer {
+            0%, 100% { box-shadow: 0 0 8px rgba(180,83,9,0.3), 0 0 16px rgba(180,83,9,0.15); }
+            50% { box-shadow: 0 0 16px rgba(180,83,9,0.6), 0 0 32px rgba(180,83,9,0.3), 0 0 48px rgba(180,83,9,0.1); }
+          }
+          @keyframes bronze-glow {
+            0%, 100% { border-color: #b45309; }
+            50% { border-color: #f59e0b; }
+          }
+        `}</style>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { tag: "3", title: "Pâlpâire de Bronz 🥉", streakReq: 3, reward: 15, color: "border-amber-700 bg-amber-50/40 text-amber-900", desc: "Zile consecutive de citit: 3" },
-            { tag: "7", title: "Scânteie de Argint 🥈", streakReq: 7, reward: 40, color: "border-slate-400 bg-slate-50 text-slate-900", desc: "Săptămână completă de vară!" },
-            { tag: "30", title: "Flacără de Aur 🥇", streakReq: 30, reward: 150, color: "border-yellow-500 bg-yellow-50/50 text-yellow-900", desc: "Super-cititorul lunii de vacanță!" },
-            { tag: "100", title: "Legendă de Diamant 💎", streakReq: 100, reward: 500, color: "border-cyan-500 bg-cyan-50 text-cyan-900", desc: "Olimpic absolut la lectură!" }
+            { tag: "3", title: "Pâlpâire de Bronz 🥉", streakReq: 3, reward: 15, color: "border-amber-700 bg-amber-50/40 text-amber-900", desc: "Zile consecutive de citit: 3", shimmer: true },
+            { tag: "7", title: "Scânteie de Argint 🥈", streakReq: 7, reward: 40, color: "border-slate-400 bg-slate-50 text-slate-900", desc: "Săptămână completă de vară!", shimmer: false },
+            { tag: "30", title: "Flacără de Aur 🥇", streakReq: 30, reward: 150, color: "border-yellow-500 bg-yellow-50/50 text-yellow-900", desc: "Super-cititorul lunii de vacanță!", shimmer: false },
+            { tag: "100", title: "Legendă de Diamant 💎", streakReq: 100, reward: 500, color: "border-cyan-500 bg-cyan-50 text-cyan-900", desc: "Olimpic absolut la lectură!", shimmer: false }
           ].map((milestone) => {
             const hasStreak = (child.readingStreak || 0) >= milestone.streakReq;
             const claimed = child.claimedStreakMilestones?.includes(milestone.tag);
+            const isBronzeUnclaimed = milestone.tag === "3" && hasStreak && !claimed;
             
             return (
               <div 
@@ -984,10 +1001,18 @@ export default function KidDashboard({ childId, state, onRefresh, theme, onChang
                   claimed 
                     ? "bg-slate-100/50 border-slate-300 opacity-70" 
                     : hasStreak
-                      ? `${milestone.color} scale-102 ring-4 ring-indigo-500/20`
+                      ? `${milestone.color} ${dashboardStyles.milestoneBorder} scale-102`
                       : "bg-white border-slate-200 text-slate-400"
                 }`}
+                style={isBronzeUnclaimed ? {
+                  animation: 'bronze-shimmer 2s ease-in-out infinite, bronze-glow 3s ease-in-out infinite',
+                } : {}}
               >
+                {isBronzeUnclaimed && (
+                  <div className="absolute -top-2.5 -right-2.5 bg-amber-600 text-white border-2 border-amber-800 font-black text-[7px] uppercase px-2 py-0.5 rounded-full animate-bounce z-10 shadow-lg">
+                    Revendică!
+                  </div>
+                )}
                 {claimed && (
                   <div className="absolute top-2.5 right-2.5 bg-emerald-500 text-white border-2 border-slate-950 font-black text-[8px] uppercase px-2 py-0.5 rounded-full rotate-[-4deg]">
                     Revendicat ✓
