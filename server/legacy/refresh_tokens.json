@@ -1,28 +1,3 @@
 {
-  "tokens": [
-    {
-      "tokenHash": "$2b$06$.Y7wKh6ygF0iZEEHtBUvCedxEFOP.xwMrwNVJ3kHJfJxrId8DGDA6",
-      "email": "multi@test.com",
-      "issuedAt": "2026-06-25T12:21:33.043Z",
-      "expiresAt": "2026-07-25T12:21:33.043Z"
-    },
-    {
-      "tokenHash": "$2b$06$tEvng/fkt4xTntnGlB2vteBc7tbPwlhSPsoQ3pA2ud3zi1N7/9whm",
-      "email": "rotation@test.com",
-      "issuedAt": "2026-06-25T12:21:33.141Z",
-      "expiresAt": "2026-07-25T12:21:33.141Z"
-    },
-    {
-      "tokenHash": "$2b$06$X0HZMhg7GwyzbAibvv5Cl.MWUckHdbSp.G0v2p9zPw.QErPM9O8qi",
-      "email": "rotate@test.com",
-      "issuedAt": "2026-06-25T12:21:33.210Z",
-      "expiresAt": "2026-07-25T12:21:33.210Z"
-    },
-    {
-      "tokenHash": "$2b$06$LLFEWQxaDk/3P7uyRewEk.y.CxuD2XYxzmRTfQ0sBmyIv/YksucWW",
-      "email": "rotate@test.com",
-      "issuedAt": "2026-06-25T12:21:33.290Z",
-      "expiresAt": "2026-07-25T12:21:33.290Z"
-    }
-  ]
+  "tokens": []
 }
