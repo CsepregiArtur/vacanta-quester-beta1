@@ -41,13 +41,19 @@ export default function CameraWidget({
 }: CameraWidgetProps) {
   return (
     <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-      <div className="bg-white rounded-3xl p-6 max-w-lg w-full border-2 border-slate-200 shadow-xl space-y-4">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        className="bg-white rounded-3xl p-6 max-w-lg w-full border-2 border-slate-200 shadow-xl space-y-4"
+      >
         <div className="flex items-center justify-between">
           <h3 className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-2">
             <Upload className="w-4 h-4 text-indigo-500" />
             {title}
           </h3>
           <button
+            aria-label="Închide"
             onClick={onClose}
             className="p-1.5 hover:bg-slate-100 rounded-full transition cursor-pointer"
             disabled={isEvaluating}
