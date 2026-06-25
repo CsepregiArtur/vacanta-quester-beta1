@@ -19,6 +19,7 @@ const connection = {
   host: REDIS_HOST,
   port: REDIS_PORT,
   maxRetriesPerRequest: null,
+  enableOfflineQueue: false,
 };
 
 // ─── Queue-uri ───────────────────────────────────────────────────────
