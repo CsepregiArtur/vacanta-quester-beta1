@@ -25,6 +25,7 @@ import { analyticsService } from "../services";
 import syncRoutes from "../routes/sync.routes";
 import deviceRoutes from "../routes/devices.routes";
 import auditRoutes from "../routes/audit.routes";
+import { errorHandler } from "../middleware/error-handler.middleware";
 
 import rateLimit from "express-rate-limit";
 
@@ -3741,6 +3742,11 @@ if (!viteDevMode) {
     });
   });
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// GLOBAL ERROR HANDLER — prinde erori nesperate și raportează pe GitHub
+// ═══════════════════════════════════════════════════════════════════
+app.use(errorHandler);
 
 // ═══════════════════════════════════════════════════════════════════
 // START SERVER

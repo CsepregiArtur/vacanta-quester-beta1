@@ -3,6 +3,13 @@
   "activeTasks": [],
   "notifications": [
     {
+      "id": "next-day-auto-1782368555356",
+      "childName": "Sistem",
+      "message": "S-a activat automat trecerea la următoarea zi calendaristică de vacanță (2026-06-25)! Sarcinile, igiena și turele de plimbat câinele au fost resetate cu succes.",
+      "timestamp": "2026-06-25T06:22:35.356Z",
+      "type": "success"
+    },
+    {
       "id": "init-notification-1782330052049",
       "childName": "Sistem",
       "message": "Vacanța de vară a început! Aplicația Arcadia Smart Vacation a pornit cu succes. Adaugă copiii în panoul de administrare pentru a începe.",
@@ -94,6 +101,10 @@
       "dateKey": "2026-06-24",
       "dominic": 80,
       "sofia": 140
+    },
+    {
+      "date": "25 iun.",
+      "dateKey": "2026-06-25"
     }
   ],
   "activityTimeLogs": [],
@@ -107,7 +118,7 @@
     "pass": "",
     "secure": false
   },
-  "lastUpdated": "2026-06-24T19:50:53.014Z",
+  "lastUpdated": "2026-06-25T06:22:35.356Z",
   "tomorrowSchedule": {},
-  "currentDateKey": "2026-06-24"
+  "currentDateKey": "2026-06-25"
 }

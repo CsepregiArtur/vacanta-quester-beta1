@@ -21,14 +21,6 @@ export default defineConfig({
         'server/legacy/',
         'server/db/drizzle.config.ts',
       ],
-<<<<<<< HEAD
-      thresholds: {
-        lines: 80,
-        functions: 80,
-        branches: 75,
-      },
-=======
->>>>>>> 634b8112f46465782a9fedba3d6048fabc422aad
     },
     setupFiles: ['./tests/setup.ts'],
     testTimeout: 10000,
@@ -38,9 +30,5 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, '..'),
     },
-<<<<<<< HEAD
-  }
-=======
->>>>>>> 634b8112f46465782a9fedba3d6048fabc422aad
   },
 });

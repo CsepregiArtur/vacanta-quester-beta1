@@ -17,6 +17,7 @@ import { initDatabase } from "./db";
 import analyticsRoutes from "./routes/analytics.routes";
 import subscriptionRoutes from "./routes/subscription.routes";
 import { syncService } from "./services";
+import { errorHandler } from "./middleware/error-handler.middleware";
 
 async function bootstrap() {
   try {
